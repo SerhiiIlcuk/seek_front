@@ -1,4 +1,4 @@
-const Login = (state = false, action) => {
+const Login = (state = localStorage.getItem('token'), action) => {
    switch (action.type) {
 	  case "LOGIN":
 		 return state = true;
