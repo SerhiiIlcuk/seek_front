@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Settings } from "react-feather";
 
 import { FoldedContentConsumer } from "../../utility/context/toggleContentContext";
-
+import templateConfig from "../../templateConfig";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import bgImg1 from "../../assets/img/sidebar-bg/01.jpg";
@@ -43,7 +43,9 @@ class Customizer extends Component {
    };
 
    render() {
+      const visible = templateConfig.customizer.visible;
       return (
+         visible &&
          <FoldedContentConsumer>
             {context => (
                <div

@@ -51,6 +51,7 @@ const LazyToastr = lazy(() => import("../views/components/extra/toastr"));
 const LazyInputs = lazy(() => import("../views/forms/elements/inputs"));
 const LazyInputGrids = lazy(() => import("../views/forms/elements/inputGrids"));
 const LazyBasicForms = lazy(() => import("../views/forms/layouts/basicForms"));
+const LazyProfile = lazy(() => import("../views/forms/layouts/profile"));
 const LazyBorderedForms = lazy(() => import("../views/forms/layouts/borderedForms"));
 const LazyFormActions = lazy(() => import("../views/forms/layouts/formActions"));
 const LazyHiddenLabels = lazy(() => import("../views/forms/layouts/hiddenLabels"));
@@ -111,6 +112,15 @@ class Router extends Component {
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazySearch {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/profile/edit"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyProfile {...matchprops} />
 						   </Suspense>
 						)}
 					 />

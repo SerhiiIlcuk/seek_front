@@ -20,6 +20,9 @@ const templateConfig = {
       backgroundImage: true, // Options: true, false | Set true to show background image
       backgroundImageURL: sidebarBGImage // Change image from sidebarBGImage import
    },
+   customizer: {
+      visible: false
+   },
    buyNow: false, // Options: true, false - To show floating buy now button.
 };
 

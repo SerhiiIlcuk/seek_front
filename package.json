@@ -31,6 +31,7 @@
       "react-dropzone": "^5.0.1",
       "react-feather": "^1.1.1",
       "react-horizontal-timeline": "^1.5.3",
+      "react-images-uploading": "^2.2.0",
       "react-perfect-scrollbar": "^1.1.1",
       "react-prism": "^4.3.2",
       "react-redux": "^5.0.7",

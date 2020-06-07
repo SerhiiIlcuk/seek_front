@@ -281,7 +281,7 @@ class ThemeNavbar extends Component {
                               </DropdownItem>
                               <DropdownItem divider />
 
-                              <Link to="/user-profile" className="p-0" onClick={() => this.onClickNav('profile')}>
+                              <Link to="/profile/edit" className="p-0" onClick={() => this.onClickNav('profile')}>
                                  <DropdownItem>
                                     <User size={16} className="mr-1" /> My Profile
                                  </DropdownItem>
