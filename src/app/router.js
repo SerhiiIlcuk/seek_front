@@ -63,6 +63,7 @@ const LazyRegular = lazy(() => import("../views/tables/regular"));
 const LazyExtended = lazy(() => import("../views/tables/extended"));
 const LazyReactTableExtended = lazy(() => import("../views/tables/reactTableExtended"));
 const LazyBasicCard = lazy(() => import("../views/cards/basicCard"));
+const LazyHome = lazy(() => import("../views/cards/home"));
 const LazyExtendedCard = lazy(() => import("../views/cards/extendedCard"));
 const LazyStatisticCard = lazy(() => import("../views/cards/statisticCard"));
 const LazyAdvancedCard = lazy(() => import("../views/cards/advancedCard"));
@@ -111,7 +112,7 @@ class Router extends Component {
 						path="/"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
-							  <LazySearch {...matchprops} />
+							  <LazyHome {...matchprops} />
 						   </Suspense>
 						)}
 					 />
