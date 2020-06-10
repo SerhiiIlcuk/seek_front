@@ -32,7 +32,9 @@ import {
    X,
    LogOut,
    Home,
-   MessageSquare
+   Moon,
+   MessageSquare,
+   Smile
 } from "react-feather";
 import NavbarSearch from "../../../components/search/Search";
 import ReactCountryFlag from "react-country-flag";
@@ -83,7 +85,6 @@ class ThemeNavbar extends Component {
 
    render() {
       const {activePage} = this.state;
-      console.log('a', activePage);
 
       return (
          <Navbar className="navbar navbar-expand-lg navbar-light bg-faded fixed-top">
@@ -97,8 +98,8 @@ class ThemeNavbar extends Component {
                   />
                   {/*<Form className="navbar-form mt-1 float-left" role="search">
                      <NavbarSearch />
-                  </Form>
-                   <Moon size={20} color="#333" className="m-2 cursor-pointer"/> */}
+                  </Form>*/}
+                   <Smile size={50} color="yellow" className="m-2 cursor-pointer"/>
                   <MoreVertical
                      className="mt-1 navbar-toggler black no-border float-right"
                      size={50}

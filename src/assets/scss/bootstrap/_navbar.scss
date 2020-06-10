@@ -1,5 +1,5 @@
 .navbar {
-   z-index: 4; // required to make the shadow overlap the below content (need is visible in mobile drawer overlay)
+   z-index: 100; // required to make the shadow overlap the below content (need is visible in mobile drawer overlay)
    border: 0;
    border-radius: 0;
    padding: 1rem 0;

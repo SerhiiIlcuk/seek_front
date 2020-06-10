@@ -41,7 +41,7 @@ const items = [
 class Home extends Component {
    constructor(props) {
       super(props);
-      this.state = { activeIndex: 0 };
+      this.state = { activeIndex1: 0, activeIndex2: 0 };
       this.next = this.next.bind(this);
       this.previous = this.previous.bind(this);
       this.goToIndex = this.goToIndex.bind(this);
@@ -49,37 +49,59 @@ class Home extends Component {
       this.onExited = this.onExited.bind(this);
    }
 
-   onExiting() {
-      this.animating = true;
+   onExiting(slideIndex) {
+      const animatingIndex = `animating${slideIndex}`;
+      this[animatingIndex] = true;
    }
 
-   onExited() {
-      this.animating = false;
+   onExited(slideIndex) {
+      const animatingIndex = `animating${slideIndex}`;
+      this[animatingIndex] = false;
    }
 
-   next() {
-      if (this.animating) return;
-      const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
-      this.setState({ activeIndex: nextIndex });
+   next(slideIndex) {
+      const animatingIndex = `animating${slideIndex}`;
+      if (this[animatingIndex]) return;
+
+      const indexName = `activeIndex${slideIndex}`;
+
+      const nextIndex = this.state[indexName] === items.length - 1 ? 0 : this.state[indexName] + 1;
+      this.setState({ [indexName]: nextIndex });
    }
 
-   previous() {
-      if (this.animating) return;
-      const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
-      this.setState({ activeIndex: nextIndex });
+   previous(slideIndex) {
+      const animatingIndex = `animating${slideIndex}`;
+      if (this[animatingIndex]) return;
+
+      const indexName = `activeIndex${slideIndex}`;
+
+      const nextIndex = this.state[indexName] === 0 ? items.length - 1 : this.state[indexName] - 1;
+      this.setState({ [indexName]: nextIndex });
    }
 
-   goToIndex(newIndex) {
-      if (this.animating) return;
-      this.setState({ activeIndex: newIndex });
+   goToIndex(newIndex, slideIndex) {
+      const animatingIndex = `animating${slideIndex}`;
+      if (this[animatingIndex]) return;
+
+      const indexName = `activeIndex${slideIndex}`;
+      this.setState({ [indexName]: newIndex });
    }
 
    render() {
-      const { activeIndex } = this.state;
+      const { activeIndex1, activeIndex2 } = this.state;
 
-      const slides = items.map(item => {
+      const slides1 = items.map(item => {
          return (
-            <CarouselItem onExiting={this.onExiting} onExited={this.onExited} key={item.src}>
+            <CarouselItem onExiting={() => this.onExiting(1)} onExited={() => this.onExited(1)} key={item.src}>
+               <img src={item.src} alt={item.altText} />
+               <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+            </CarouselItem>
+         );
+      });
+
+      const slides2 = items.map(item => {
+         return (
+            <CarouselItem onExiting={() => this.onExiting(2)} onExited={() => this.onExited(2)} key={item.src}>
                <img src={item.src} alt={item.altText} />
                <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
             </CarouselItem>
@@ -92,29 +114,29 @@ class Home extends Component {
                <Col sm="12" md="4">
                   <Card className="text-left">
                      <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
+                        <CardTitle>Business 1</CardTitle>
+                        <CardText>Business Introduction 1</CardText>
                      </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
+                     <Carousel activeIndex={activeIndex1} next={() => this.next(1)} previous={() => this.previous(1)}>
+                        <CarouselIndicators items={items} activeIndex={activeIndex1} onClickHandler={(index) => this.goToIndex(index, 1)} />
+                        {slides1}
+                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={() => this.previous(1)} />
+                        <CarouselControl direction="next" directionText="Next" onClickHandler={() => this.next(1)} />
                      </Carousel>
                      <CardBody>
                         <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
+                           Details of Business 1
                         </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
+                        <CardLink href="#">Link 1</CardLink>
+                        <CardLink href="#">Link 2</CardLink>
                      </CardBody>
                      <CardFooter>
                         2 day ago{" "}
                         <Badge className="float-right" color="success">
-                           Branding
+                           Feature 1
                         </Badge>
                         <Badge className="float-right mr-1" color="danger">
-                           Design
+                           Feature 2
                         </Badge>
                      </CardFooter>
                   </Card>
@@ -122,209 +144,29 @@ class Home extends Component {
                <Col sm="12" md="4">
                   <Card className="text-left">
                      <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
+                        <CardTitle>Business 2</CardTitle>
+                        <CardText>Business Introduction 2</CardText>
                      </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
+                     <Carousel activeIndex={activeIndex2} next={() => this.next(2)} previous={() => this.previous(2)}>
+                        <CarouselIndicators items={items} activeIndex={activeIndex2} onClickHandler={(index) => this.goToIndex(index, 2)} />
+                        {slides2}
+                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={() => this.previous(2)} />
+                        <CarouselControl direction="next" directionText="Next" onClickHandler={() => this.next(2)} />
                      </Carousel>
                      <CardBody>
                         <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
+                           Details of Business 2
                         </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
+                        <CardLink href="#">Link 1</CardLink>
+                        <CardLink href="#">Link 2</CardLink>
                      </CardBody>
                      <CardFooter>
                         2 day ago{" "}
                         <Badge className="float-right" color="success">
-                           Branding
+                           Feature 1
                         </Badge>
                         <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Carousel</CardTitle>
-                        <CardText>Carousel Card With Header & Footer</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
-                        {slides}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </CardText>
-                        <CardLink href="#">Card Link</CardLink>
-                        <CardLink href="#">Another Link</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Branding
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Design
+                           Feature 2
                         </Badge>
                      </CardFooter>
                   </Card>
