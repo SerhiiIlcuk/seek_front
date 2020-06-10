@@ -41,7 +41,7 @@ const items = [
 class Home extends Component {
    constructor(props) {
       super(props);
-      this.state = { activeIndex1: 0, activeIndex2: 0 };
+      this.state = { activeIndex1: 0, activeIndex2: 1, activeIndex3: 2, activeIndex4: 2, activeIndex5: 2, activeIndex6: 0, activeIndex7: 2, activeIndex8: 1, activeIndex9: 0 };
       this.next = this.next.bind(this);
       this.previous = this.previous.bind(this);
       this.goToIndex = this.goToIndex.bind(this);
@@ -88,89 +88,60 @@ class Home extends Component {
    }
 
    render() {
-      const { activeIndex1, activeIndex2 } = this.state;
+      const businesses = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      let slides = [];
 
-      const slides1 = items.map(item => {
-         return (
-            <CarouselItem onExiting={() => this.onExiting(1)} onExited={() => this.onExited(1)} key={item.src}>
-               <img src={item.src} alt={item.altText} />
-               <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
-            </CarouselItem>
-         );
-      });
-
-      const slides2 = items.map(item => {
-         return (
-            <CarouselItem onExiting={() => this.onExiting(2)} onExited={() => this.onExited(2)} key={item.src}>
-               <img src={item.src} alt={item.altText} />
-               <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
-            </CarouselItem>
-         );
+      businesses.map((business, index) => {
+         slides[index + 1] = items.map(item => {
+            return (
+               <CarouselItem onExiting={() => this.onExiting(index + 1)} onExited={() => this.onExited(index + 1)} key={item.src}>
+                  <img src={item.src} alt={item.altText} />
+                  <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+               </CarouselItem>
+            );
+         });
       });
 
       return (
          <Fragment>
             <Row className="row-eq-height">
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Business 1</CardTitle>
-                        <CardText>Business Introduction 1</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex1} next={() => this.next(1)} previous={() => this.previous(1)}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex1} onClickHandler={(index) => this.goToIndex(index, 1)} />
-                        {slides1}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={() => this.previous(1)} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={() => this.next(1)} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Details of Business 1
-                        </CardText>
-                        <CardLink href="#">Link 1</CardLink>
-                        <CardLink href="#">Link 2</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Feature 1
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Feature 2
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
-               <Col sm="12" md="4">
-                  <Card className="text-left">
-                     <CardBody>
-                        <CardTitle>Business 2</CardTitle>
-                        <CardText>Business Introduction 2</CardText>
-                     </CardBody>
-                     <Carousel activeIndex={activeIndex2} next={() => this.next(2)} previous={() => this.previous(2)}>
-                        <CarouselIndicators items={items} activeIndex={activeIndex2} onClickHandler={(index) => this.goToIndex(index, 2)} />
-                        {slides2}
-                        <CarouselControl direction="prev" directionText="Previous" onClickHandler={() => this.previous(2)} />
-                        <CarouselControl direction="next" directionText="Next" onClickHandler={() => this.next(2)} />
-                     </Carousel>
-                     <CardBody>
-                        <CardText>
-                           Details of Business 2
-                        </CardText>
-                        <CardLink href="#">Link 1</CardLink>
-                        <CardLink href="#">Link 2</CardLink>
-                     </CardBody>
-                     <CardFooter>
-                        2 day ago{" "}
-                        <Badge className="float-right" color="success">
-                           Feature 1
-                        </Badge>
-                        <Badge className="float-right mr-1" color="danger">
-                           Feature 2
-                        </Badge>
-                     </CardFooter>
-                  </Card>
-               </Col>
+               {
+                  businesses.map((business, key) => {
+                     const activeSlideIndex = `activeIndex${key + 1}`;
+                     return (
+                        <Col sm="12" md="4">
+                           <Card className="text-left">
+                              <CardBody>
+                                 <CardTitle>Business {key + 1}</CardTitle>
+                                 <CardText>Business Introduction {key + 1}</CardText>
+                              </CardBody>
+                              <Carousel activeIndex={this.state[activeSlideIndex]} next={() => this.next(key + 1)} previous={() => this.previous(key + 1)}>
+                                 <CarouselIndicators items={items} activeIndex={this.state[activeSlideIndex]} onClickHandler={(index) => this.goToIndex(index, key + 1)} />
+                                 {slides[key + 1]}
+                                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={() => this.previous(key + 1)} />
+                                 <CarouselControl direction="next" directionText="Next" onClickHandler={() => this.next(key + 1)} />
+                              </Carousel>
+                              <CardBody>
+                                 <CardText>
+                                    Details of Business {key + 1}
+                                 </CardText>
+                                 <CardLink href="#">Link 1</CardLink>
+                                 <CardLink href="#">Link 2</CardLink>
+                              </CardBody>
+                              <CardFooter>
+                                 2 day ago{" "}
+                                 <Badge className="float-right" color="success">
+                                    Feature 2
+                                 </Badge>
+                                 <Badge className="float-right mr-1" color="danger">
+                                    Feature 1
+                                 </Badge>
+                              </CardFooter>
+                           </Card>
+                        </Col>
+                     )
+                  })
+               }
             </Row>
 
          </Fragment>
