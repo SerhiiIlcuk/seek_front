@@ -89,14 +89,14 @@ class Register extends Component {
                               <Row>
                                  <Col md="6">
                                     <Label check>
-                                       <Input type="radio" name="business" defaultChecked />
-                                       Business
+                                       <Input type="radio" name="company" defaultChecked />
+                                       Company
                                     </Label>
                                  </Col>
                                  <Col md="6">
                                     <Label check>
-                                       <Input type="radio" name="business" />
-                                       Influencer
+                                       <Input type="radio" name="company" />
+                                       Candidate
                                     </Label>
                                  </Col>
                               </Row>

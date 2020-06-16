@@ -24,7 +24,7 @@ const templateConfig = {
       visible: false
    },
    footer: {
-      visible: false
+      visible: true
    },
    buyNow: false, // Options: true, false - To show floating buy now button.
 };

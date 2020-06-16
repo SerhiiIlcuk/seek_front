@@ -80,6 +80,16 @@ const LazyKnowledgeBase = lazy(() => import("../views/pages/knowledgeBase"));
 const LazySearch = lazy(() => import("../views/pages/search"));
 const LazyBlankPage = lazy(() => import("../views/pages/blankPage"));
 const LazyChangeLogPage = lazy(() => import("../views/pages/changeLogPage"));
+// By Serhii
+const LazyCompanyProfile = lazy(() => import("../views/employer/profile"));
+const LazyCandidateProfile = lazy(() => import("../views/candidate/profile"));
+const LazyJobPost = lazy(() => import("../views/employer/jobPost"));
+
+// unSigned
+const LazyLanding = lazy(() => import("../views/candidate/landing"));
+const LazyJob = lazy(() => import("../views/candidate/job"));
+const LazyCompany = lazy(() => import("../views/candidate/company"));
+const LazyNews = lazy(() => import("../views/candidate/news"));
 
 // Full Layout
 const LazyForgotPassword = lazy(() => import("../views/pages/forgotPassword"));
@@ -104,7 +114,7 @@ class Router extends Component {
 		 // Set the directory path if you are deplying in sub-folder
 		 <BrowserRouter basename="/">
 			{
-			   localStorage.getItem('token') ? (
+			   this.props.token ? (
 				  <Switch>
 					 {/* Dashboard Views */}
 					 <MainLayoutRoutes
@@ -112,7 +122,34 @@ class Router extends Component {
 						path="/"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
-							  <LazyHome {...matchprops} />
+							  <LazyLanding {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/job"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyJob {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/news"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyNews {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/company"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyCompany {...matchprops} />
 						   </Suspense>
 						)}
 					 />
@@ -122,6 +159,33 @@ class Router extends Component {
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyProfile {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/employer/company-profile/edit"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyCompanyProfile {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/employer/job-post"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyJobPost {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/candidate/profile/edit"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyCandidateProfile {...matchprops} />
 						   </Suspense>
 						)}
 					 />
@@ -811,6 +875,42 @@ class Router extends Component {
 				  </Switch>
 			   ) : (
 				  <Switch>
+					 <MainLayoutRoutes
+						exact
+						path="/"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyLanding {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/job"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyJob {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/news"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyNews {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/company"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyCompany {...matchprops} />
+						   </Suspense>
+						)}
+					 />
 					 <FullPageLayout
 						exact
 						path="/login"
@@ -840,7 +940,7 @@ class Router extends Component {
 					 />
 					 <Redirect
 						exact
-						to="/login"
+						to="/"
 					 />
 				  </Switch>
 			   )

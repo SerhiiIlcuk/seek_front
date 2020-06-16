@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 
 // import internal(own) modules
 import registerServiceWorker from "./registerServiceWorker";
-import { store } from "./redux/storeConfig/store";
+import {store} from "./redux/storeConfig/store";
 import ReduxToastr from 'react-redux-toastr'
 
 import "font-awesome/css/font-awesome.min.css";
