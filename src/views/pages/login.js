@@ -16,14 +16,8 @@ import {
    CardBody,
    CardFooter
 } from "reactstrap";
-
-const mapDispatchToProps = (dispatch) =>
-   bindActionCreators(
-	  {
-		 loginAction,
-	  },
-	  dispatch,
-   )
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/auth";
+import {toastr} from "react-redux-toastr";
 
 class Login extends Component {
 
@@ -32,6 +26,31 @@ class Login extends Component {
 	  password: '',
 	  isChecked: true
    };
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+	  const {
+		 success,
+		 submitting,
+		 errMessage
+	  } = this.props;
+
+	  if (prevProps.submitting !== submitting) {
+		 if (!submitting) {
+			if (!submitting) {
+			   if (!success) {
+				  toastr.error(
+					 "Error",
+					 errMessage,
+					 {
+						position: "top-right",
+						timeOut: 1000
+					 }
+				  );
+			   }
+			}
+		 }
+	  }
+   }
 
    handleChecked = e => {
 	  this.setState(prevState => ({
@@ -154,4 +173,21 @@ class Login extends Component {
    }
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+const mapStateToProps = (state) => ({
+   success: getSuccess(state),
+   submitting: getSubmitting(state),
+   errMessage: getErrMessage(state),
+});
+
+const mapDispatchToProps = (dispatch) =>
+   bindActionCreators(
+	  {
+		 loginAction,
+	  },
+	  dispatch,
+   )
+
+export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(Login);

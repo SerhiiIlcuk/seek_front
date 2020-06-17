@@ -2,14 +2,15 @@ import React, {Component, Fragment} from "react";
 import {bindActionCreators} from "redux"
 import {connect} from "react-redux";
 import {Card, CardBody, CardTitle, Row, Col, Button, FormGroup, Label, Input, CustomInput} from "reactstrap";
+import {toastr} from 'react-redux-toastr';
 import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
-import "../../assets/scss/views/form/profile.scss"
+import "../../assets/scss/views/form/profile.scss";
 import {
    fetchUserAction,
    updateUserAction,
 } from "../../redux/actions/user";
-import {getUserData} from "../../redux/selectors/user";
+import {getSubmitting, getSuccess, getUserData} from "../../redux/selectors/user";
 
 const formSchema = Yup.object().shape({
    firstName: Yup.string()
@@ -52,9 +53,37 @@ class ProfileEdit extends Component {
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-	  const {userData} = this.props;
+	  const {
+	     userData,
+		 submitting,
+		 success,
+	  } = this.props;
 	  if (prevProps.userData !== userData) {
 		 this.setState({userData: userData});
+	  }
+
+	  if (prevProps.submitting !== submitting) {
+	     if (!submitting) {
+	        if (success) {
+			   toastr.success(
+			      "Success",
+				  "Profile updated successfully",
+				  {
+				     position: "top-right",
+					 timeOut: 1000
+				  }
+			   );
+			} else {
+			   toastr.error(
+				  "Error",
+				  "Something went wrong",
+				  {
+					 position: "top-right",
+					 timeOut: 1000
+				  }
+			   );
+			}
+		 }
 	  }
    }
 
@@ -140,7 +169,7 @@ class ProfileEdit extends Component {
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-						console.log(values);
+						console.log('updateProfile', values);
 						this.props.updateUserAction(values);
 					 }}
 					 enableReinitialize={true}
@@ -382,7 +411,9 @@ class ProfileEdit extends Component {
 }
 
 const mapStateToProps = (state) => ({
-   userData: getUserData(state)
+   userData: getUserData(state),
+   submitting: getSubmitting(state),
+   success: getSuccess(state),
 });
 
 const mapDispatchToProps = (dispatch) =>

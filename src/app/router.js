@@ -184,7 +184,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/candidate/profile/edit"
+						path="/user/profile/edit"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyCandidateProfile {...matchprops} />

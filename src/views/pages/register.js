@@ -1,6 +1,7 @@
 // import external modules
 import React, { Component } from "react";
 import {connect} from "react-redux"
+import {toastr} from 'react-redux-toastr';
 import { NavLink } from "react-router-dom";
 import {
    Row,
@@ -16,6 +17,7 @@ import {
 } from "reactstrap";
 import {registerAction} from "../../redux/actions/auth";
 import {bindActionCreators} from "redux";
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/auth";
 
 class Register extends Component {
    state = {
@@ -25,6 +27,40 @@ class Register extends Component {
       candidate: false,
       isChecked: true
    };
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+      const {
+         success,
+         submitting,
+         errMessage
+      } = this.props;
+
+      if (prevProps.submitting !== submitting) {
+         if (!submitting) {
+            if (!submitting) {
+               if (success) {
+                  toastr.success(
+                     "Success",
+                     "Registered successfully",
+                     {
+                        position: "top-right",
+                        timeOut: 1000
+                     }
+                  );
+               } else {
+                  toastr.error(
+                     "Error",
+                     errMessage,
+                     {
+                        position: "top-right",
+                        timeOut: 1000
+                     }
+                  );
+               }
+            }
+         }
+      }
+   }
 
    handleChecked = e => {
       this.setState(prevState => ({
@@ -40,7 +76,7 @@ class Register extends Component {
          password,
          company
       } = this.state;
-      const userType = company ? "company" : "candidate";
+      const userType = company ? "employer" : "candidate";
       const data = {
          email,
          password,
@@ -186,6 +222,12 @@ class Register extends Component {
    }
 }
 
+const mapStateToProps = (state) => ({
+   success: getSuccess(state),
+   submitting: getSubmitting(state),
+   errMessage: getErrMessage(state),
+});
+
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
       {
@@ -194,4 +236,7 @@ const mapDispatchToProps = (dispatch) =>
       dispatch,
    )
 
-export default connect(null, mapDispatchToProps)(Register);
+export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(Register);

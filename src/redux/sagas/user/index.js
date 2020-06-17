@@ -12,8 +12,8 @@ import {
    updateUser,
 } from "../../../http/http-calls";
 import {
-   FETCH_USER, UPDATE_USER,
-   USER_RESULT
+   FETCH_USER, UPDATE_USER, UPDATE_USER_END,
+   USER_RESULT, UPDATE_USER_SUCCESS
 } from "../../types/user";
 
 function* actionWatcher() {
@@ -36,9 +36,20 @@ function* fetchUserSaga() {
 function* updateUserSaga({payload}) {
    try {
 	  const data = yield call(updateUser, payload);
-	  console.log('success', data);
+	  yield put({
+		 type: UPDATE_USER_END,
+		 payload: {
+			success: true
+		 }
+	  });
    } catch (e) {
 	  console.log('error', e);
+	  yield put({
+		 type: UPDATE_USER_END,
+		 payload: {
+			success: false
+		 }
+	  });
    }
 }
 

@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from "react";
-import { bindActionCreators} from "redux"
+import {bindActionCreators} from "redux"
 import {Card, CardBody, CardTitle, Row, Col, Button, FormGroup, Label, Input, CustomInput} from "reactstrap";
 import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
@@ -7,12 +7,14 @@ import "../../assets/scss/views/form/profile.scss"
 import {connect} from "react-redux";
 
 const formSchema = Yup.object().shape({
-   companyName: Yup.string()
+   name: Yup.string()
 	  .required("Required"),
    localEmployees: Yup.number()
-	  .required("Required"),
+	  .required("Required")
+	  .typeError("Please input number"),
    totalEmployees: Yup.number()
-	  .required("Required"),
+	  .required("Required")
+	  .typeError("Please input number"),
    website: Yup.string()
 	  .url()
 	  .required("Required"),
@@ -23,13 +25,13 @@ const formSchema = Yup.object().shape({
 	  .required("Required"),
    zipCode: Yup.string()
 	  .required("Required"),
-   twitter: Yup.string()
+   twitterUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   facebook: Yup.string()
+   facebookUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   instagram: Yup.string()
+   instagramUrl: Yup.string()
 	  .url()
 	  .required("Required"),
 });
@@ -38,9 +40,8 @@ class ProfileEdit extends Component {
    state = {
 	  logoImg: "",
 	  splashImg: "",
+	  birthYear: "2020",
 	  neighborhood: "",
-	  description: "",
-	  expectation: ""
    };
 
    cropImage = (url, size) => {
@@ -103,20 +104,13 @@ class ProfileEdit extends Component {
 		 logoImg,
 		 splashImg,
 		 neighborhood,
+		 birthYear,
 	  } = this.state;
 	  const logoImgUrl = logoImg ? logoImg : null;
 	  const splashImgUrl = splashImg ? splashImg : null;
 
 	  return (
 		 <Fragment>
-			{/*<ContentHeader>Form Validation</ContentHeader>
-			<ContentSubHeader>
-			   <p>Form Validation example.</p>
-			   <a href="https://github.com/jaredpalmer/formik" target="_blank" rel="noopener noreferrer">
-				  <img src="https://img.shields.io/github/stars/jaredpalmer/formik.svg?style=social" alt="Stars" />
-				  <img src="https://img.shields.io/npm/dm/formik.svg" alt="Downloads"/>
-			   </a>
-			</ContentSubHeader>*/}
 			<Row>
 			   <Col sm="2">
 
@@ -125,20 +119,24 @@ class ProfileEdit extends Component {
 				  <Formik
 					 initialValues={{
 						companyName: "",
-						localEmployees: "",
-						totalEmployees: "",
+						localEmployees: 0,
+						totalEmployees: 0,
 						website: "",
 						streetAddressOne: "",
 						streetAddressTwo: "",
 						city: "",
 						zipCode: "",
-						twitter: "",
-						facebook: "",
-						instagram: ""
+						twitterUrl: "",
+						facebookUrl: "",
+						instagramUrl: ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-						console.log(values);
+					    const data = {
+					       ...values,
+						   ...this.state
+						};
+						console.log(data);
 					 }}
 				  >
 					 {({errors, touched}) => (
@@ -162,7 +160,12 @@ class ProfileEdit extends Component {
 										  <Col md="4">
 											 <FormGroup>
 												<Label for="year">Year</Label>
-												<Input type="select" id="year" name="year">
+												<Input
+												   type="select"
+												   value={birthYear}
+												   id="year" name="year"
+												   onChange={(e) => this.onChange("birthYear", e.target.value)}
+												>
 												   <option value="2015">2015</option>
 												   <option value="2016">2016</option>
 												   <option value="2017">2017</option>
@@ -345,29 +348,29 @@ class ProfileEdit extends Component {
 								 <Row>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="facebook">Facebook</Label>
-										  <Field name="facebook" id="facebook"
-												 className={`form-control ${errors.facebook && touched.facebook && 'is-invalid'}`}/>
-										  {errors.facebook && touched.facebook ?
-											 <div className="invalid-feedback">{errors.facebook}</div> : null}
+										  <Label for="facebookUrl">facebookUrl</Label>
+										  <Field name="facebookUrl" id="facebookUrl"
+												 className={`form-control ${errors.facebookUrl && touched.facebookUrl && 'is-invalid'}`}/>
+										  {errors.facebookUrl && touched.facebookUrl ?
+											 <div className="invalid-feedback">{errors.facebookUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="instagram">Instagram</Label>
-										  <Field name="instagram" id="instagram"
-												 className={`form-control ${errors.instagram && touched.instagram && 'is-invalid'}`}/>
-										  {errors.instagram && touched.instagram ?
-											 <div className="invalid-feedback">{errors.instagram}</div> : null}
+										  <Label for="instagramUrl">instagramUrl</Label>
+										  <Field name="instagramUrl" id="instagramUrl"
+												 className={`form-control ${errors.instagramUrl && touched.instagramUrl && 'is-invalid'}`}/>
+										  {errors.instagramUrl && touched.instagramUrl ?
+											 <div className="invalid-feedback">{errors.instagramUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="twitter">Twitter</Label>
-										  <Field name="twitter" id="twitter"
-												 className={`form-control ${errors.twitter && touched.twitter && 'is-invalid'}`}/>
-										  {errors.twitter && touched.twitter ?
-											 <div className="invalid-feedback">{errors.twitter}</div> : null}
+										  <Label for="twitterUrl">twitterUrl</Label>
+										  <Field name="twitterUrl" id="twitterUrl"
+												 className={`form-control ${errors.twitterUrl && touched.twitterUrl && 'is-invalid'}`}/>
+										  {errors.twitterUrl && touched.twitterUrl ?
+											 <div className="invalid-feedback">{errors.twitterUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12" className="text-center">
@@ -386,15 +389,11 @@ class ProfileEdit extends Component {
    }
 }
 
-const mapStateToProps = state => ({
-
-})
+const mapStateToProps = state => ({})
 
 const mapDispatchToProps = dispatch =>
    bindActionCreators(
-	  {
-
-	  },
+	  {},
 	  dispatch
    );
 

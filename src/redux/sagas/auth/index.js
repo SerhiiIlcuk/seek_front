@@ -11,7 +11,10 @@ import {
    login,
    register
 } from "../../../http/http-calls";
-import {REGISTER} from "../../types/auth";
+import {
+   REGISTER,
+   SUBMIT_END
+} from "../../types/auth";
 
 function* actionWatcher() {
    yield takeLatest('LOGIN', loginSaga);
@@ -25,9 +28,24 @@ function* registerSaga({payload: {email, password, userType}}) {
 		 password,
 		 userType
 	  });
+
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+		    success: true,
+			errMessage: null
+		 }
+	  });
 	  console.log('success', res);
    } catch (e) {
-	  console.log('error', e);
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: false,
+			errMessage: e.message
+		 }
+	  });
+	  console.log('error', e.message);
    }
 }
 
@@ -38,16 +56,33 @@ function* loginSaga({payload: {email, password}}) {
 		 password
 	  });
 
+	  console.log(res);
+
 	  yield put({
 		 type: 'LOGIN_RESULT',
 		 payload: {
-		    token: res.accessToken
+		    token: res.accessToken,
+			userType: res.userType
+		 }
+	  });
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: true,
 		 }
 	  });
 
+	  localStorage.setItem("userType", res.userType);
 	  localStorage.setItem("token", res.accessToken);
 	  localStorage.setItem("refreshToken", res.refreshToken);
    } catch (e) {
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: false,
+			errMessage: e.message
+		 }
+	  });
 	  console.log('error', e);
    }
 }

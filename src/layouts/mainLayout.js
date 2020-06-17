@@ -10,7 +10,9 @@ import Navbar from "./components/navbar/navbar"
 import CandidateNavbar from "./components/navbar/candidateNavbar"
 import Footer from "./components/footer/footer";
 import templateConfig from "../templateConfig";
-import {getToken} from "../redux/selectors/auth";
+import {getToken, getUserType} from "../redux/selectors/auth";
+import {CANDIDATE} from "../config/constants";
+import EmployerNavbar from "./components/navbar/employerNavbar";
 
 class MainLayout extends PureComponent {
    state = {
@@ -51,7 +53,10 @@ class MainLayout extends PureComponent {
    }
 
    render() {
-	  const {token} = this.props;
+	  const {
+	     token,
+		 userType
+	  } = this.props;
 	  return (
 		 <FoldedContentProvider>
 			<FoldedContentConsumer>
@@ -76,10 +81,17 @@ class MainLayout extends PureComponent {
 					 />
 					 {
 					    token ? (
-						   <CandidateNavbar
-							  toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
-							  sidebarState={this.state.sidebarState}
-						   />
+					       userType === CANDIDATE ? (
+							  <CandidateNavbar
+								 toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
+								 sidebarState={this.state.sidebarState}
+							  />
+						   ) : (
+						      <EmployerNavbar
+								 toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
+								 sidebarState={this.state.sidebarState}
+							  />
+						   )
 						) : (
 						   <CandidateNavbar
 							  toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
@@ -99,7 +111,8 @@ class MainLayout extends PureComponent {
 
 
 const mapStateToProps = state => ({
-   token: getToken(state)
+   token: getToken(state),
+   userType: getUserType(state)
 });
 
 export default connect(mapStateToProps)(MainLayout);

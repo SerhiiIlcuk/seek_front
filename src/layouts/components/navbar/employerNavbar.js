@@ -25,7 +25,7 @@ import imgTeam from "../../../assets/img/svg/team.svg"
 import {logoutAction} from "../../../redux/actions/auth/logoutActions";
 import {getToken} from "../../../redux/selectors/auth";
 
-class ThemeCandidateNavbar extends Component {
+class ThemeEmployerNavbar extends Component {
    handleClick = e => {
 	  this.props.toggleSidebarMenu("open");
    };
@@ -50,8 +50,8 @@ class ThemeCandidateNavbar extends Component {
    }
 
    logout = () => {
-      localStorage.removeItem("token");
-      this.props.logout();
+	  localStorage.removeItem("token");
+	  this.props.logout();
    }
 
    render() {
@@ -95,13 +95,19 @@ class ThemeCandidateNavbar extends Component {
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1">
+						   <Link to="/employer/company-profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
+							  {/*<Settings size={40} />*/}
+							  <span className="text-white text-bold-400">Company Profile</span>
+						   </Link>
+						</NavItem>
+						<NavItem className="pr-1">
 						   <Link to="/user/profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
 							  <Settings size={40} />
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1 mr-1">
 						   {
-						      token ? (
+							  token ? (
 								 <Link to="" className="nav-link" onClick={() => this.logout()}>
 									<LogOut size={40} />
 								 </Link>
@@ -133,4 +139,4 @@ const mapDispatchToProps = (dispatch) =>
 	  dispatch,
    )
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThemeCandidateNavbar);
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeEmployerNavbar);
