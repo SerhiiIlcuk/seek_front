@@ -1,0 +1,3 @@
+export const FETCH_USER = "USER/FETCH_USER";
+export const USER_RESULT = "USER/USER_RESULT";
+export const UPDATE_USER = "USER/UPDATE_USER";

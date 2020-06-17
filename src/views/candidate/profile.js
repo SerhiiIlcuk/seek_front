@@ -1,8 +1,15 @@
 import React, {Component, Fragment} from "react";
+import {bindActionCreators} from "redux"
+import {connect} from "react-redux";
 import {Card, CardBody, CardTitle, Row, Col, Button, FormGroup, Label, Input, CustomInput} from "reactstrap";
 import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
 import "../../assets/scss/views/form/profile.scss"
+import {
+   fetchUserAction,
+   updateUserAction,
+} from "../../redux/actions/user";
+import {getUserData} from "../../redux/selectors/user";
 
 const formSchema = Yup.object().shape({
    firstName: Yup.string()
@@ -12,19 +19,19 @@ const formSchema = Yup.object().shape({
    email: Yup.string()
 	  .email("Invalid email")
 	  .required("Required"),
-   linkedIn: Yup.string()
+   linkedInUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   twitter: Yup.string()
+   twitterUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   dribble: Yup.string()
+   dribbleUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   github: Yup.string()
+   githubUrl: Yup.string()
 	  .url()
 	  .required("Required"),
-   kaggle: Yup.string()
+   kaggleUrl: Yup.string()
 	  .url()
 	  .required("Required")
 });
@@ -34,8 +41,22 @@ class ProfileEdit extends Component {
 	  logoImg: "",
 	  neighborhood: "",
 	  description: "",
-	  expectation: ""
+	  expectation: "",
+	  userData: this.props.userData,
    };
+
+   componentDidMount() {
+	  const {fetchUserAction} = this.props;
+
+	  fetchUserAction();
+   }
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+	  const {userData} = this.props;
+	  if (prevProps.userData !== userData) {
+		 this.setState({userData: userData});
+	  }
+   }
 
    cropImage = (url, size) => {
 	  return new Promise(resolve => {
@@ -95,20 +116,12 @@ class ProfileEdit extends Component {
    render() {
 	  const {
 		 logoImg,
-		 neighborhood,
+		 userData
 	  } = this.state;
 	  const logoImgUrl = logoImg ? logoImg : null;
 
 	  return (
 		 <Fragment>
-			{/*<ContentHeader>Form Validation</ContentHeader>
-			<ContentSubHeader>
-			   <p>Form Validation example.</p>
-			   <a href="https://github.com/jaredpalmer/formik" target="_blank" rel="noopener noreferrer">
-				  <img src="https://img.shields.io/github/stars/jaredpalmer/formik.svg?style=social" alt="Stars" />
-				  <img src="https://img.shields.io/npm/dm/formik.svg" alt="Downloads"/>
-			   </a>
-			</ContentSubHeader>*/}
 			<Row>
 			   <Col sm="2">
 
@@ -116,19 +129,21 @@ class ProfileEdit extends Component {
 			   <Col sm="8">
 				  <Formik
 					 initialValues={{
-						firstName: "",
-						lastName: "",
-						email: "",
-						linkedIn: "",
-						twitter: "",
-						dribble: "",
-						github: "",
-						kaggle: ""
+						firstName: (userData && userData.firstName) || "",
+						lastName: (userData && userData.lastName) || "",
+						email: (userData && userData.email) || "",
+						linkedInUrl: (userData && userData.linkedInUrl) || "",
+						twitterUrl: (userData && userData.twitterUrl) || "",
+						dribbleUrl: (userData && userData.dribbleUrl) || "",
+						githubUrl: (userData && userData.githubUrl) || "",
+						kaggleUrl: (userData && userData.kaggleUrl) || ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
 						console.log(values);
+						this.props.updateUserAction(values);
 					 }}
+					 enableReinitialize={true}
 				  >
 					 {({errors, touched}) => (
 						<Form>
@@ -224,47 +239,47 @@ class ProfileEdit extends Component {
 								 <Row>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="linkedIn">LinkedIn Url</Label>
-										  <Field name="linkedIn" id="linkedIn"
-												 className={`form-control ${errors.linkedIn && touched.linkedIn && 'is-invalid'}`}/>
-										  {errors.linkedIn && touched.linkedIn ?
-											 <div className="invalid-feedback">{errors.linkedIn}</div> : null}
+										  <Label for="linkedInUrl">LinkedIn Url</Label>
+										  <Field name="linkedInUrl" id="linkedInUrl"
+												 className={`form-control ${errors.linkedInUrl && touched.linkedInUrl && 'is-invalid'}`}/>
+										  {errors.linkedInUrl && touched.linkedInUrl ?
+											 <div className="invalid-feedback">{errors.linkedInUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="twitter">Twitter</Label>
-										  <Field name="twitter" id="twitter"
-												 className={`form-control ${errors.twitter && touched.twitter && 'is-invalid'}`}/>
-										  {errors.twitter && touched.twitter ?
-											 <div className="invalid-feedback">{errors.twitter}</div> : null}
+										  <Label for="twitterUrl">Twitter</Label>
+										  <Field name="twitterUrl" id="twitterUrl"
+												 className={`form-control ${errors.twitterUrl && touched.twitterUrl && 'is-invalid'}`}/>
+										  {errors.twitterUrl && touched.twitterUrl ?
+											 <div className="invalid-feedback">{errors.twitterUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="dribble">Dribble</Label>
-										  <Field name="dribble" id="dribble"
-												 className={`form-control ${errors.dribble && touched.dribble && 'is-invalid'}`}/>
-										  {errors.dribble && touched.dribble ?
-											 <div className="invalid-feedback">{errors.dribble}</div> : null}
+										  <Label for="dribbleUrl">Dribble</Label>
+										  <Field name="dribbleUrl" id="dribbleUrl"
+												 className={`form-control ${errors.dribbleUrl && touched.dribbleUrl && 'is-invalid'}`}/>
+										  {errors.dribbleUrl && touched.dribbleUrl ?
+											 <div className="invalid-feedback">{errors.dribbleUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="github">Github</Label>
-										  <Field name="github" id="github"
-												 className={`form-control ${errors.github && touched.github && 'is-invalid'}`}/>
-										  {errors.github && touched.github ?
-											 <div className="invalid-feedback">{errors.github}</div> : null}
+										  <Label for="githubUrl">Github</Label>
+										  <Field name="githubUrl" id="githubUrl"
+												 className={`form-control ${errors.githubUrl && touched.githubUrl && 'is-invalid'}`}/>
+										  {errors.githubUrl && touched.githubUrl ?
+											 <div className="invalid-feedback">{errors.githubUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="kaggle">Kaggle</Label>
-										  <Field name="kaggle" id="kaggle"
-												 className={`form-control ${errors.kaggle && touched.kaggle && 'is-invalid'}`}/>
-										  {errors.kaggle && touched.kaggle ?
-											 <div className="invalid-feedback">{errors.kaggle}</div> : null}
+										  <Label for="kaggleUrl">Kaggle</Label>
+										  <Field name="kaggleUrl" id="kaggleUrl"
+												 className={`form-control ${errors.kaggleUrl && touched.kaggleUrl && 'is-invalid'}`}/>
+										  {errors.kaggleUrl && touched.kaggleUrl ?
+											 <div className="invalid-feedback">{errors.kaggleUrl}</div> : null}
 									   </FormGroup>
 									</Col>
 								 </Row>
@@ -366,4 +381,20 @@ class ProfileEdit extends Component {
    }
 }
 
-export default ProfileEdit;
+const mapStateToProps = (state) => ({
+   userData: getUserData(state)
+});
+
+const mapDispatchToProps = (dispatch) =>
+   bindActionCreators(
+	  {
+		 fetchUserAction,
+		 updateUserAction,
+	  },
+	  dispatch,
+   );
+
+export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(ProfileEdit);

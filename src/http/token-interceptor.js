@@ -1,8 +1,8 @@
 export const getToken = () => {
   return new Promise((resolve, reject) => {
     let token = null;
-    if (localStorage.ma13AdminToken) {
-      token = localStorage.ma13AdminToken;
+    if (localStorage.token) {
+      token = localStorage.token;
     }
     resolve(token);
   });

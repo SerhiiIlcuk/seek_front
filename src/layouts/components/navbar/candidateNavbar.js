@@ -22,15 +22,8 @@ import imgJob from "../../../assets/img/svg/work-from-home.svg";
 import imgCompany from "../../../assets/img/svg/organization.svg";
 import imgNews from "../../../assets/img/svg/news.svg";
 import imgTeam from "../../../assets/img/svg/team.svg"
-import {logoutAction} from "../../../redux/actions/login/logoutActions";
-
-const mapDispatchToProps = (dispatch) =>
-   bindActionCreators(
-	  {
-		 logout: logoutAction
-	  },
-	  dispatch,
-   )
+import {logoutAction} from "../../../redux/actions/auth/logoutActions";
+import {getToken} from "../../../redux/selectors/auth";
 
 class ThemeCandidateNavbar extends Component {
    handleClick = e => {
@@ -63,7 +56,7 @@ class ThemeCandidateNavbar extends Component {
 
    render() {
 	  const {activePage} = this.state;
-	  const {loggedIn} = this.props;
+	  const {token} = this.props;
 
 	  return (
 		 <Navbar className="navbar navbar-expand-lg navbar-light bg-faded fixed-top">
@@ -106,9 +99,9 @@ class ThemeCandidateNavbar extends Component {
 							  <Settings size={40} />
 						   </Link>
 						</NavItem>
-						<NavItem className="pr-1">
+						<NavItem className="pr-1 mr-1">
 						   {
-						      loggedIn ? (
+						      token ? (
 								 <Link to="" className="nav-link" onClick={() => this.logout()}>
 									<LogOut size={40} />
 								 </Link>
@@ -129,7 +122,15 @@ class ThemeCandidateNavbar extends Component {
 }
 
 const mapStateToProps = state => ({
-   loggedIn: state.login
+   token: getToken(state)
 });
+
+const mapDispatchToProps = (dispatch) =>
+   bindActionCreators(
+	  {
+		 logout: logoutAction
+	  },
+	  dispatch,
+   )
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThemeCandidateNavbar);

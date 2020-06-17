@@ -1,12 +1,13 @@
 import {
    makeGetRequest,
-   makePostRequest
+   makePostRequest,
+   makePutRequest,
 } from "./http-service";
 import config from "../config/index";
 import {endPoints} from "../config/end-points";
 
 /**
- * login
+ * auth
  * @param {object} data email and password
  */
 export const login = (data) => {
@@ -75,12 +76,11 @@ export const getAllUsers = () => {
 };
 
 /**
- * getUserDetails - to get the details of the user by user ID
- * @param {string} id the id of the user
+ * @description getUserDetails - to get the details by token
  */
-export const getUserDetails = (data) => {
+export const getUserDetails = () => {
    return new Promise((resolve, reject) => {
-	  makeGetRequest(config.baseUrl + endPoints.userLoad, true, data)
+	  makeGetRequest(config.baseUrl + endPoints.userLoad, true)
 		 .then(res => {
 			resolve(res);
 		 })
@@ -92,6 +92,7 @@ export const getUserDetails = (data) => {
 };
 
 
+
 /**
  * updateUser - to update the user details
  * @param {string} id id of the user
@@ -99,7 +100,7 @@ export const getUserDetails = (data) => {
  */
 export const updateUser = (data) => {
    return new Promise((resolve, reject) => {
-	  makePostRequest(config.baseUrl + endPoints.userUpdate, true, data)
+	  makePutRequest(config.baseUrl + endPoints.userUpdate, true, data)
 		 .then(res => {
 			resolve(res);
 		 })

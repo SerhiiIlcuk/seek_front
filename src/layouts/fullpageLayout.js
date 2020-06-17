@@ -5,7 +5,7 @@ import classnames from "classnames";
 const FullPageLayout = ({ children, ...rest }) => {
    return (
       <div
-         className={classnames("login-layout wrapper ", {
+         className={classnames("auth-layout wrapper ", {
             "layout-dark": templateConfig.layoutDark
          })}
       >

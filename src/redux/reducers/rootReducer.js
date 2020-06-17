@@ -8,7 +8,8 @@ import chatReducer from "./chat/";
 import contactsReducer from "./contacts/";
 import todoReducer from "./todo/";
 import customizer from "./customizer/";
-import login from "./login/login";
+import auth from "./auth";
+import user from "./user";
 
 import { reducer as toastrReducer } from "react-redux-toastr";
 
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
    toastr: toastrReducer, // <- Mounted at toastr.
    chatApp: chatReducer,
    customizer: customizer,
-   login: login,
+   auth: auth,
+   user: user,
 });
 
 export default rootReducer;

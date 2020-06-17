@@ -10,6 +10,7 @@ import Navbar from "./components/navbar/navbar"
 import CandidateNavbar from "./components/navbar/candidateNavbar"
 import Footer from "./components/footer/footer";
 import templateConfig from "../templateConfig";
+import {getToken} from "../redux/selectors/auth";
 
 class MainLayout extends PureComponent {
    state = {
@@ -50,7 +51,7 @@ class MainLayout extends PureComponent {
    }
 
    render() {
-	  const {loggedIn} = this.props;
+	  const {token} = this.props;
 	  return (
 		 <FoldedContentProvider>
 			<FoldedContentConsumer>
@@ -74,7 +75,7 @@ class MainLayout extends PureComponent {
 						handleLayout={this.handleLayout.bind(this)}
 					 />
 					 {
-					    loggedIn ? (
+					    token ? (
 						   <CandidateNavbar
 							  toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
 							  sidebarState={this.state.sidebarState}
@@ -98,7 +99,7 @@ class MainLayout extends PureComponent {
 
 
 const mapStateToProps = state => ({
-   loggedIn: state.login
+   token: getToken(state)
 });
 
 export default connect(mapStateToProps)(MainLayout);

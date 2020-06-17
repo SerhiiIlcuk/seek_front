@@ -109,7 +109,7 @@ class Home extends Component {
                   businesses.map((business, key) => {
                      const activeSlideIndex = `activeIndex${key + 1}`;
                      return (
-                        <Col sm="12" md="4">
+                        <Col sm="12" md="4" key={key}>
                            <Card className="text-left">
                               <CardBody>
                                  <CardTitle>Business {key + 1}</CardTitle>

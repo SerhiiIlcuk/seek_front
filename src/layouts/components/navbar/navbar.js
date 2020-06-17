@@ -45,7 +45,7 @@ import userImage2 from "../../../assets/img/portrait/small/avatar-s-2.png";
 import userImage3 from "../../../assets/img/portrait/small/avatar-s-3.png";
 import userImage4 from "../../../assets/img/portrait/small/avatar-s-4.png";
 import "../../../assets/scss/components/navbar/topbar.scss";
-import {logoutAction} from "../../../redux/actions/login/logoutActions";
+import {logoutAction} from "../../../redux/actions/auth/logoutActions";
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(

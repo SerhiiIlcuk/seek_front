@@ -1,9 +1,9 @@
 // import external modules
 import React, {Component} from "react";
-import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
 import {NavLink, Redirect} from "react-router-dom";
-import {loginAction} from "../../redux/actions/login/loginActions";
+import {loginAction} from "../../redux/actions/auth/loginActions";
 import {
    Row,
    Col,
@@ -16,7 +16,6 @@ import {
    CardBody,
    CardFooter
 } from "reactstrap";
-import {login} from "../../http/http-calls";
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
@@ -40,14 +39,32 @@ class Login extends Component {
 	  }));
    };
 
+   onChangeInput = (value, key) => {
+	  this.setState({[key]: value});
+   }
+
    onLogin = async e => {
 	  e.preventDefault();
-	  localStorage.setItem("token", "true");
 
-	  this.props.loginAction();
+	  const {
+		 email,
+		 password
+	  } = this.state;
+
+	  const data = {
+		 email,
+		 password
+	  };
+
+	  this.props.loginAction(data);
    };
 
    render() {
+	  const {
+		 email,
+		 password
+	  } = this.state;
+
 	  return (
 		 <div className="container">
 			<Row className="full-height-vh">
@@ -63,6 +80,8 @@ class Login extends Component {
 									className="form-control"
 									name="inputEmail"
 									id="inputEmail"
+									value={email}
+									onChange={(e) => this.onChangeInput(e.target.value, 'email')}
 									placeholder="Email"
 									required
 								 />
@@ -76,6 +95,8 @@ class Login extends Component {
 									className="form-control"
 									name="inputPass"
 									id="inputPass"
+									value={password}
+									onChange={(e) => this.onChangeInput(e.target.value, 'password')}
 									placeholder="Password"
 									required
 								 />
@@ -109,14 +130,6 @@ class Login extends Component {
 								 >
 									Login
 								 </Button>
-								 {/*<Button*/}
-								 {/*   type="button"*/}
-								 {/*   color="secondary"*/}
-								 {/*   block className="btn-raised"*/}
-								 {/*   onClick={this.onReset}*/}
-								 {/*>*/}
-								 {/*   Reset*/}
-								 {/*</Button>*/}
 							  </Col>
 						   </FormGroup>
 						</Form>

@@ -40,8 +40,7 @@ export const makeGetRequest = async (
     try {
       const authToken = await getToken();
       if (authToken) {
-        console.log(authToken);
-        headers["x-access-token"] = authToken;
+        headers["x-token"] = authToken;
       }
     } catch (e) {
       console.log(e);
@@ -87,7 +86,7 @@ export const makePostRequest = async (
     try {
       const authToken = await getToken();
       if (authToken) {
-        headers["x-access-token"] = authToken;
+        headers["x-token"] = authToken;
       }
     } catch (e) {
       console.log("Error fetching auth token: ", e);
@@ -133,7 +132,7 @@ export const makePutRequest = async (
     try {
       const authToken = await getToken();
       if (authToken) {
-        headers["x-access-token"] = authToken;
+        headers["x-token"] = authToken;
       }
     } catch (e) {
       console.log("Error fetching auth token: ", e);
@@ -189,7 +188,7 @@ export const makeDeleteRequest = async (
     try {
       const authToken = await getToken();
       if (authToken) {
-        headers["x-access-token"] = authToken;
+        headers["x-token"] = authToken;
       }
     } catch (e) {
       console.log("Error fetching auth token: ", e);

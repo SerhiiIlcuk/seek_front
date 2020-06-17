@@ -9,6 +9,8 @@ import MainLayoutRoutes from "../layouts/routes/mainRoutes";
 import FullPageLayout from "../layouts/routes/fullpageRoutes";
 import ErrorLayoutRoute from "../layouts/routes/errorRoutes";
 
+import {getToken} from "../redux/selectors/auth";
+
 // Main Layout
 const LazyEcommerceDashboard = lazy(() => import("../views/dashboard/ecommerceDashboard"));
 const LazyAnalyticsDashboard = lazy(() => import("../views/dashboard/analyticsDashboard"));
@@ -103,7 +105,7 @@ const LazyErrorPage = lazy(() => import("../views/pages/error"));
 
 const mapStateToProps = (state) => {
    return {
-	  token: state.login,
+	  token: getToken(state),
    }
 };
 
