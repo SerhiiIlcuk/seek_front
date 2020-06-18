@@ -1,6 +1,6 @@
 import {
    CREATE_COMPANY,
-   FETCH_COMPANY, UPDATE_COMPANY,
+   FETCH_COMPANY, IMAGE_UPLOAD, UPDATE_COMPANY,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -20,4 +20,11 @@ export const updateCompanyAction = (company, companyId) => ({
 
 export const fetchCompanyAction = () => ({
    type: FETCH_COMPANY
+})
+
+export const uploadImageAction = (base64) => ({
+   type: IMAGE_UPLOAD,
+   payload: {
+      base64
+   }
 })

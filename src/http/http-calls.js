@@ -78,7 +78,6 @@ export const getUserDetails = () => {
 
 /**
  * updateUser - to update the user details
- * @param {string} id id of the user
  * @param {object} data information to be updated with
  */
 export const updateUser = (data) => {
@@ -100,6 +99,22 @@ export const updateUser = (data) => {
 export const createCompany = (data) => {
    return new Promise((resolve, reject) => {
 	  makePostRequest(config.baseUrl + endPoints.createCompany, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description upload image
+ */
+export const uploadImage = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.uploadImage, true, data)
 		 .then(res => {
 			resolve(res);
 		 })
@@ -141,4 +156,3 @@ export const getCompanyDetails = (companyId) => {
 		 });
    });
 };
-

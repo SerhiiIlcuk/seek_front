@@ -11,6 +11,9 @@ import {
    updateUserAction,
 } from "../../redux/actions/user";
 import {getSubmitting, getSuccess, getUserData} from "../../redux/selectors/user";
+import {cropImage} from "../employee/profile";
+import {uploadImage} from "../../http/http-calls";
+import config from "../../config";
 
 const formSchema = Yup.object().shape({
    firstName: Yup.string()
@@ -39,10 +42,7 @@ const formSchema = Yup.object().shape({
 
 class ProfileEdit extends Component {
    state = {
-	  logoImg: "",
-	  neighborhood: "",
-	  description: "",
-	  expectation: "",
+	  logoImg: this.props.userData && this.props.userData.logoImg,
 	  userData: this.props.userData,
    };
 
@@ -59,7 +59,10 @@ class ProfileEdit extends Component {
 		 success,
 	  } = this.props;
 	  if (prevProps.userData !== userData) {
-		 this.setState({userData: userData});
+		 this.setState({
+			logoImg: userData.logoImg,
+			userData: userData
+		 });
 	  }
 
 	  if (prevProps.submitting !== submitting) {
@@ -87,48 +90,29 @@ class ProfileEdit extends Component {
 	  }
    }
 
-   cropImage = (url, size) => {
-	  return new Promise(resolve => {
-		 // this image will hold our source image data
-		 const inputImage = new Image();
-
-		 // we want to wait for our image to load
-		 inputImage.onload = () => {
-			// let's store the width and height of our image
-			const minLength = Math.min(inputImage.naturalWidth, inputImage.naturalHeight);
-
-			// calculate the position to draw the image at
-			const offsetX = (inputImage.naturalWidth - minLength) / 2;
-			const offsetY = (inputImage.naturalHeight - minLength) / 2;
-
-			// create a canvas that will present the output image
-			const outputImage = document.createElement('canvas');
-
-			// set it to the same size as the image
-			outputImage.width = size;
-			outputImage.height = size;
-
-			// draw our image at position 0, 0 on the canvas
-			const ctx = outputImage.getContext('2d');
-			ctx.drawImage(inputImage, offsetX, offsetY, minLength, minLength, 0, 0, size, size);
-			resolve(outputImage.toDataURL('image/jpeg', 0.4));
-		 };
-		 // start cropping
-		 inputImage.src = url;
-	  })
-   };
-
-
    selectImage = (e, key) => {
 	  const url = e.target.files && e.target.files[0];
 	  if (url) {
 		 const reader = new FileReader();
 		 reader.onload = fileEvent => {
-			this.cropImage(fileEvent.target.result, 200)
+			cropImage(fileEvent.target.result, 200)
 			   .then(croppedImg => {
-				  this.setState({
-					 [key]: croppedImg
-				  });
+				  uploadImage({base64: croppedImg})
+					 .then(res => {
+						this.setState({
+						   [key]: res.path
+						});
+					 })
+					 .catch(err => {
+						toastr.error(
+						   "Error",
+						   "Image uploading error",
+						   {
+							  position: "top-right",
+							  timeOut: 1000
+						   }
+						);
+					 })
 			   })
 			   .catch(err => {
 				  console.log(err);
@@ -147,7 +131,7 @@ class ProfileEdit extends Component {
 		 logoImg,
 		 userData
 	  } = this.state;
-	  const logoImgUrl = logoImg ? logoImg : null;
+	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
 
 	  return (
 		 <Fragment>
@@ -169,8 +153,10 @@ class ProfileEdit extends Component {
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-						console.log('updateProfile', values);
-						this.props.updateUserAction(values);
+						this.props.updateUserAction({
+						   ...values,
+						   logoImg,
+						});
 					 }}
 					 enableReinitialize
 				  >
@@ -252,12 +238,10 @@ class ProfileEdit extends Component {
 
 								 <Row>
 									<Col md="12">
-									   <Label>Resume</Label>
-									</Col>
-									<Col md="12" className="text-center">
-									   <Button id="resume" name="resume" size="lg">
-										  Upload Resume
-									   </Button>
+									   <FormGroup>
+										  <Label for="resume">Upload Resume</Label>
+										  <Input type="file" name="resume" id="resume" accept="application/pdf"/>
+									   </FormGroup>
 									</Col>
 								 </Row>
 							  </CardBody>

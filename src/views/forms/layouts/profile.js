@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import "../../../assets/scss/views/form/profile.scss"
 import imgMan from "../../../assets/img/svg/fill-man.svg"
 import {XCircle} from "react-feather";
+import {cropImage} from "../../employee/profile";
 
 const formSchema = Yup.object().shape({
    industryName: Yup.string()
@@ -39,44 +40,12 @@ class ProfileEdit extends Component {
 	  expectation: ""
    };
 
-   cropImage = (url, size) => {
-	  return new Promise(resolve => {
-		 // this image will hold our source image data
-		 const inputImage = new Image();
-
-		 // we want to wait for our image to load
-		 inputImage.onload = () => {
-			// let's store the width and height of our image
-			const minLength = Math.min(inputImage.naturalWidth, inputImage.naturalHeight);
-
-			// calculate the position to draw the image at
-			const offsetX = (inputImage.naturalWidth - minLength) / 2;
-			const offsetY = (inputImage.naturalHeight - minLength) / 2;
-
-			// create a canvas that will present the output image
-			const outputImage = document.createElement('canvas');
-
-			// set it to the same size as the image
-			outputImage.width = size;
-			outputImage.height = size;
-
-			// draw our image at position 0, 0 on the canvas
-			const ctx = outputImage.getContext('2d');
-			ctx.drawImage(inputImage, offsetX, offsetY, minLength, minLength, 0, 0, size, size);
-			resolve(outputImage.toDataURL('image/jpeg', 0.4));
-		 };
-		 // start cropping
-		 inputImage.src = url;
-	  })
-   };
-
-
    selectImage = (e) => {
       const url = e.target.files && e.target.files[0];
       if (url) {
 		 const reader = new FileReader();
 		 reader.onload = fileEvent => {
-		 this.cropImage(fileEvent.target.result, 200)
+		 cropImage(fileEvent.target.result, 200)
 			.then(croppedImg => {
 			   this.setState({
 				  uploadImg: croppedImg

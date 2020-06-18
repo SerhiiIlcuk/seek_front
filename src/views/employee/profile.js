@@ -7,10 +7,14 @@ import "../../assets/scss/views/form/profile.scss"
 import {connect} from "react-redux";
 import {
    fetchCompanyAction,
-   createCompanyAction, updateCompanyAction,
+   createCompanyAction,
+   updateCompanyAction,
+	uploadImageAction,
 } from "../../redux/actions/company";
 import {getCompany, getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/company";
 import {toastr} from "react-redux-toastr";
+import {uploadImage} from "../../http/http-calls";
+import config from "../../config/index"
 
 const formSchema = Yup.object().shape({
    name: Yup.string()
@@ -44,10 +48,41 @@ const formSchema = Yup.object().shape({
 	  .required("Required"),
 });
 
+export const cropImage = (url, size) => {
+   return new Promise(resolve => {
+	  // this image will hold our source image data
+	  const inputImage = new Image();
+
+	  // we want to wait for our image to load
+	  inputImage.onload = () => {
+		 // let's store the width and height of our image
+		 const minLength = Math.min(inputImage.naturalWidth, inputImage.naturalHeight);
+
+		 // calculate the position to draw the image at
+		 const offsetX = (inputImage.naturalWidth - minLength) / 2;
+		 const offsetY = (inputImage.naturalHeight - minLength) / 2;
+
+		 // create a canvas that will present the output image
+		 const outputImage = document.createElement('canvas');
+
+		 // set it to the same size as the image
+		 outputImage.width = size;
+		 outputImage.height = size;
+
+		 // draw our image at position 0, 0 on the canvas
+		 const ctx = outputImage.getContext('2d');
+		 ctx.drawImage(inputImage, offsetX, offsetY, minLength, minLength, 0, 0, size, size);
+		 resolve(outputImage.toDataURL('image/jpeg', 0.4));
+	  };
+	  // start cropping
+	  inputImage.src = url;
+   })
+};
+
 class ProfileEdit extends Component {
    state = {
-	  logoImg: "",
-	  splashImg: "",
+	  logoImg: (this.props.company && this.props.company.logoImg),
+	  splashImg: (this.props.company && this.props.company.splashImg),
 	  birthYear: (this.props.company && this.props.company.birthYear) || "2020",
 	  neighborhood: (this.props.company && this.props.company.neighborhood) || "",
 	  company: this.props.company,
@@ -73,6 +108,8 @@ class ProfileEdit extends Component {
          this.setState({
 			birthYear: (company.birthYear) || "2020",
 			neighborhood: (company.neighborhood) || "",
+			logoImg: (company.logoImg),
+			splashImg: (company.splashImg),
 			company: company
          });
 	  }
@@ -82,7 +119,7 @@ class ProfileEdit extends Component {
 			if (success) {
 			   toastr.success(
 				  "Success",
-				  "Registered successfully",
+				  "Operation successfully done",
 				  {
 					 position: "top-right",
 					 timeOut: 1000
@@ -102,48 +139,33 @@ class ProfileEdit extends Component {
 	  }
    }
 
-   cropImage = (url, size) => {
-	  return new Promise(resolve => {
-		 // this image will hold our source image data
-		 const inputImage = new Image();
-
-		 // we want to wait for our image to load
-		 inputImage.onload = () => {
-			// let's store the width and height of our image
-			const minLength = Math.min(inputImage.naturalWidth, inputImage.naturalHeight);
-
-			// calculate the position to draw the image at
-			const offsetX = (inputImage.naturalWidth - minLength) / 2;
-			const offsetY = (inputImage.naturalHeight - minLength) / 2;
-
-			// create a canvas that will present the output image
-			const outputImage = document.createElement('canvas');
-
-			// set it to the same size as the image
-			outputImage.width = size;
-			outputImage.height = size;
-
-			// draw our image at position 0, 0 on the canvas
-			const ctx = outputImage.getContext('2d');
-			ctx.drawImage(inputImage, offsetX, offsetY, minLength, minLength, 0, 0, size, size);
-			resolve(outputImage.toDataURL('image/jpeg', 0.4));
-		 };
-		 // start cropping
-		 inputImage.src = url;
-	  })
-   };
-
-
    selectImage = (e, key) => {
+      let size = 200;
+      if (key !== "logo") {
+         size = 400
+	  }
 	  const url = e.target.files && e.target.files[0];
 	  if (url) {
 		 const reader = new FileReader();
 		 reader.onload = fileEvent => {
-			this.cropImage(fileEvent.target.result, 200)
+			cropImage(fileEvent.target.result, size)
 			   .then(croppedImg => {
-				  this.setState({
-					 [key]: croppedImg
-				  });
+			      uploadImage({base64: croppedImg})
+					 .then(res => {
+						this.setState({
+						   [key]: res.path
+						});
+					 })
+					 .catch(err => {
+						toastr.error(
+						   "Error",
+						   "Image uploading error",
+						   {
+							  position: "top-right",
+							  timeOut: 1000
+						   }
+						);
+					 })
 			   })
 			   .catch(err => {
 				  console.log(err);
@@ -166,8 +188,8 @@ class ProfileEdit extends Component {
 		 company,
 	  } = this.state;
 
-	  const logoImgUrl = logoImg ? logoImg : null;
-	  const splashImgUrl = splashImg ? splashImg : null;
+	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
+	  const splashImgUrl = splashImg ? config.baseUrl + splashImg : null;
 	  const {
 	     createCompany,
 		 updateCompany,
@@ -479,6 +501,7 @@ const mapDispatchToProps = dispatch =>
 		 fetchCompany: fetchCompanyAction,
 		 createCompany: createCompanyAction,
 		 updateCompany: updateCompanyAction,
+		 uploadImage: uploadImageAction
 	  },
 	  dispatch
    );

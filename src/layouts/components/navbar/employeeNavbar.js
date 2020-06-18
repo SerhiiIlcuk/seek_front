@@ -14,7 +14,8 @@ import {
    MoreVertical,
    LogIn,
    LogOut,
-   Settings
+   Settings,
+   Edit,
 } from "react-feather";
 import "../../../assets/scss/components/navbar/topbar.scss";
 import "../../../assets/scss/components/navbar/candidateNavbar.scss";
@@ -114,7 +115,8 @@ class ThemeEmployeeNavbar extends Component {
 						<NavItem className="pr-1">
 						   <Link to="/employee/company-profile/edit" className="nav-link"
 								 onClick={() => this.onClickNav('profile')}>
-							  <span className="text-white text-bold-400">Company Profile</span>
+							  <Edit size={40}/>
+							  {/*<span className="text-white text-bold-400">Company Profile</span>*/}
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1">

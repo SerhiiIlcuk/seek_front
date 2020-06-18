@@ -1,6 +1,6 @@
 import { produce } from "immer"
 import {
-   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END
+   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END, UPDATE_COMPANY
 } from "../../types/company";
 
 const initialState = {
@@ -13,6 +13,10 @@ const initialState = {
 export default (state = initialState, action) => {
    switch (action.type) {
 	  case CREATE_COMPANY:
+		 return produce(state, draft => {
+			draft.submitting = true;
+		 });
+	  case UPDATE_COMPANY:
 		 return produce(state, draft => {
 			draft.submitting = true;
 		 });
