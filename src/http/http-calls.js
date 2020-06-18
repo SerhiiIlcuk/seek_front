@@ -60,22 +60,6 @@ export const fotgotPassword = ({email}) => {
 };
 
 /**
- * getAllUsers - to get the list of all users
- */
-export const getAllUsers = () => {
-   return new Promise((resolve, reject) => {
-	  makeGetRequest(config.baseUrl + endPoints.usersLoad, true)
-		 .then(res => {
-			resolve(res);
-		 })
-		 .catch(e => {
-			console.log("API call error: ", e);
-			reject(e);
-		 });
-   });
-};
-
-/**
  * @description getUserDetails - to get the details by token
  */
 export const getUserDetails = () => {
@@ -111,30 +95,12 @@ export const updateUser = (data) => {
    });
 };
 
-
 /**
- * getBanner - to get the Banner
+ * @description getCompanyDetails - to get the details of company by user token
  */
-export const getBanner = () => {
+export const getCompanyDetails = () => {
    return new Promise((resolve, reject) => {
-	  makeGetRequest(config.baseUrl + endPoints.bannerLoad, true)
-		 .then(res => {
-			resolve(res);
-		 })
-		 .catch(e => {
-			console.log("API call error: ", e);
-			reject(e);
-		 });
-   });
-};
-
-/**
- * updateBanner - to update the Banner
- * @param object that has banner_url
- */
-export const uploadBanner = (data) => {
-   return new Promise((resolve, reject) => {
-	  makePostRequest(config.baseUrl + endPoints.bannerUpload, true, data)
+	  makeGetRequest(config.baseUrl + endPoints.userLoad, true)
 		 .then(res => {
 			resolve(res);
 		 })

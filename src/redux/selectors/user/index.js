@@ -4,6 +4,10 @@ export const getUserData = (state) => {
    return get(state, "user.userData");
 };
 
+export const getUserCompany = (state) => {
+   return get(state, "user.userCompany");
+};
+
 export const getSubmitting = (state) => {
    return get(state, "user.submitting");
 };

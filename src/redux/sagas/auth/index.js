@@ -15,6 +15,7 @@ import {
    REGISTER,
    SUBMIT_END
 } from "../../types/auth";
+import {USER_COMPANY} from "../../types/user";
 
 function* actionWatcher() {
    yield takeLatest('LOGIN', loginSaga);
@@ -63,6 +64,13 @@ function* loginSaga({payload: {email, password}}) {
 		 payload: {
 		    token: res.accessToken,
 			userType: res.userType
+		 }
+	  });
+	  yield put({
+		 type: USER_COMPANY,
+		 payload: {
+		    id: res.id,
+		    company: res.company
 		 }
 	  });
 	  yield put({

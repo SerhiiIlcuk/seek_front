@@ -149,8 +149,10 @@ class ProfileEdit extends Component {
 										  <Col md="12">
 											 <FormGroup>
 												<Label for="companyName">Company Name</Label>
-												<Field name="companyName" id="companyName"
-													   className={`form-control ${errors.companyName && touched.companyName && 'is-invalid'}`}/>
+												<Field
+												   name="companyName"
+												   id="companyName"
+												   className={`form-control ${errors.companyName && touched.companyName && 'is-invalid'}`}/>
 												{errors.companyName && touched.companyName ?
 												   <div className="invalid-feedback">{errors.companyName}</div> : null}
 											 </FormGroup>
@@ -393,7 +395,9 @@ const mapStateToProps = state => ({})
 
 const mapDispatchToProps = dispatch =>
    bindActionCreators(
-	  {},
+	  {
+
+	  },
 	  dispatch
    );
 

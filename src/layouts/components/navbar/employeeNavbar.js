@@ -24,8 +24,10 @@ import imgNews from "../../../assets/img/svg/news.svg";
 import imgTeam from "../../../assets/img/svg/team.svg"
 import {logoutAction} from "../../../redux/actions/auth/logoutActions";
 import {getToken} from "../../../redux/selectors/auth";
+import {getUserCompany} from "../../../redux/selectors/user";
+import {EMPLOYEE_ROLES} from "../../../config/constants";
 
-class ThemeEmployerNavbar extends Component {
+class ThemeEmployeeNavbar extends Component {
    handleClick = e => {
 	  this.props.toggleSidebarMenu("open");
    };
@@ -56,7 +58,12 @@ class ThemeEmployerNavbar extends Component {
 
    render() {
 	  const {activePage} = this.state;
-	  const {token} = this.props;
+	  const {token, company} = this.props;
+	  const roles = company && company.roles;
+	  const hasJobRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.JOB) === -1);
+	  const hasUserRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.USER) === -1);
+	  const hasNewsRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.NEWS) === -1);
+	  const hasProfileRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.PROFILE) === -1);
 
 	  return (
 		 <Navbar className="navbar navbar-expand-lg navbar-light bg-faded fixed-top">
@@ -79,27 +86,38 @@ class ThemeEmployerNavbar extends Component {
 			   <div className="navbar-container">
 				  <Collapse isOpen={this.state.isOpen} navbar>
 					 <Nav className="ml-auto float-right" navbar>
-						<NavItem className="pr-1">
-						   <Link to="/job" className="nav-link" onClick={() => this.onClickNav('job')}>
-							  <img src={imgJob} className="job-icon" alt="job icon" />
-						   </Link>
-						</NavItem>
-						<NavItem className="pr-1">
-						   <Link to="/company" className="nav-link" onClick={() => this.onClickNav('company')}>
-							  <img src={imgCompany} className="company-icon" alt="company icon" />
-						   </Link>
-						</NavItem>
-						<NavItem className="pr-1">
-						   <Link to="/news" className="nav-link" onClick={() => this.onClickNav('news')}>
-							  <img src={imgNews} className="news-icon" alt="news icon" />
-						   </Link>
-						</NavItem>
-						<NavItem className="pr-1">
-						   <Link to="/employer/company-profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
-							  {/*<Settings size={40} />*/}
-							  <span className="text-white text-bold-400">Company Profile</span>
-						   </Link>
-						</NavItem>
+						{
+						   hasJobRole &&
+						   <NavItem className="pr-1">
+							  <Link to="/job" className="nav-link" onClick={() => this.onClickNav('job')}>
+								 <img src={imgJob} className="job-icon" alt="job icon" />
+							  </Link>
+						   </NavItem>
+						}
+						{
+						   hasUserRole &&
+						   <NavItem className="pr-1">
+							  <Link to="/company" className="nav-link" onClick={() => this.onClickNav('company')}>
+								 <img src={imgCompany} className="company-icon" alt="company icon" />
+							  </Link>
+						   </NavItem>
+						}
+						{
+						   hasNewsRole &&
+						   <NavItem className="pr-1">
+							  <Link to="/news" className="nav-link" onClick={() => this.onClickNav('news')}>
+								 <img src={imgNews} className="news-icon" alt="news icon" />
+							  </Link>
+						   </NavItem>
+						}
+						{
+						   hasProfileRole &&
+						   <NavItem className="pr-1">
+							  <Link to="/employee/company-profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
+								 <span className="text-white text-bold-400">Company Profile</span>
+							  </Link>
+						   </NavItem>
+						}
 						<NavItem className="pr-1">
 						   <Link to="/user/profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
 							  <Settings size={40} />
@@ -128,7 +146,8 @@ class ThemeEmployerNavbar extends Component {
 }
 
 const mapStateToProps = state => ({
-   token: getToken(state)
+   token: getToken(state),
+   company: getUserCompany(state)
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -139,4 +158,4 @@ const mapDispatchToProps = (dispatch) =>
 	  dispatch,
    )
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThemeEmployerNavbar);
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeEmployeeNavbar);

@@ -5,6 +5,5 @@ export const endPoints = {
     forgotPassword: "user_forgot_password",
     userLoad: "user",
     userUpdate: "user",
-    bannerLoad: "banner_load",
-    bannerUpload: "banner_upload"
+    companyLoad: "company"
 };

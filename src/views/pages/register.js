@@ -76,7 +76,7 @@ class Register extends Component {
          password,
          company
       } = this.state;
-      const userType = company ? "employer" : "candidate";
+      const userType = company ? "employee" : "candidate";
       const data = {
          email,
          password,

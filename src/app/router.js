@@ -83,9 +83,9 @@ const LazySearch = lazy(() => import("../views/pages/search"));
 const LazyBlankPage = lazy(() => import("../views/pages/blankPage"));
 const LazyChangeLogPage = lazy(() => import("../views/pages/changeLogPage"));
 // By Serhii
-const LazyCompanyProfile = lazy(() => import("../views/employer/profile"));
+const LazyCompanyProfile = lazy(() => import("../views/employee/profile"));
 const LazyCandidateProfile = lazy(() => import("../views/candidate/profile"));
-const LazyJobPost = lazy(() => import("../views/employer/jobPost"));
+const LazyJobPost = lazy(() => import("../views/employee/jobPost"));
 
 // unSigned
 const LazyLanding = lazy(() => import("../views/candidate/landing"));
@@ -166,7 +166,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/employer/company-profile/edit"
+						path="/employee/company-profile/edit"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyCompanyProfile {...matchprops} />
@@ -175,7 +175,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/employer/job-post"
+						path="/employee/job-post"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyJobPost {...matchprops} />

@@ -12,7 +12,7 @@ import Footer from "./components/footer/footer";
 import templateConfig from "../templateConfig";
 import {getToken, getUserType} from "../redux/selectors/auth";
 import {CANDIDATE} from "../config/constants";
-import EmployerNavbar from "./components/navbar/employerNavbar";
+import EmployeeNavbar from "./components/navbar/employeeNavbar";
 
 class MainLayout extends PureComponent {
    state = {
@@ -87,7 +87,7 @@ class MainLayout extends PureComponent {
 								 sidebarState={this.state.sidebarState}
 							  />
 						   ) : (
-						      <EmployerNavbar
+						      <EmployeeNavbar
 								 toggleSidebarMenu={this.toggleSidebarMenu.bind(this)}
 								 sidebarState={this.state.sidebarState}
 							  />
