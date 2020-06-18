@@ -172,7 +172,7 @@ class ProfileEdit extends Component {
 						console.log('updateProfile', values);
 						this.props.updateUserAction(values);
 					 }}
-					 enableReinitialize={true}
+					 enableReinitialize
 				  >
 					 {({errors, touched}) => (
 						<Form>

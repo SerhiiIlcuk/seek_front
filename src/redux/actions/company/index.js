@@ -1,6 +1,22 @@
 import {
-   FETCH_COMPANY,
+   CREATE_COMPANY,
+   FETCH_COMPANY, UPDATE_COMPANY,
 } from "../../types/company";
+
+export const createCompanyAction = (company) => ({
+   type: CREATE_COMPANY,
+   payload: {
+      company
+   }
+})
+
+export const updateCompanyAction = (company, companyId) => ({
+   type: UPDATE_COMPANY,
+   payload: {
+      company,
+      companyId
+   }
+})
 
 export const fetchCompanyAction = () => ({
    type: FETCH_COMPANY

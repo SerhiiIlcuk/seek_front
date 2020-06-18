@@ -5,5 +5,7 @@ export const endPoints = {
     forgotPassword: "user_forgot_password",
     userLoad: "user",
     userUpdate: "user",
-    companyLoad: "company"
+    createCompany: "company",
+    updateCompany: "company/",
+    companyLoad: "company/"
 };

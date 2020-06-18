@@ -1,8 +1,8 @@
 // import external modules
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import {
    Collapse,
    Navbar,
@@ -31,6 +31,7 @@ class ThemeEmployeeNavbar extends Component {
    handleClick = e => {
 	  this.props.toggleSidebarMenu("open");
    };
+
    constructor(props) {
 	  super(props);
 
@@ -60,10 +61,10 @@ class ThemeEmployeeNavbar extends Component {
 	  const {activePage} = this.state;
 	  const {token, company} = this.props;
 	  const roles = company && company.roles;
-	  const hasJobRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.JOB) === -1);
-	  const hasUserRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.USER) === -1);
-	  const hasNewsRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.NEWS) === -1);
-	  const hasProfileRole = !(roles && roles.findIndex(role => role === EMPLOYEE_ROLES.PROFILE) === -1);
+	  const hasJobRole = (roles && roles.findIndex(role => role === EMPLOYEE_ROLES.JOB) !== -1);
+	  const hasUserRole = (roles && roles.findIndex(role => role === EMPLOYEE_ROLES.USER) !== -1);
+	  const hasNewsRole = (roles && roles.findIndex(role => role === EMPLOYEE_ROLES.NEWS) !== -1);
+	  const hasProfileRole = (roles && roles.findIndex(role => role === EMPLOYEE_ROLES.PROFILE) !== -1);
 
 	  return (
 		 <Navbar className="navbar navbar-expand-lg navbar-light bg-faded fixed-top">
@@ -75,7 +76,7 @@ class ThemeEmployeeNavbar extends Component {
 					 onClick={this.handleClick.bind(this)}
 					 data-toggle="collapse"
 				  />
-				  <img src={imgTeam} className="logo" alt="logo" />
+				  <img src={imgTeam} className="logo" alt="logo"/>
 				  <MoreVertical
 					 className="mt-1 navbar-toggler black no-border float-right"
 					 size={50}
@@ -90,7 +91,7 @@ class ThemeEmployeeNavbar extends Component {
 						   hasJobRole &&
 						   <NavItem className="pr-1">
 							  <Link to="/job" className="nav-link" onClick={() => this.onClickNav('job')}>
-								 <img src={imgJob} className="job-icon" alt="job icon" />
+								 <img src={imgJob} className="job-icon" alt="job icon"/>
 							  </Link>
 						   </NavItem>
 						}
@@ -98,7 +99,7 @@ class ThemeEmployeeNavbar extends Component {
 						   hasUserRole &&
 						   <NavItem className="pr-1">
 							  <Link to="/company" className="nav-link" onClick={() => this.onClickNav('company')}>
-								 <img src={imgCompany} className="company-icon" alt="company icon" />
+								 <img src={imgCompany} className="company-icon" alt="company icon"/>
 							  </Link>
 						   </NavItem>
 						}
@@ -106,32 +107,31 @@ class ThemeEmployeeNavbar extends Component {
 						   hasNewsRole &&
 						   <NavItem className="pr-1">
 							  <Link to="/news" className="nav-link" onClick={() => this.onClickNav('news')}>
-								 <img src={imgNews} className="news-icon" alt="news icon" />
-							  </Link>
-						   </NavItem>
-						}
-						{
-						   hasProfileRole &&
-						   <NavItem className="pr-1">
-							  <Link to="/employee/company-profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
-								 <span className="text-white text-bold-400">Company Profile</span>
+								 <img src={imgNews} className="news-icon" alt="news icon"/>
 							  </Link>
 						   </NavItem>
 						}
 						<NavItem className="pr-1">
-						   <Link to="/user/profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
-							  <Settings size={40} />
+						   <Link to="/employee/company-profile/edit" className="nav-link"
+								 onClick={() => this.onClickNav('profile')}>
+							  <span className="text-white text-bold-400">Company Profile</span>
+						   </Link>
+						</NavItem>
+						<NavItem className="pr-1">
+						   <Link to="/user/profile/edit" className="nav-link"
+								 onClick={() => this.onClickNav('profile')}>
+							  <Settings size={40}/>
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1 mr-1">
 						   {
 							  token ? (
 								 <Link to="" className="nav-link" onClick={() => this.logout()}>
-									<LogOut size={40} />
+									<LogOut size={40}/>
 								 </Link>
 							  ) : (
 								 <Link to="/login" className="nav-link" onClick={() => this.onClickNav('login')}>
-									<LogIn size={40} />
+									<LogIn size={40}/>
 								 </Link>
 							  )
 						   }

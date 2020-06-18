@@ -10,6 +10,7 @@ import todoReducer from "./todo/";
 import customizer from "./customizer/";
 import auth from "./auth";
 import user from "./user";
+import company from "./company";
 
 import { reducer as toastrReducer } from "react-redux-toastr";
 
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
    customizer: customizer,
    auth: auth,
    user: user,
+   company: company,
 });
 
 export default rootReducer;

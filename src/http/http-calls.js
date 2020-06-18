@@ -76,7 +76,6 @@ export const getUserDetails = () => {
 };
 
 
-
 /**
  * updateUser - to update the user details
  * @param {string} id id of the user
@@ -96,11 +95,43 @@ export const updateUser = (data) => {
 };
 
 /**
+ * @description create company
+ */
+export const createCompany = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.createCompany, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description update company
+ */
+export const updateCompany = (data, companyId) => {
+   return new Promise((resolve, reject) => {
+	  makePutRequest(config.baseUrl + endPoints.updateCompany + companyId, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
  * @description getCompanyDetails - to get the details of company by user token
  */
-export const getCompanyDetails = () => {
+export const getCompanyDetails = (companyId) => {
    return new Promise((resolve, reject) => {
-	  makeGetRequest(config.baseUrl + endPoints.userLoad, true)
+	  makeGetRequest(config.baseUrl + endPoints.companyLoad + companyId, true)
 		 .then(res => {
 			resolve(res);
 		 })

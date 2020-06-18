@@ -5,15 +5,23 @@ import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
 import "../../assets/scss/views/form/profile.scss"
 import {connect} from "react-redux";
+import {
+   fetchCompanyAction,
+   createCompanyAction, updateCompanyAction,
+} from "../../redux/actions/company";
+import {getCompany, getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/company";
+import {toastr} from "react-redux-toastr";
 
 const formSchema = Yup.object().shape({
    name: Yup.string()
 	  .required("Required"),
    localEmployees: Yup.number()
 	  .required("Required")
+	  .min(1)
 	  .typeError("Please input number"),
    totalEmployees: Yup.number()
 	  .required("Required")
+	  .min(1)
 	  .typeError("Please input number"),
    website: Yup.string()
 	  .url()
@@ -40,9 +48,59 @@ class ProfileEdit extends Component {
    state = {
 	  logoImg: "",
 	  splashImg: "",
-	  birthYear: "2020",
-	  neighborhood: "",
+	  birthYear: (this.props.company && this.props.company.birthYear) || "2020",
+	  neighborhood: (this.props.company && this.props.company.neighborhood) || "",
+	  company: this.props.company,
    };
+
+   componentDidMount() {
+      const {fetchCompany} = this.props;
+
+      if (fetchCompany) {
+         fetchCompany();
+	  }
+   };
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+      const {
+         submitting,
+		 success,
+		 errMessage,
+         company,
+      } = this.props;
+
+      if (prevProps.company !== company) {
+         this.setState({
+			birthYear: (company.birthYear) || "2020",
+			neighborhood: (company.neighborhood) || "",
+			company: company
+         });
+	  }
+
+      if (prevProps.submitting !== submitting) {
+         if (!submitting) {
+			if (success) {
+			   toastr.success(
+				  "Success",
+				  "Registered successfully",
+				  {
+					 position: "top-right",
+					 timeOut: 1000
+				  }
+			   );
+			} else {
+			   toastr.error(
+				  "Error",
+				  errMessage,
+				  {
+					 position: "top-right",
+					 timeOut: 1000
+				  }
+			   );
+			}
+		 }
+	  }
+   }
 
    cropImage = (url, size) => {
 	  return new Promise(resolve => {
@@ -105,9 +163,15 @@ class ProfileEdit extends Component {
 		 splashImg,
 		 neighborhood,
 		 birthYear,
+		 company,
 	  } = this.state;
+
 	  const logoImgUrl = logoImg ? logoImg : null;
 	  const splashImgUrl = splashImg ? splashImg : null;
+	  const {
+	     createCompany,
+		 updateCompany,
+	  } = this.props;
 
 	  return (
 		 <Fragment>
@@ -118,26 +182,36 @@ class ProfileEdit extends Component {
 			   <Col sm="8">
 				  <Formik
 					 initialValues={{
-						companyName: "",
-						localEmployees: 0,
-						totalEmployees: 0,
-						website: "",
-						streetAddressOne: "",
-						streetAddressTwo: "",
-						city: "",
-						zipCode: "",
-						twitterUrl: "",
-						facebookUrl: "",
-						instagramUrl: ""
+						name: (company && company.name) || "",
+						localEmployees: (company && company.localEmployees) || 1,
+						totalEmployees: (company && company.totalEmployees) || 1,
+						website: (company && company.website) || "",
+						streetAddressOne: (company && company.streetAddressOne) || "",
+						streetAddressTwo: (company && company.streetAddressTwo) || "",
+						city: (company && company.city) || "",
+						zipCode: (company && company.zipCode) || "",
+						twitterUrl: (company && company.twitterUrl) || "",
+						facebookUrl: (company && company.facebookUrl) || "",
+						instagramUrl: (company && company.instagramUrl) || ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
 					    const data = {
 					       ...values,
+						   localEmployees: parseInt(values.localEmployees),
+						   totalEmployees: parseInt(values.totalEmployees),
 						   ...this.state
 						};
-						console.log(data);
+
+					    delete data['company'];
+
+					    if (company._id) { // update company
+						   updateCompany(data, company._id)
+						} else { // create company
+						   createCompany(data);
+						}
 					 }}
+					 enableReinitialize
 				  >
 					 {({errors, touched}) => (
 						<Form>
@@ -148,13 +222,13 @@ class ProfileEdit extends Component {
 									   <Row>
 										  <Col md="12">
 											 <FormGroup>
-												<Label for="companyName">Company Name</Label>
+												<Label for="name">Company Name</Label>
 												<Field
-												   name="companyName"
-												   id="companyName"
-												   className={`form-control ${errors.companyName && touched.companyName && 'is-invalid'}`}/>
-												{errors.companyName && touched.companyName ?
-												   <div className="invalid-feedback">{errors.companyName}</div> : null}
+												   name="name"
+												   id="name"
+												   className={`form-control ${errors.name && touched.name && 'is-invalid'}`}/>
+												{errors.name && touched.name ?
+												   <div className="invalid-feedback">{errors.name}</div> : null}
 											 </FormGroup>
 										  </Col>
 									   </Row>
@@ -165,7 +239,8 @@ class ProfileEdit extends Component {
 												<Input
 												   type="select"
 												   value={birthYear}
-												   id="year" name="year"
+												   id="year"
+												   name="year"
 												   onChange={(e) => this.onChange("birthYear", e.target.value)}
 												>
 												   <option value="2015">2015</option>
@@ -350,7 +425,7 @@ class ProfileEdit extends Component {
 								 <Row>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="facebookUrl">facebookUrl</Label>
+										  <Label for="facebookUrl">Facebook</Label>
 										  <Field name="facebookUrl" id="facebookUrl"
 												 className={`form-control ${errors.facebookUrl && touched.facebookUrl && 'is-invalid'}`}/>
 										  {errors.facebookUrl && touched.facebookUrl ?
@@ -359,7 +434,7 @@ class ProfileEdit extends Component {
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="instagramUrl">instagramUrl</Label>
+										  <Label for="instagramUrl">Instagram</Label>
 										  <Field name="instagramUrl" id="instagramUrl"
 												 className={`form-control ${errors.instagramUrl && touched.instagramUrl && 'is-invalid'}`}/>
 										  {errors.instagramUrl && touched.instagramUrl ?
@@ -368,7 +443,7 @@ class ProfileEdit extends Component {
 									</Col>
 									<Col md="12">
 									   <FormGroup>
-										  <Label for="twitterUrl">twitterUrl</Label>
+										  <Label for="twitterUrl">Twitter</Label>
 										  <Field name="twitterUrl" id="twitterUrl"
 												 className={`form-control ${errors.twitterUrl && touched.twitterUrl && 'is-invalid'}`}/>
 										  {errors.twitterUrl && touched.twitterUrl ?
@@ -376,7 +451,7 @@ class ProfileEdit extends Component {
 									   </FormGroup>
 									</Col>
 									<Col md="12" className="text-center">
-									   <Button type="submit" color="success" size="lg">success</Button>
+									   <Button type="submit" color="success" size="lg">Submit</Button>
 									</Col>
 								 </Row>
 							  </CardBody>
@@ -391,12 +466,19 @@ class ProfileEdit extends Component {
    }
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+   company: getCompany(state),
+   success: getSuccess(state),
+   errMessage: getErrMessage(state),
+   submitting: getSubmitting(state),
+})
 
 const mapDispatchToProps = dispatch =>
    bindActionCreators(
 	  {
-
+		 fetchCompany: fetchCompanyAction,
+		 createCompany: createCompanyAction,
+		 updateCompany: updateCompanyAction,
 	  },
 	  dispatch
    );
