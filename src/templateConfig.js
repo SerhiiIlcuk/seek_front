@@ -11,7 +11,7 @@ const templateConfig = {
    layoutColor: 'layout-light', // Options: layout-dark, layout-light - Set layout-dark for dark mode and layout-light for light.
    // fixedNavbar: true, // Options: true, false - Set true for fixed navbar.
    sidebar: {
-      visible: false,
+      visible: true,
       collapsed: true, // Options: true, false | Set false to keep the sidebar open / set it to true for collapsed sidebar by default
       size: 'sidebar-md', // Options: 'sidebar-lg', 'sidebar-md', 'sidebar-sm'
       backgroundColor: "man-of-steel",

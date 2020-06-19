@@ -12,8 +12,13 @@ import {
 } from "../../redux/actions/user";
 import {getSubmitting, getSuccess, getUserData} from "../../redux/selectors/user";
 import {cropImage} from "../employee/profile";
-import {uploadImage} from "../../http/http-calls";
+import {
+   uploadFile,
+   uploadImage,
+} from "../../http/http-calls";
 import config from "../../config";
+import * as Icon from "react-feather";
+import {endPoints} from "../../config/end-points";
 
 const formSchema = Yup.object().shape({
    firstName: Yup.string()
@@ -44,6 +49,7 @@ class ProfileEdit extends Component {
    state = {
 	  logoImg: this.props.userData && this.props.userData.logoImg,
 	  userData: this.props.userData,
+	  resumeLink: this.props.userData && this.props.userData.resumeLink,
    };
 
    componentDidMount() {
@@ -54,25 +60,26 @@ class ProfileEdit extends Component {
 
    componentDidUpdate(prevProps, prevState, snapshot) {
 	  const {
-	     userData,
+		 userData,
 		 submitting,
 		 success,
 	  } = this.props;
 	  if (prevProps.userData !== userData) {
 		 this.setState({
 			logoImg: userData.logoImg,
-			userData: userData
+			userData: userData,
+			resumeLink: userData.resumeLink
 		 });
 	  }
 
 	  if (prevProps.submitting !== submitting) {
-	     if (!submitting) {
-	        if (success) {
+		 if (!submitting) {
+			if (success) {
 			   toastr.success(
-			      "Success",
+				  "Success",
 				  "Profile updated successfully",
 				  {
-				     position: "top-right",
+					 position: "top-right",
 					 timeOut: 1000
 				  }
 			   );
@@ -126,10 +133,24 @@ class ProfileEdit extends Component {
 	  this.setState({[key]: value});
    }
 
+   onChangeFile = async (e) => {
+	  const file = e.target.files[0];
+	  let formData = new FormData();
+	  formData.append('file', file, file.name);
+
+	  try {
+		 const ret = await uploadFile(formData);
+		 this.setState({resumeLink: ret.path});
+	  } catch (e) {
+		 console.log(e);
+	  }
+   }
+
    render() {
 	  const {
 		 logoImg,
-		 userData
+		 userData,
+		 resumeLink
 	  } = this.state;
 	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
 
@@ -156,6 +177,7 @@ class ProfileEdit extends Component {
 						this.props.updateUserAction({
 						   ...values,
 						   logoImg,
+						   resumeLink,
 						});
 					 }}
 					 enableReinitialize
@@ -237,11 +259,30 @@ class ProfileEdit extends Component {
 								 </Row>
 
 								 <Row>
-									<Col md="12">
-									   <FormGroup>
-										  <Label for="resume">Upload Resume</Label>
-										  <Input type="file" name="resume" id="resume" accept="application/pdf"/>
-									   </FormGroup>
+									<Col md="3"/>
+									<Col md="9">
+									   {
+									      !resumeLink ? (
+											 <FormGroup>
+												<Label for="resume">Upload Resume</Label>
+												<Input
+												   type="file"
+												   name="resume"
+												   id="resume"
+												   onChange={e => this.onChangeFile(e)}
+												/>
+											 </FormGroup>
+										  ) : (
+										     <>
+												<Icon.FileText size={50}/>
+												<Icon.XCircle
+												   style={{cursor: 'pointer'}}
+												   size={15}
+												   onClick={() => this.setState({resumeLink: ""})}
+												/>
+											 </>
+										  )
+									   }
 									</Col>
 								 </Row>
 							  </CardBody>

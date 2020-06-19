@@ -8,5 +8,6 @@ export const endPoints = {
     createCompany: "company",
     updateCompany: "company/",
     companyLoad: "company/",
-    uploadImage: "file-upload/image"
+    uploadImage: "file-upload/image",
+    uploadFile: "file-upload/etc",
 };

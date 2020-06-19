@@ -110,22 +110,6 @@ export const createCompany = (data) => {
 };
 
 /**
- * @description upload image
- */
-export const uploadImage = (data) => {
-   return new Promise((resolve, reject) => {
-	  makePostRequest(config.baseUrl + endPoints.uploadImage, true, data)
-		 .then(res => {
-			resolve(res);
-		 })
-		 .catch(e => {
-			console.log("API call error: ", e);
-			reject(e);
-		 });
-   });
-};
-
-/**
  * @description update company
  */
 export const updateCompany = (data, companyId) => {
@@ -156,3 +140,39 @@ export const getCompanyDetails = (companyId) => {
 		 });
    });
 };
+
+/**
+ * @description upload image
+ */
+export const uploadImage = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.uploadImage, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description upload resume file
+ * @param formData
+ */
+export const uploadFile = async (formData) => {
+   const res = await fetch(config.baseUrl + endPoints.uploadFile, {
+	  method: 'POST',
+	  headers: {
+		 'x-token': localStorage.getItem('token'),
+	  },
+	  body: formData
+   }).then(res => {
+	  return res.json();
+   }).catch(err => {
+	  console.log(err);
+   });
+
+   return res;
+}
