@@ -1,0 +1,1 @@
+export const SUBMIT_END = "COMMON/SUBMIT_END";

@@ -16,12 +16,12 @@ import {
    LogOut,
    Settings,
    Edit,
+   PlusSquare,
+   List,
+   Users,
 } from "react-feather";
 import "../../../assets/scss/components/navbar/topbar.scss";
 import "../../../assets/scss/components/navbar/candidateNavbar.scss";
-import imgJob from "../../../assets/img/svg/work-from-home.svg";
-import imgCompany from "../../../assets/img/svg/organization.svg";
-import imgNews from "../../../assets/img/svg/news.svg";
 import imgTeam from "../../../assets/img/svg/team.svg"
 import {logoutAction} from "../../../redux/actions/auth/logoutActions";
 import {getToken} from "../../../redux/selectors/auth";
@@ -91,24 +91,24 @@ class ThemeEmployeeNavbar extends Component {
 						{
 						   hasJobRole &&
 						   <NavItem className="pr-1">
-							  <Link to="/job" className="nav-link" onClick={() => this.onClickNav('job')}>
-								 <img src={imgJob} className="job-icon" alt="job icon"/>
+							  <Link to="/" className="nav-link" onClick={() => this.onClickNav('company')}>
+								 <List size={40}/>
+							  </Link>
+						   </NavItem>
+						}
+						{
+						   hasJobRole &&
+						   <NavItem className="pr-1">
+							  <Link to="/employee/job-post" className="nav-link" onClick={() => this.onClickNav('news')}>
+								 <PlusSquare size={40}/>
 							  </Link>
 						   </NavItem>
 						}
 						{
 						   hasUserRole &&
 						   <NavItem className="pr-1">
-							  <Link to="/company" className="nav-link" onClick={() => this.onClickNav('company')}>
-								 <img src={imgCompany} className="company-icon" alt="company icon"/>
-							  </Link>
-						   </NavItem>
-						}
-						{
-						   hasNewsRole &&
-						   <NavItem className="pr-1">
-							  <Link to="/news" className="nav-link" onClick={() => this.onClickNav('news')}>
-								 <img src={imgNews} className="news-icon" alt="news icon"/>
+							  <Link to="/" className="nav-link" onClick={() => this.onClickNav('job')}>
+								 <Users size={40}/>
 							  </Link>
 						   </NavItem>
 						}
@@ -116,7 +116,6 @@ class ThemeEmployeeNavbar extends Component {
 						   <Link to="/employee/company-profile/edit" className="nav-link"
 								 onClick={() => this.onClickNav('profile')}>
 							  <Edit size={40}/>
-							  {/*<span className="text-white text-bold-400">Company Profile</span>*/}
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1">

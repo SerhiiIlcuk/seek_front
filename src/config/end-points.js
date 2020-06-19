@@ -10,4 +10,5 @@ export const endPoints = {
     companyLoad: "company/",
     uploadImage: "file-upload/image",
     uploadFile: "file-upload/etc",
+    createJob: "job",
 };

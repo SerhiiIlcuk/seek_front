@@ -176,3 +176,19 @@ export const uploadFile = async (formData) => {
 
    return res;
 }
+
+/**
+ * @description create job
+ */
+export const createJob = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.createJob, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};

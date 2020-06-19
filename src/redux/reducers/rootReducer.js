@@ -11,6 +11,7 @@ import customizer from "./customizer/";
 import auth from "./auth";
 import user from "./user";
 import company from "./company";
+import job from "./job";
 
 import { reducer as toastrReducer } from "react-redux-toastr";
 
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
    auth: auth,
    user: user,
    company: company,
+   job: job,
 });
 
 export default rootReducer;

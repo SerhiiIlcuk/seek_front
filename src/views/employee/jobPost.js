@@ -14,14 +14,20 @@ import {
 import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
 import "../../assets/scss/views/form/profile.scss"
-import { Editor } from "react-draft-wysiwyg";
+import {Editor} from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../../assets/scss/views/components/extra/editor.scss";
+import {stateToHTML} from 'draft-js-export-html'
+import {EditorState} from 'draft-js';
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/job";
+import {bindActionCreators} from "redux";
+import {createJobAction} from "../../redux/actions/job";
+import {connect} from "react-redux";
+import {toastr} from "react-redux-toastr";
 
 const formSchema = Yup.object().shape({
-   company: Yup.string()
-	  .required("Required"),
-   jobTitle: Yup.string()
+   company: Yup.string(),
+   title: Yup.string()
 	  .required("Required"),
    location: Yup.string()
 	  .required("Required")
@@ -30,18 +36,74 @@ const formSchema = Yup.object().shape({
 class JobPost extends Component {
    state = {
 	  summary: "",
-	  howToApply: ""
+	  howToApply: "",
+	  description: EditorState.createEmpty(),
+	  published: false,
+	  unpublished: true,
    };
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+	  const {
+		 success,
+		 submitting,
+		 errMessage
+	  } = this.props;
+
+	  if (prevProps.submitting !== submitting) {
+		 if (!submitting) {
+			if (!submitting) {
+			   if (success) {
+				  toastr.success(
+					 "Success",
+					 "Job Created successfully",
+					 {
+						position: "top-right",
+						timeOut: 1000
+					 }
+				  );
+			   } else {
+				  toastr.error(
+					 "Error",
+					 errMessage,
+					 {
+						position: "top-right",
+						timeOut: 1000
+					 }
+				  );
+			   }
+			}
+		 }
+	  }
+   }
 
    onChange = (key, value) => {
 	  this.setState({[key]: value});
    }
 
+   onInputChange = (value, key) => {
+	  if (key === "published") {
+		 this.setState({published: true});
+		 this.setState({unpublished: false});
+	  } else if (key === "unpublished") {
+		 this.setState({published: false});
+		 this.setState({unpublished: true});
+	  }
+   };
+
+   convertStateToHtml = () => {
+      const {description} = this.state;
+	  return stateToHTML(description.getCurrentContent());
+   };
+
    render() {
 	  const {
 		 summary,
-		 howToApply
+		 howToApply,
+		 description,
+		 published,
+		 unpublished,
 	  } = this.state;
+	  const {createJob} = this.props;
 
 	  return (
 		 <Fragment>
@@ -54,16 +116,26 @@ class JobPost extends Component {
 			   </a>
 			</ContentSubHeader>*/}
 			<Row>
-			   <Col sm="12">
+			   <Col sm="2"/>
+			   <Col sm="8">
 				  <Formik
 					 initialValues={{
 						company: "",
-						jobTitle: "",
+						title: "",
 						location: ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-						console.log(values);
+						const description = this.convertStateToHtml();
+						const data = {
+						   ...values,
+						   published,
+						   summary,
+						   howToApply,
+						   description
+						};
+
+						createJob(data);
 					 }}
 				  >
 					 {({errors, touched}) => (
@@ -83,11 +155,11 @@ class JobPost extends Component {
 									</Col>
 									<Col md="6">
 									   <FormGroup>
-										  <Label for="jobTitle">Job Title</Label>
-										  <Field name="jobTitle" id="jobTitle"
-												 className={`form-control ${errors.jobTitle && touched.jobTitle && 'is-invalid'}`}/>
-										  {errors.jobTitle && touched.jobTitle ?
-											 <div className="invalid-feedback">{errors.jobTitle}</div> : null}
+										  <Label for="title">Job Title</Label>
+										  <Field name="title" id="title"
+												 className={`form-control ${errors.title && touched.title && 'is-invalid'}`}/>
+										  {errors.title && touched.title ?
+											 <div className="invalid-feedback">{errors.title}</div> : null}
 									   </FormGroup>
 									</Col>
 								 </Row>
@@ -170,7 +242,12 @@ class JobPost extends Component {
 									<Col md="12">
 									   <FormGroup>
 										  <Label for="description">Description</Label>
-										  <Editor id="description" editorClassName="demo-editor" />
+										  <Editor
+											 id="description"
+											 editorClassName="demo-editor"
+											 editorState={description}
+											 onEditorStateChange={(e) => this.onChange('description', e)}
+										  />
 									   </FormGroup>
 									</Col>
 								 </Row>
@@ -204,11 +281,39 @@ class JobPost extends Component {
 									   </FormGroup>
 									</Col>
 								 </Row>
-
 								 <Row>
-									<Col md="12">
-									   <Button className="mr-2" color="success" size="lg">Publish</Button>
-									   <Button color="secondary" size="lg">UnPublish</Button>
+									<Col md="12" className="ml-3">
+									   <FormGroup tag="fieldset">
+										  <Row>
+											 <Col md="6">
+												<Label check>
+												   <Input
+													  type="radio"
+													  name="published"
+													  checked={published}
+													  onChange={(e) => this.onInputChange(e.target.checked, "published")}
+												   />
+												   Publish
+												</Label>
+											 </Col>
+											 <Col md="6">
+												<Label check>
+												   <Input
+													  type="radio"
+													  name="unpublished"
+													  checked={unpublished}
+													  onChange={(e) => this.onInputChange(e.target.checked, "unpublished")}
+												   />
+												   UnPublish
+												</Label>
+											 </Col>
+										  </Row>
+									   </FormGroup>
+									</Col>
+								 </Row>
+								 <Row>
+									<Col md="12" className="text-center">
+									   <Button type="submit" className="mr-2" color="success" size="lg">Submit</Button>
 									</Col>
 								 </Row>
 							  </CardBody>
@@ -223,4 +328,21 @@ class JobPost extends Component {
    }
 }
 
-export default JobPost;
+const mapStateToProps = (state) => ({
+   success: getSuccess(state),
+   submitting: getSubmitting(state),
+   errMessage: getErrMessage(state),
+});
+
+const mapDispatchToProps = (dispatch) =>
+   bindActionCreators(
+	  {
+		 createJob: createJobAction,
+	  },
+	  dispatch,
+   )
+
+export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(JobPost);
