@@ -80,17 +80,17 @@ class ThemeCandidateNavbar extends Component {
 				  <Collapse isOpen={this.state.isOpen} navbar>
 					 <Nav className="ml-auto float-right" navbar>
 						<NavItem className="pr-1">
-						   <Link to="/job" className="nav-link" onClick={() => this.onClickNav('job')}>
+						   <Link to="/candidate/job" className="nav-link" onClick={() => this.onClickNav('job')}>
 							  <img src={imgJob} className="job-icon" alt="job icon" />
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1">
-						   <Link to="/company" className="nav-link" onClick={() => this.onClickNav('company')}>
+						   <Link to="/candidate/company" className="nav-link" onClick={() => this.onClickNav('company')}>
 							  <img src={imgCompany} className="company-icon" alt="company icon" />
 						   </Link>
 						</NavItem>
 						<NavItem className="pr-1">
-						   <Link to="/news" className="nav-link" onClick={() => this.onClickNav('news')}>
+						   <Link to="/candidate/news" className="nav-link" onClick={() => this.onClickNav('news')}>
 							  <img src={imgNews} className="news-icon" alt="news icon" />
 						   </Link>
 						</NavItem>

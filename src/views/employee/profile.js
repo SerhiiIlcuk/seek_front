@@ -81,8 +81,8 @@ export const cropImage = (url, size) => {
 
 class ProfileEdit extends Component {
    state = {
-	  logoImg: (this.props.company && this.props.company.logoImg),
-	  splashImg: (this.props.company && this.props.company.splashImg),
+	  logoImg: (this.props.company && this.props.company.logoImg) || "",
+	  splashImg: (this.props.company && this.props.company.splashImg) || "",
 	  birthYear: (this.props.company && this.props.company.birthYear) || "2020",
 	  neighborhood: (this.props.company && this.props.company.neighborhood) || "",
 	  company: this.props.company,
@@ -108,8 +108,8 @@ class ProfileEdit extends Component {
          this.setState({
 			birthYear: (company.birthYear) || "2020",
 			neighborhood: (company.neighborhood) || "",
-			logoImg: (company.logoImg),
-			splashImg: (company.splashImg),
+			logoImg: (company.logoImg) || "",
+			splashImg: (company.splashImg) || "",
 			company: company
          });
 	  }
@@ -227,7 +227,7 @@ class ProfileEdit extends Component {
 
 					    delete data['company'];
 
-					    if (company._id) { // update company
+					    if (company && company._id) { // update company
 						   updateCompany(data, company._id)
 						} else { // create company
 						   createCompany(data);

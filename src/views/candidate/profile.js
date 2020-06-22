@@ -47,7 +47,7 @@ const formSchema = Yup.object().shape({
 
 class ProfileEdit extends Component {
    state = {
-	  logoImg: this.props.userData && this.props.userData.logoImg,
+	  logoImg: (this.props.userData && this.props.userData.logoImg) || "",
 	  userData: this.props.userData,
 	  resumeLink: this.props.userData && this.props.userData.resumeLink,
    };
@@ -66,9 +66,9 @@ class ProfileEdit extends Component {
 	  } = this.props;
 	  if (prevProps.userData !== userData) {
 		 this.setState({
-			logoImg: userData.logoImg,
+			logoImg: (userData.logoImg) || "",
 			userData: userData,
-			resumeLink: userData.resumeLink
+			resumeLink: (userData.resumeLink) || ""
 		 });
 	  }
 

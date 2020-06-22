@@ -131,7 +131,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/job"
+						path="/candidate/job"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyJob {...matchprops} />
@@ -140,7 +140,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/news"
+						path="/candidate/news"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyNews {...matchprops} />
@@ -149,7 +149,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/company"
+						path="/candidate/company"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyCompany {...matchprops} />
