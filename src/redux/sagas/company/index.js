@@ -14,10 +14,19 @@ import {
    uploadImage,
    updateEmployee,
    deleteEmployee,
+   fetchAllCompanies,
 } from "../../../http/http-calls";
 import {
    FETCH_COMPANY,
-   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END, UPDATE_COMPANY, IMAGE_UPLOAD, UPDATE_EMPLOYEE, DELETE_EMPLOYEE,
+   COMPANY_RESULT,
+   CREATE_COMPANY,
+   SUBMIT_END,
+   UPDATE_COMPANY,
+   IMAGE_UPLOAD,
+   UPDATE_EMPLOYEE,
+   DELETE_EMPLOYEE,
+   FETCH_ALL_COMPANIES,
+   ALL_COMPANIES_RESULT,
 } from "../../types/company";
 import {getUserCompany} from "../../selectors/user";
 
@@ -27,6 +36,7 @@ function* actionWatcher() {
    yield takeLatest(UPDATE_EMPLOYEE, updateEmployeeSaga);
    yield takeLatest(DELETE_EMPLOYEE, deleteEmployeeSaga);
    yield takeLatest(FETCH_COMPANY, fetchCompanySaga);
+   yield takeLatest(FETCH_ALL_COMPANIES, fetchAllCompaniesSaga);
    yield takeLatest(IMAGE_UPLOAD, uploadImageSaga);
 }
 
@@ -40,7 +50,7 @@ function* createCompanySaga({payload: {company}}) {
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
-		    success: true,
+			success: true,
 		 }
 	  })
    } catch (e) {
@@ -97,11 +107,23 @@ function* fetchCompanySaga() {
    }
 }
 
-function * uploadImageSaga({payload}) {
+function* fetchAllCompaniesSaga() {
+   try {
+	  const data = yield call(fetchAllCompanies);
+	  yield put({
+		 type: ALL_COMPANIES_RESULT,
+		 payload: data
+	  });
+   } catch (e) {
+	  console.log('error', e);
+   }
+}
+
+function* uploadImageSaga({payload}) {
    try {
 	  yield call(uploadImage, payload);
    } catch (e) {
-      console.log('error', e);
+	  console.log('error', e);
    }
 }
 

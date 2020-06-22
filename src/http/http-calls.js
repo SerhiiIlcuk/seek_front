@@ -175,6 +175,23 @@ export const getCompanyDetails = (companyId) => {
 };
 
 /**
+ * @description fetch all companies
+ * @return {Promise<unknown>}
+ */
+export const fetchAllCompanies = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllCompanies, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
  * @description upload image
  */
 export const uploadImage = (data) => {
@@ -249,7 +266,7 @@ export const updateJob = (data) => {
  */
 export const fetchJob = (id) => {
    return new Promise((resolve, reject) => {
-	  makeGetRequest(config.baseUrl + endPoints.fetchJob + "/" + id, true)
+	  makeGetRequest(config.baseUrl + endPoints.fetchJob + id, true)
 		 .then(res => {
 			resolve(res);
 		 })

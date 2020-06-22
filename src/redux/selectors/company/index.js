@@ -4,6 +4,10 @@ export const getCompany = (state) => {
    return get(state, "company.companyData");
 };
 
+export const getAllCompanies = (state) => {
+   return get(state, "company.allCompanies");
+};
+
 export const getSubmitting = (state) => {
    return get(state, "company.submitting");
 };

@@ -5,6 +5,7 @@ import {
    UPDATE_COMPANY,
    UPDATE_EMPLOYEE,
    DELETE_EMPLOYEE,
+   FETCH_ALL_COMPANIES,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -24,6 +25,10 @@ export const updateCompanyAction = (company, companyId) => ({
 
 export const fetchCompanyAction = () => ({
    type: FETCH_COMPANY
+})
+
+export const fetchAllCompaniesAction = () => ({
+   type: FETCH_ALL_COMPANIES
 })
 
 export const uploadImageAction = (base64) => ({
