@@ -6,6 +6,7 @@ import {
    UPDATE_EMPLOYEE,
    DELETE_EMPLOYEE,
    FETCH_ALL_COMPANIES,
+   FETCH_ALL_COMPANY_TYPES,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -38,16 +39,33 @@ export const uploadImageAction = (base64) => ({
    }
 })
 
+/**
+ * @description update employee's role on company
+ * @param companyEmployee
+ * @return {{payload: {companyEmployee: *}, type: string}}
+ */
 export const updateEmployeeAction = (companyEmployee) => ({
    type: UPDATE_EMPLOYEE,
    payload: {
       companyEmployee
    }
 })
-
+/**
+ * delete employee from company
+ * @param companyEmployee
+ * @return {{payload: {companyEmployee: *}, type: string}}
+ */
 export const deleteEmployeeAction = (companyEmployee) => ({
    type: DELETE_EMPLOYEE,
    payload: {
       companyEmployee
    }
+})
+
+/**
+ * @description fetch all company types
+ * @return {{type: string}}
+ */
+export const fetchAllCompanyTypesAction = () => ({
+   type: FETCH_ALL_COMPANY_TYPES,
 })

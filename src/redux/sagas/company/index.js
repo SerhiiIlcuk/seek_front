@@ -15,6 +15,7 @@ import {
    updateEmployee,
    deleteEmployee,
    fetchAllCompanies,
+   fetchAllCompanyTypes,
 } from "../../../http/http-calls";
 import {
    FETCH_COMPANY,
@@ -27,6 +28,8 @@ import {
    DELETE_EMPLOYEE,
    FETCH_ALL_COMPANIES,
    ALL_COMPANIES_RESULT,
+   FETCH_ALL_COMPANY_TYPES,
+   ALL_COMPANY_TYPES_RESULT,
 } from "../../types/company";
 import {getUserCompany} from "../../selectors/user";
 
@@ -38,6 +41,7 @@ function* actionWatcher() {
    yield takeLatest(FETCH_COMPANY, fetchCompanySaga);
    yield takeLatest(FETCH_ALL_COMPANIES, fetchAllCompaniesSaga);
    yield takeLatest(IMAGE_UPLOAD, uploadImageSaga);
+   yield takeLatest(FETCH_ALL_COMPANY_TYPES,fetchAllCompanyTypesSaga);
 }
 
 function* createCompanySaga({payload: {company}}) {
@@ -182,6 +186,19 @@ function* deleteEmployeeSaga({payload: {companyEmployee}}) {
 			errMessage: e.message
 		 }
 	  })
+   }
+}
+
+function* fetchAllCompanyTypesSaga() {
+   try {
+	  const companyTypes = yield call(fetchAllCompanyTypes);
+
+	  yield put({
+		 type: ALL_COMPANY_TYPES_RESULT,
+		 payload: companyTypes
+	  });
+   } catch (e) {
+	  console.log('error', e);
    }
 }
 

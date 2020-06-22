@@ -9,9 +9,16 @@ import {
    fetchCompanyAction,
    createCompanyAction,
    updateCompanyAction,
-	uploadImageAction,
+   uploadImageAction,
+   fetchAllCompanyTypesAction,
 } from "../../redux/actions/company";
-import {getCompany, getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/company";
+import {
+   getAllCompanyTypes,
+   getCompany,
+   getErrMessage,
+   getSubmitting,
+   getSuccess,
+} from "../../redux/selectors/company";
 import {toastr} from "react-redux-toastr";
 import {uploadImage} from "../../http/http-calls";
 import config from "../../config/index"
@@ -85,37 +92,46 @@ class ProfileEdit extends Component {
 	  splashImg: (this.props.company && this.props.company.splashImg) || "",
 	  birthYear: (this.props.company && this.props.company.birthYear) || "2020",
 	  neighborhood: (this.props.company && this.props.company.neighborhood) || "",
+	  companyTypes: (this.props.company && this.props.company.companyTypes) || [],
 	  company: this.props.company,
    };
 
    componentDidMount() {
-      const {fetchCompany} = this.props;
+	  const {
+		 fetchCompany,
+		 fetchAllCompanyTypes,
+	  } = this.props;
 
-      if (fetchCompany) {
-         fetchCompany();
+	  if (fetchCompany) {
+		 fetchCompany();
+	  }
+
+	  if (fetchAllCompanyTypes) {
+		 fetchAllCompanyTypes();
 	  }
    };
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {
-         submitting,
+	  const {
+		 submitting,
 		 success,
 		 errMessage,
-         company,
-      } = this.props;
+		 company,
+	  } = this.props;
 
-      if (prevProps.company !== company) {
-         this.setState({
+	  if (prevProps.company !== company) {
+		 this.setState({
 			birthYear: (company.birthYear) || "2020",
 			neighborhood: (company.neighborhood) || "",
 			logoImg: (company.logoImg) || "",
 			splashImg: (company.splashImg) || "",
+			companyTypes: (this.props.company && this.props.company.companyTypes) || [],
 			company: company
-         });
+		 });
 	  }
 
-      if (prevProps.submitting !== submitting) {
-         if (!submitting) {
+	  if (prevProps.submitting !== submitting) {
+		 if (!submitting) {
 			if (success) {
 			   toastr.success(
 				  "Success",
@@ -140,9 +156,9 @@ class ProfileEdit extends Component {
    }
 
    selectImage = (e, key) => {
-      let size = 200;
-      if (key !== "logo") {
-         size = 400
+	  let size = 200;
+	  if (key !== "logo") {
+		 size = 400
 	  }
 	  const url = e.target.files && e.target.files[0];
 	  if (url) {
@@ -150,7 +166,7 @@ class ProfileEdit extends Component {
 		 reader.onload = fileEvent => {
 			cropImage(fileEvent.target.result, size)
 			   .then(croppedImg => {
-			      uploadImage({base64: croppedImg})
+				  uploadImage({base64: croppedImg})
 					 .then(res => {
 						this.setState({
 						   [key]: res.path
@@ -179,6 +195,23 @@ class ProfileEdit extends Component {
 	  this.setState({[key]: value});
    }
 
+   onChangeCompanyType = (checked, id) => {
+	  const {companyTypes} = this.state;
+	  const data = JSON.parse(JSON.stringify(companyTypes));
+	  const index = data.findIndex(item => item === id);
+	  if (checked) {
+		 if (index === -1) {
+			data.push(id);
+		 }
+	  } else {
+		 if (index !== -1) {
+			data.splice(index, 1);
+		 }
+	  }
+
+	  this.setState({companyTypes: data});
+   }
+
    render() {
 	  const {
 		 logoImg,
@@ -186,13 +219,15 @@ class ProfileEdit extends Component {
 		 neighborhood,
 		 birthYear,
 		 company,
+		 companyTypes,
 	  } = this.state;
 
 	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
 	  const splashImgUrl = splashImg ? config.baseUrl + splashImg : null;
 	  const {
-	     createCompany,
+		 createCompany,
 		 updateCompany,
+		 allCompanyTypes,
 	  } = this.props;
 
 	  return (
@@ -218,16 +253,16 @@ class ProfileEdit extends Component {
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-					    const data = {
-					       ...values,
+						const data = {
+						   ...values,
 						   localEmployees: parseInt(values.localEmployees),
 						   totalEmployees: parseInt(values.totalEmployees),
 						   ...this.state
 						};
 
-					    delete data['company'];
+						delete data['company'];
 
-					    if (company && company._id) { // update company
+						if (company && company._id) { // update company
 						   updateCompany(data, company._id)
 						} else { // create company
 						   createCompany(data);
@@ -353,24 +388,22 @@ class ProfileEdit extends Component {
 									<Col md="12">
 									   <Label>Company Type</Label>
 									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="111" label="type 1"/>
-										  <CustomInput type="checkbox" id="222" label="type 2"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="555" label="type 5"/>
-										  <CustomInput type="checkbox" id="666" label="type 6"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="333" label="type 3"/>
-										  <CustomInput type="checkbox" id="444" label="type 4"/>
-									   </FormGroup>
-									</Col>
+									{
+									   allCompanyTypes && allCompanyTypes.map((item) => {
+									      const exist = (companyTypes.findIndex(type => type === item._id) !== -1);
+										  return (
+											 <Col md="4" key={item._id}>
+												<CustomInput
+												   type="checkbox"
+												   id={item._id}
+												   checked={exist}
+												   label={item.typeName}
+												   onChange={(e) => this.onChangeCompanyType(e.target.checked, item._id)}
+												/>
+											 </Col>
+										  )
+									   })
+									}
 								 </Row>
 							  </CardBody>
 						   </Card>
@@ -408,8 +441,9 @@ class ProfileEdit extends Component {
 									   <FormGroup>
 										  <Label for="state">State</Label>
 										  <Input type="select" id="state" name="state">
-											 <option value="state1">State 1</option>
-											 <option value="state2">State 2</option>
+											 <option value="state1">Alaska</option>
+											 <option value="state2">New York</option>
+											 <option value="state3">Florida</option>
 										  </Input>
 									   </FormGroup>
 									</Col>
@@ -490,6 +524,7 @@ class ProfileEdit extends Component {
 
 const mapStateToProps = state => ({
    company: getCompany(state),
+   allCompanyTypes: getAllCompanyTypes(state),
    success: getSuccess(state),
    errMessage: getErrMessage(state),
    submitting: getSubmitting(state),
@@ -499,6 +534,7 @@ const mapDispatchToProps = dispatch =>
    bindActionCreators(
 	  {
 		 fetchCompany: fetchCompanyAction,
+		 fetchAllCompanyTypes: fetchAllCompanyTypesAction,
 		 createCompany: createCompanyAction,
 		 updateCompany: updateCompanyAction,
 		 uploadImage: uploadImageAction

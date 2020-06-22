@@ -11,6 +11,7 @@ export const endPoints = {
     deleteEmployee: "company/employee",
     companyLoad: "company/detail/",
     fetchAllCompanies: "company",
+    fetchAllCompanyTypes: "company/company-types",
     uploadImage: "file-upload/image",
     uploadFile: "file-upload/etc",
     createJob: "job",

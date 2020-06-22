@@ -192,6 +192,23 @@ export const fetchAllCompanies = () => {
 };
 
 /**
+ * @description fetch all company Types
+ * @return {Promise<unknown>}
+ */
+export const fetchAllCompanyTypes = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllCompanyTypes, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
  * @description upload image
  */
 export const uploadImage = (data) => {
