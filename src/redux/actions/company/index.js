@@ -1,6 +1,10 @@
 import {
    CREATE_COMPANY,
-   FETCH_COMPANY, IMAGE_UPLOAD, UPDATE_COMPANY,
+   FETCH_COMPANY,
+   IMAGE_UPLOAD,
+   UPDATE_COMPANY,
+   UPDATE_EMPLOYEE,
+   DELETE_EMPLOYEE,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -26,5 +30,19 @@ export const uploadImageAction = (base64) => ({
    type: IMAGE_UPLOAD,
    payload: {
       base64
+   }
+})
+
+export const updateEmployeeAction = (companyEmployee) => ({
+   type: UPDATE_EMPLOYEE,
+   payload: {
+      companyEmployee
+   }
+})
+
+export const deleteEmployeeAction = (companyEmployee) => ({
+   type: DELETE_EMPLOYEE,
+   payload: {
+      companyEmployee
    }
 })

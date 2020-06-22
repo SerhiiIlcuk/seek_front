@@ -24,7 +24,7 @@ function* actionWatcher() {
 
 function* registerSaga({payload: {email, password, userType}}) {
    try {
-	  const res = yield call(register, {
+	  yield call(register, {
 		 email,
 		 password,
 		 userType
@@ -37,7 +37,6 @@ function* registerSaga({payload: {email, password, userType}}) {
 			errMessage: null
 		 }
 	  });
-	  console.log('success', res);
    } catch (e) {
 	  yield put({
 		 type: SUBMIT_END,
@@ -56,8 +55,6 @@ function* loginSaga({payload: {email, password}}) {
 		 email,
 		 password
 	  });
-
-	  console.log(res);
 
 	  yield put({
 		 type: 'LOGIN_RESULT',

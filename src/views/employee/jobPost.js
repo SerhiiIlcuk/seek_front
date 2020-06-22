@@ -11,6 +11,7 @@ import {
    CustomInput,
    CardHeader
 } from "reactstrap";
+
 import {Formik, Field, Form} from "formik";
 import * as Yup from "yup";
 import "../../assets/scss/views/form/profile.scss"
@@ -18,10 +19,10 @@ import {Editor} from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../../assets/scss/views/components/extra/editor.scss";
 import {stateToHTML} from 'draft-js-export-html'
-import {EditorState} from 'draft-js';
-import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/job";
+import {EditorState, convertFromHTML, ContentState} from 'draft-js';
+import {getErrMessage, getSubmitting, getSuccess, getJob} from "../../redux/selectors/job";
 import {bindActionCreators} from "redux";
-import {createJobAction} from "../../redux/actions/job";
+import {createJobAction, fetchJobAction, updateJobAction} from "../../redux/actions/job";
 import {connect} from "react-redux";
 import {toastr} from "react-redux-toastr";
 
@@ -35,6 +36,7 @@ const formSchema = Yup.object().shape({
 
 class JobPost extends Component {
    state = {
+      postPage: true,
 	  summary: "",
 	  howToApply: "",
 	  description: EditorState.createEmpty(),
@@ -42,12 +44,32 @@ class JobPost extends Component {
 	  unpublished: true,
    };
 
+   componentDidMount() {
+	  const {
+	     location,
+		 match,
+		 fetchJob,
+	  } = this.props;
+
+	  // if job edit page
+	  if (location.pathname.includes("job-edit") && location.pathname.includes("employee")) {
+	     const jobId = match.params.id;
+	     this.setState({postPage: false});
+		 if (jobId) {
+		    fetchJob(jobId);
+		 }
+	  }
+   }
+
    componentDidUpdate(prevProps, prevState, snapshot) {
 	  const {
 		 success,
 		 submitting,
-		 errMessage
+		 errMessage,
+		 history,
+		 job
 	  } = this.props;
+	  const {postPage} = this.state;
 
 	  if (prevProps.submitting !== submitting) {
 		 if (!submitting) {
@@ -55,12 +77,15 @@ class JobPost extends Component {
 			   if (success) {
 				  toastr.success(
 					 "Success",
-					 "Job Created successfully",
+					 postPage ? "Job Created successfully" : "Job Updated successfully",
 					 {
 						position: "top-right",
 						timeOut: 1000
 					 }
 				  );
+				  if (postPage) {
+					 history.push('/employee/manage-jobs');
+				  }
 			   } else {
 				  toastr.error(
 					 "Error",
@@ -71,6 +96,28 @@ class JobPost extends Component {
 					 }
 				  );
 			   }
+			}
+		 }
+	  }
+
+	  if (job !== prevProps.job) {
+		 if (job) {
+		    if (job.description) {
+			   const blocksFromHTML = convertFromHTML(job.description);
+			   let descriptionState;
+			   if (blocksFromHTML && blocksFromHTML.contentBlocks && blocksFromHTML.entityMap) {
+				  descriptionState = ContentState.createFromBlockArray(
+					 blocksFromHTML.contentBlocks,
+					 blocksFromHTML.entityMap,
+				  );
+			   }
+			   this.setState({
+				  summary: job.summary,
+				  howToApply: job.howToApply,
+				  published: job.published,
+				  unpublished: !job.published,
+				  description: descriptionState && EditorState.createWithContent(descriptionState),
+			   });
 			}
 		 }
 	  }
@@ -102,8 +149,13 @@ class JobPost extends Component {
 		 description,
 		 published,
 		 unpublished,
+		 postPage,
 	  } = this.state;
-	  const {createJob} = this.props;
+	  const {
+	     job,
+		 updateJob,
+		 createJob,
+	  } = this.props;
 
 	  return (
 		 <Fragment>
@@ -120,9 +172,9 @@ class JobPost extends Component {
 			   <Col sm="8">
 				  <Formik
 					 initialValues={{
-						company: "",
-						title: "",
-						location: ""
+						company: (job && job.company) || "",
+						title: (job && job.title) || "",
+						location: (job && job.location) || ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
@@ -135,8 +187,17 @@ class JobPost extends Component {
 						   description
 						};
 
-						createJob(data);
+						if (postPage) { // job post page
+						   createJob(data);
+						} else { // job edit page
+						   const updateData = {
+						      id: job._id,
+						      ...data,
+						   };
+						   updateJob(updateData);
+						}
 					 }}
+					 enableReinitialize
 				  >
 					 {({errors, touched}) => (
 						<Form>
@@ -332,12 +393,15 @@ const mapStateToProps = (state) => ({
    success: getSuccess(state),
    submitting: getSubmitting(state),
    errMessage: getErrMessage(state),
+   job: getJob(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
 	  {
 		 createJob: createJobAction,
+		 updateJob: updateJobAction,
+		 fetchJob: fetchJobAction,
 	  },
 	  dispatch,
    )

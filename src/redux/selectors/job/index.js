@@ -11,3 +11,11 @@ export const getSuccess = (state) => {
 export const getErrMessage = (state) => {
    return get(state, "job.errMessage");
 };
+
+export const getEmployeeJobs = (state) => {
+   return get(state, "job.employeeJobs");
+};
+
+export const getJob = (state) => {
+   return get(state, "job.job");
+};

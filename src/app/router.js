@@ -86,7 +86,8 @@ const LazyChangeLogPage = lazy(() => import("../views/pages/changeLogPage"));
 const LazyCompanyProfile = lazy(() => import("../views/employee/profile"));
 const LazyCandidateProfile = lazy(() => import("../views/candidate/profile"));
 const LazyJobPost = lazy(() => import("../views/employee/jobPost"));
-
+const LazyManageJobs = lazy(() => import("../views/employee/manageJobs"));
+const LazyManageUsers = lazy(() => import("../views/employee/manageUsers"));
 // unSigned
 const LazyLanding = lazy(() => import("../views/candidate/landing"));
 const LazyJob = lazy(() => import("../views/candidate/job"));
@@ -179,6 +180,33 @@ class Router extends Component {
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyJobPost {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/employee/job-edit/:id"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyJobPost {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/employee/manage-jobs"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyManageJobs {...matchprops} />
+						   </Suspense>
+						)}
+					 />
+					 <MainLayoutRoutes
+						exact
+						path="/employee/manage-users"
+						render={matchprops => (
+						   <Suspense fallback={<Spinner/>}>
+							  <LazyManageUsers {...matchprops} />
 						   </Suspense>
 						)}
 					 />

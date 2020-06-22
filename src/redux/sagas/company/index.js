@@ -12,16 +12,20 @@ import {
    getCompanyDetails,
    updateCompany,
    uploadImage,
+   updateEmployee,
+   deleteEmployee,
 } from "../../../http/http-calls";
 import {
    FETCH_COMPANY,
-   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END, UPDATE_COMPANY, IMAGE_UPLOAD,
+   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END, UPDATE_COMPANY, IMAGE_UPLOAD, UPDATE_EMPLOYEE, DELETE_EMPLOYEE,
 } from "../../types/company";
 import {getUserCompany} from "../../selectors/user";
 
 function* actionWatcher() {
    yield takeLatest(CREATE_COMPANY, createCompanySaga);
    yield takeLatest(UPDATE_COMPANY, updateCompanySaga);
+   yield takeLatest(UPDATE_EMPLOYEE, updateEmployeeSaga);
+   yield takeLatest(DELETE_EMPLOYEE, deleteEmployeeSaga);
    yield takeLatest(FETCH_COMPANY, fetchCompanySaga);
    yield takeLatest(IMAGE_UPLOAD, uploadImageSaga);
 }
@@ -95,9 +99,67 @@ function* fetchCompanySaga() {
 
 function * uploadImageSaga({payload}) {
    try {
-	  const data = yield call(uploadImage, payload);
+	  yield call(uploadImage, payload);
    } catch (e) {
       console.log('error', e);
+   }
+}
+
+function* updateEmployeeSaga({payload: {companyEmployee}}) {
+   try {
+	  const data = yield call(updateEmployee, companyEmployee);
+
+	  if (data) {
+		 yield put({
+			type: COMPANY_RESULT,
+			payload: data
+		 });
+
+		 yield put({
+			type: SUBMIT_END,
+			payload: {
+			   success: true,
+			}
+		 })
+	  }
+   } catch (e) {
+	  console.log('error', e);
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: false,
+			errMessage: e.message
+		 }
+	  })
+   }
+}
+
+function* deleteEmployeeSaga({payload: {companyEmployee}}) {
+   try {
+	  const data = yield call(deleteEmployee, companyEmployee);
+
+	  if (data) {
+		 yield put({
+			type: COMPANY_RESULT,
+			payload: data
+		 });
+
+		 yield put({
+			type: SUBMIT_END,
+			payload: {
+			   success: true,
+			}
+		 })
+	  }
+   } catch (e) {
+	  console.log('error', e);
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: false,
+			errMessage: e.message
+		 }
+	  })
    }
 }
 

@@ -91,7 +91,7 @@ class ThemeEmployeeNavbar extends Component {
 						{
 						   hasJobRole &&
 						   <NavItem className="pr-1">
-							  <Link to="/" className="nav-link" onClick={() => this.onClickNav('company')}>
+							  <Link to="/employee/manage-jobs" className="nav-link" onClick={() => this.onClickNav('company')}>
 								 <List size={40}/>
 							  </Link>
 						   </NavItem>
@@ -107,7 +107,7 @@ class ThemeEmployeeNavbar extends Component {
 						{
 						   hasUserRole &&
 						   <NavItem className="pr-1">
-							  <Link to="/" className="nav-link" onClick={() => this.onClickNav('job')}>
+							  <Link to="/employee/manage-users" className="nav-link" onClick={() => this.onClickNav('users')}>
 								 <Users size={40}/>
 							  </Link>
 						   </NavItem>

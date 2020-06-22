@@ -2,6 +2,7 @@ import {
    makeGetRequest,
    makePostRequest,
    makePutRequest,
+   makeDeleteRequest,
 } from "./http-service";
 import config from "../config/index";
 import {endPoints} from "../config/end-points";
@@ -126,6 +127,38 @@ export const updateCompany = (data, companyId) => {
 };
 
 /**
+ * @description update employee of company (specially update roles)
+ */
+export const updateEmployee = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePutRequest(config.baseUrl + endPoints.updateEmployee, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description update employee of company (specially update roles)
+ */
+export const deleteEmployee = (data) => {
+   return new Promise((resolve, reject) => {
+	  makeDeleteRequest(config.baseUrl + endPoints.deleteEmployee, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
  * @description getCompanyDetails - to get the details of company by user token
  */
 export const getCompanyDetails = (companyId) => {
@@ -192,3 +225,61 @@ export const createJob = (data) => {
 		 });
    });
 };
+
+/**
+ * @description update job
+ */
+export const updateJob = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePutRequest(config.baseUrl + endPoints.createJob, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+export const fetchJob = (id) => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchJob + "/" + id, true)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+}
+
+/**
+ * @description fetch jobs created by employee (me)
+ */
+export const fetchEmployeeJobs = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchEmployeeJobs, true)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+}
+
+export const updateJobSettings = (settings) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.updateJobSettings, true, settings)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+}
