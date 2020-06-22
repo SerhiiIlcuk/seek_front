@@ -242,9 +242,30 @@ export const updateJob = (data) => {
    });
 };
 
+/**
+ * @description fetch job by id
+ * @param id
+ * @return {Promise<unknown>}
+ */
 export const fetchJob = (id) => {
    return new Promise((resolve, reject) => {
 	  makeGetRequest(config.baseUrl + endPoints.fetchJob + "/" + id, true)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description fetch all jobs published
+ */
+export const fetchAllJobs = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllJobs, false)
 		 .then(res => {
 			resolve(res);
 		 })

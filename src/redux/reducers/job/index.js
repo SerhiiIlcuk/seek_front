@@ -1,6 +1,6 @@
 import { produce } from "immer"
 import {SUBMIT_END} from "../../types/common";
-import {CREATE_JOB, EMPLOYEE_JOBS_RESULT, JOB_RESULT, UPDATE_JOB} from "../../types/job";
+import {ALL_JOBS_RESULT, CREATE_JOB, EMPLOYEE_JOBS_RESULT, JOB_RESULT, UPDATE_JOB} from "../../types/job";
 
 const initialState = {
    success: false,
@@ -8,6 +8,7 @@ const initialState = {
    errMessage: null,
    employeeJobs: null,
    job: null, // job record used when edit job
+   allJobs: null,
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +24,10 @@ export default (state = initialState, action) => {
 	  case JOB_RESULT:
 		 return produce(state, draft => {
 			draft.job = action.payload.job;
+		 });
+	  case ALL_JOBS_RESULT:
+		 return produce(state, draft => {
+			draft.allJobs = action.payload.allJobs;
 		 });
 	  case EMPLOYEE_JOBS_RESULT:
 		 return produce(state, draft => {

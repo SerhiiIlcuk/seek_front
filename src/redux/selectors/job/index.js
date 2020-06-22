@@ -19,3 +19,7 @@ export const getEmployeeJobs = (state) => {
 export const getJob = (state) => {
    return get(state, "job.job");
 };
+
+export const getAllJobs = (state) => {
+   return get(state, "job.allJobs");
+};

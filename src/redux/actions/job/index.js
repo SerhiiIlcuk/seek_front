@@ -4,6 +4,7 @@ import {
    UPDATE_JOB,
    FETCH_EMPLOYEE_JOBS,
    UPDATE_JOB_SETTINGS,
+   FETCH_ALL_JOBS,
 } from "../../types/job";
 
 export const createJobAction = (job) => ({
@@ -11,6 +12,10 @@ export const createJobAction = (job) => ({
    payload: {
       job
    }
+})
+
+export const fetchAllJobsAction = () => ({
+   type: FETCH_ALL_JOBS
 })
 
 export const updateJobAction = (job) => ({
