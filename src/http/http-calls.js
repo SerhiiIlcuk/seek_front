@@ -389,3 +389,20 @@ export const fetchAllJobLocations = () => {
 		 });
    });
 };
+
+/**
+ * @description fetch all job categories
+ * @return {Promise<unknown>}
+ */
+export const fetchAllJobCategories = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllJobCategories, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};

@@ -23,11 +23,13 @@ import {EditorState, convertFromHTML, ContentState} from 'draft-js';
 import {getErrMessage, getSubmitting, getSuccess, getJob} from "../../redux/selectors/job";
 import {bindActionCreators} from "redux";
 import {createJobAction, fetchJobAction, updateJobAction} from "../../redux/actions/job";
+import {fetchAllJobCategoriesAction} from "../../redux/actions/common";
+import {getAllJobCategories} from "../../redux/selectors/common";
 import {connect} from "react-redux";
 import {toastr} from "react-redux-toastr";
 
 const formSchema = Yup.object().shape({
-   company: Yup.string(),
+   // company: Yup.string(),
    title: Yup.string()
 	  .required("Required"),
    location: Yup.string()
@@ -36,28 +38,37 @@ const formSchema = Yup.object().shape({
 
 class JobPost extends Component {
    state = {
-      postPage: true,
+	  postPage: true,
 	  summary: "",
 	  howToApply: "",
 	  description: EditorState.createEmpty(),
 	  published: false,
 	  unpublished: true,
+	  jobCategory: "", // selected job category by user
+	  subCategories: [], // subcategories showed when job category change
+	  jobSubCategories: [], // selected subcategories by user
+	  errors: [],
    };
 
    componentDidMount() {
 	  const {
-	     location,
+		 location,
 		 match,
 		 fetchJob,
+		 fetchAllJobCategories,
 	  } = this.props;
 
 	  // if job edit page
 	  if (location.pathname.includes("job-edit") && location.pathname.includes("employee")) {
-	     const jobId = match.params.id;
-	     this.setState({postPage: false});
+		 const jobId = match.params.id;
+		 this.setState({postPage: false});
 		 if (jobId) {
-		    fetchJob(jobId);
+			fetchJob(jobId);
 		 }
+	  }
+
+	  if (fetchAllJobCategories) {
+		 fetchAllJobCategories();
 	  }
    }
 
@@ -67,7 +78,8 @@ class JobPost extends Component {
 		 submitting,
 		 errMessage,
 		 history,
-		 job
+		 job,
+		 allJobCategories,
 	  } = this.props;
 	  const {postPage} = this.state;
 
@@ -102,21 +114,36 @@ class JobPost extends Component {
 
 	  if (job !== prevProps.job) {
 		 if (job) {
-		    if (job.description) {
+			let descriptionState;
+			if (job.description) {
 			   const blocksFromHTML = convertFromHTML(job.description);
-			   let descriptionState;
 			   if (blocksFromHTML && blocksFromHTML.contentBlocks && blocksFromHTML.entityMap) {
 				  descriptionState = ContentState.createFromBlockArray(
 					 blocksFromHTML.contentBlocks,
 					 blocksFromHTML.entityMap,
 				  );
 			   }
+			}
+			this.setState({
+			   summary: job.summary,
+			   howToApply: job.howToApply,
+			   published: job.published,
+			   unpublished: !job.published,
+			   description: descriptionState && EditorState.createWithContent(descriptionState),
+			   jobCategory: (job.jobCategory && job.jobCategory._id) || "",
+			   jobSubCategories: job.jobSubCategories || [],
+			   subCategories: (job.jobCategory && job.jobCategory.subCategories) ||
+				  (allJobCategories && allJobCategories[0] && allJobCategories.subCategories),
+			});
+		 }
+	  }
+
+	  if (allJobCategories !== prevProps.allJobCategories) {
+		 if (allJobCategories && allJobCategories.length > 0) {
+		    if (!(job && job.jobCategory)) {
 			   this.setState({
-				  summary: job.summary,
-				  howToApply: job.howToApply,
-				  published: job.published,
-				  unpublished: !job.published,
-				  description: descriptionState && EditorState.createWithContent(descriptionState),
+				  jobCategory: allJobCategories[0]._id,
+				  subCategories: allJobCategories[0].subCategories,
 			   });
 			}
 		 }
@@ -138,9 +165,38 @@ class JobPost extends Component {
    };
 
    convertStateToHtml = () => {
-      const {description} = this.state;
+	  const {description} = this.state;
 	  return stateToHTML(description.getCurrentContent());
    };
+
+   onChangeDropdown = (id, stateName) => {
+	  this.setState({[stateName]: id});
+	  if (stateName === 'jobCategory') {
+		 const category = this.props.allJobCategories.find(item => item._id === id);
+	     this.setState({
+			subCategories: category && category.subCategories, // change subcategories according to job category
+			jobSubCategories: [], // initializing when change job category
+		 });
+	  }
+   }
+
+   onChangeCheckbox = (checked, id, stateName) => {
+	  const temp = this.state[stateName];
+	  const data = JSON.parse(JSON.stringify(temp));
+	  const index = data.findIndex(item => item === id);
+
+	  if (index === -1) {
+		 if (checked) {
+			data.push(id);
+		 }
+	  } else {
+		 if (!checked) {
+			data.splice(index, 1);
+		 }
+	  }
+
+	  this.setState({[stateName]: data});
+   }
 
    render() {
 	  const {
@@ -150,13 +206,18 @@ class JobPost extends Component {
 		 published,
 		 unpublished,
 		 postPage,
+		 jobCategory,
+		 subCategories,
+		 jobSubCategories,
+		 errors,
 	  } = this.state;
 	  const {
-	     job,
+		 job,
 		 updateJob,
 		 createJob,
+		 allJobCategories,
 	  } = this.props;
-
+	  const jobSubCategoriesError = errors.indexOf('jobSubCategories') !== -1;
 	  return (
 		 <Fragment>
 			{/*<ContentHeader>POST JOB</ContentHeader>*/}
@@ -172,27 +233,41 @@ class JobPost extends Component {
 			   <Col sm="8">
 				  <Formik
 					 initialValues={{
-						company: (job && job.company) || "",
+						// company: (job && job.company) || "",
 						title: (job && job.title) || "",
 						location: (job && job.location) || ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
+					    if (!(jobSubCategories && jobSubCategories.length > 0)) {
+						   const data = JSON.parse(JSON.stringify(this.state.errors));
+						   if (data.indexOf('jobSubCategories') === -1) {
+							  data.push('jobSubCategories');
+						   }
+
+						   this.setState({errors: data});
+					       return;
+						}
+
 						const description = this.convertStateToHtml();
 						const data = {
 						   ...values,
 						   published,
 						   summary,
 						   howToApply,
-						   description
+						   description,
+						   jobSubCategories,
+						   jobCategory,
 						};
+
+						console.log(data);
 
 						if (postPage) { // job post page
 						   createJob(data);
 						} else { // job edit page
 						   const updateData = {
-						      id: job._id,
-						      ...data,
+							  id: job._id,
+							  ...data,
 						   };
 						   updateJob(updateData);
 						}
@@ -206,13 +281,13 @@ class JobPost extends Component {
 							  <CardBody>
 								 <Row>
 									<Col md="6">
-									   <FormGroup>
+									   {/*<FormGroup>
 										  <Label for="company">Company</Label>
 										  <Field name="company" id="company"
 												 className={`form-control ${errors.company && touched.company && 'is-invalid'}`}/>
 										  {errors.company && touched.company ?
 											 <div className="invalid-feedback">{errors.company}</div> : null}
-									   </FormGroup>
+									   </FormGroup>*/}
 									</Col>
 									<Col md="6">
 									   <FormGroup>
@@ -249,10 +324,24 @@ class JobPost extends Component {
 									<Col md="4">
 									   <FormGroup>
 										  <Label for="jobCategories">Job Categories</Label>
-										  <Input type="select" id="jobCategories" name="jobCategories">
-											 <option value="1">Sales</option>
-											 <option value="2">Marketing</option>
-											 <option value="3">Development</option>
+										  <Input
+											 type="select"
+											 id="jobCategories"
+											 name="jobCategories"
+											 value={jobCategory}
+											 onChange={(e) => this.onChangeDropdown(e.target.value, 'jobCategory')}
+										  >
+											 {
+												allJobCategories && allJobCategories.map(item => {
+												   return (
+													  <option
+														 key={item._id}
+														 value={item._id}
+													  >{item.name}
+													  </option>
+												   )
+												})
+											 }
 										  </Input>
 									   </FormGroup>
 									</Col>
@@ -262,27 +351,30 @@ class JobPost extends Component {
 									<Col md="12">
 									   <Label>Select at least one subcategory</Label>
 									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="111" label="Customer Success"/>
-										  <CustomInput type="checkbox" id="222" label="Operation"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="555" label="Account Executive"/>
-										  <CustomInput type="checkbox" id="666" label="Sales Development"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="333" label="Account Management"/>
-										  <CustomInput type="checkbox" id="444" label="Leadership"/>
-									   </FormGroup>
-									</Col>
+									{
+									   subCategories && subCategories.map((item, key) => {
+									      const id = key + item;
+										  const checked = jobSubCategories.findIndex(ele => ele === item) !== -1;
+										  return (
+											 <Col md="4" key={key}>
+												<CustomInput
+												   type="checkbox"
+												   label={item}
+												   checked={checked}
+												   id={id}
+												   onChange={(e) => this.onChangeCheckbox(e.target.checked, item, 'jobSubCategories')}
+												/>
+											 </Col>
+										  )
+									   })
+									}
+									{
+									   (jobSubCategoriesError && (!jobSubCategories || jobSubCategories.length === 0)) &&
+									   <div className="font-small-2 text-danger">Please choose at least one item</div>
+									}
 								 </Row>
 
-								 <Row>
+								 <Row className="mt-3">
 									<Col md="12">
 									   <FormGroup>
 										  <Label for="summary">Summary (Hide summary)</Label>
@@ -394,6 +486,7 @@ const mapStateToProps = (state) => ({
    submitting: getSubmitting(state),
    errMessage: getErrMessage(state),
    job: getJob(state),
+   allJobCategories: getAllJobCategories(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -402,6 +495,7 @@ const mapDispatchToProps = (dispatch) =>
 		 createJob: createJobAction,
 		 updateJob: updateJobAction,
 		 fetchJob: fetchJobAction,
+		 fetchAllJobCategories: fetchAllJobCategoriesAction,
 	  },
 	  dispatch,
    )

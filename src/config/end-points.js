@@ -15,6 +15,7 @@ export const endPoints = {
     fetchAllSkills: "user/skills",
     fetchAllProfessions: "user/professions",
     fetchAllJobLocations: "job/job-locations",
+    fetchAllJobCategories: "job/job-categories",
     uploadImage: "file-upload/image",
     uploadFile: "file-upload/etc",
     createJob: "job",

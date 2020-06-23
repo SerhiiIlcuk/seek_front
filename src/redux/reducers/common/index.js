@@ -4,6 +4,7 @@ import {
    ALL_JOB_LOCATIONS_RESULT,
    ALL_SKILLS_RESULT,
    ALL_PROFESSIONS_RESULT,
+   ALL_JOB_CATEGORIES_RESULT,
 } from "../../types/common";
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
    allJobLocations: null,
    allSkills: null,
    allProfessions: null,
+   allJobCategories: null,
 };
 
 export default (state = initialState, action) => {
@@ -28,6 +30,10 @@ export default (state = initialState, action) => {
 	  case ALL_JOB_LOCATIONS_RESULT:
 		 return produce(state, draft => {
 			draft.allJobLocations = action.payload;
+		 });
+	  case ALL_JOB_CATEGORIES_RESULT:
+		 return produce(state, draft => {
+			draft.allJobCategories = action.payload;
 		 });
 	  case SUBMIT_END:
 		 return produce(state, draft => {

@@ -11,3 +11,7 @@ export const getAllJobLocations = (state) => {
 export const getAllProfessions = (state) => {
    return get(state, "common.allProfessions");
 };
+
+export const getAllJobCategories = (state) => {
+   return get(state, "common.allJobCategories");
+};
