@@ -338,3 +338,54 @@ export const updateJobSettings = (settings) => {
 		 });
    });
 }
+
+/**
+ * @description fetch all skills
+ * @return {Promise<unknown>}
+ */
+export const fetchAllSkills = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllSkills, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description fetch all professions
+ * @return {Promise<unknown>}
+ */
+export const fetchAllProfessions = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllProfessions, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
+ * @description fetch all job locations
+ * @return {Promise<unknown>}
+ */
+export const fetchAllJobLocations = () => {
+   return new Promise((resolve, reject) => {
+	  makeGetRequest(config.baseUrl + endPoints.fetchAllJobLocations, false)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};

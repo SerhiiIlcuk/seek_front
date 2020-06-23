@@ -10,6 +10,11 @@ import {
    fetchUserAction,
    updateUserAction,
 } from "../../redux/actions/user";
+import {
+   fetchAllProfessionsAction,
+   fetchAllJobLocationsAction,
+   fetchAllSkillsAction,
+} from "../../redux/actions/common";
 import {getSubmitting, getSuccess, getUserData} from "../../redux/selectors/user";
 import {cropImage} from "../employee/profile";
 import {
@@ -18,7 +23,8 @@ import {
 } from "../../http/http-calls";
 import config from "../../config";
 import * as Icon from "react-feather";
-import {endPoints} from "../../config/end-points";
+import {whyHereTexts} from "../../config/constants";
+import {getAllJobLocations, getAllProfessions, getAllSkills} from "../../redux/selectors/common";
 
 const formSchema = Yup.object().shape({
    firstName: Yup.string()
@@ -49,13 +55,37 @@ class ProfileEdit extends Component {
    state = {
 	  logoImg: (this.props.userData && this.props.userData.logoImg) || "",
 	  userData: this.props.userData,
-	  resumeLink: this.props.userData && this.props.userData.resumeLink,
+	  resumeLink: (this.props.userData && this.props.userData.resumeLink) || "",
+	  whyHere: (this.props.userData && this.props.userData.whyHere) || [],
+	  profession: (this.props.userData && this.props.userData.profession) || "",
+	  skills: (this.props.userData && this.props.userData.skills) || [],
+	  jobLocations: (this.props.userData && this.props.userData.jobLocations) || [],
+	  errors: []
    };
 
    componentDidMount() {
-	  const {fetchUserAction} = this.props;
+	  const {
+	     fetchUser,
+		 fetchAllSkills,
+		 fetchAllProfessions,
+		 fetchAllJobLocations,
+	  } = this.props;
 
-	  fetchUserAction();
+	  if (fetchUser) {
+		 fetchUser();
+	  }
+
+	  if (fetchAllSkills) {
+	     fetchAllSkills();
+	  }
+
+	  if (fetchAllProfessions) {
+		 fetchAllProfessions();
+	  }
+
+	  if (fetchAllJobLocations) {
+		 fetchAllJobLocations();
+	  }
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,12 +93,17 @@ class ProfileEdit extends Component {
 		 userData,
 		 submitting,
 		 success,
+		 allProfessions,
 	  } = this.props;
 	  if (prevProps.userData !== userData) {
 		 this.setState({
 			logoImg: (userData.logoImg) || "",
 			userData: userData,
-			resumeLink: (userData.resumeLink) || ""
+			resumeLink: (userData.resumeLink) || "",
+			whyHere: (userData.whyHere) || [],
+			profession: (userData.profession) || (allProfessions && allProfessions[0]._id) || "",
+			skills: (userData.skills) || [],
+			jobLocations: (userData.jobLocations) || [],
 		 });
 	  }
 
@@ -146,14 +181,47 @@ class ProfileEdit extends Component {
 	  }
    }
 
+   onChangeCheckbox = (checked, id, stateName) => {
+      const temp = this.state[stateName];
+      const data = JSON.parse(JSON.stringify(temp));
+      const index = data.findIndex(item => item === id);
+
+      if (index === -1) {
+		 if (checked) {
+			data.push(id);
+		 }
+	  } else {
+         if (!checked) {
+            data.splice(index, 1);
+		 }
+	  }
+
+      this.setState({[stateName]: data});
+   }
+
+   onChangeDropdown = (id, stateName) => {
+      this.setState({[stateName]: id});
+   }
+
    render() {
 	  const {
 		 logoImg,
 		 userData,
-		 resumeLink
+		 resumeLink,
+		 whyHere,
+		 errors,
+		 profession,
+		 skills,
+		 jobLocations,
 	  } = this.state;
-	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
+	  const {
+	     allSkills,
+		 allJobLocations,
+		 allProfessions,
+	  } = this.props;
 
+	  const logoImgUrl = logoImg ? config.baseUrl + logoImg : null;
+	  const showWhyHereError = errors.indexOf('whyHere') !== -1;
 	  return (
 		 <Fragment>
 			<Row>
@@ -174,10 +242,23 @@ class ProfileEdit extends Component {
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
-						this.props.updateUserAction({
+					    if (!(whyHere && whyHere.length)) {
+					       const data = JSON.parse(JSON.stringify(this.state.errors));
+					       if (data.indexOf('whyHere') === -1) {
+					          data.push('whyHere');
+						   }
+
+					       this.setState({errors: data});
+						   return;
+						}
+						this.props.updateUser({
 						   ...values,
 						   logoImg,
 						   resumeLink,
+						   whyHere,
+						   jobLocations,
+						   skills,
+						   profession,
 						});
 					 }}
 					 enableReinitialize
@@ -250,10 +331,29 @@ class ProfileEdit extends Component {
 									<Col md="12">
 									   <Label>Why are you here?</Label>
 									</Col>
-									<Col md="4">
+									<Col md="6">
 									   <FormGroup>
-										  <CustomInput type="checkbox" id="checkbox1" label="Find companies ..."/>
-										  <CustomInput type="checkbox" id="checkbox2" label="Find jobs ..."/>
+										  {
+										     whyHereTexts && whyHereTexts.map(item => {
+										        const id = `whyHere${item.id}`;
+										        const checked = whyHere.findIndex(ele => ele === item.id) !== -1;
+										        return (
+												   <CustomInput
+													  type="checkbox"
+													  value={item.id}
+													  id={id}
+													  key={id}
+													  checked={checked}
+													  label={item.title}
+													  onChange={(e) => this.onChangeCheckbox(e.target.checked, item.id, 'whyHere')}
+												   />
+												)
+											 })
+										  }
+										  {
+										     (showWhyHereError && (!whyHere || whyHere.length === 0)) &&
+											 <div className="font-small-2 text-danger">Please choose at least one item</div>
+										  }
 									   </FormGroup>
 									</Col>
 								 </Row>
@@ -346,10 +446,24 @@ class ProfileEdit extends Component {
 									<Col md="6">
 									   <FormGroup>
 										  <Label for="profession">Profession</Label>
-										  <Input type="select" id="profession" name="profession">
-											 <option value="1">Sales</option>
-											 <option value="2">Marketing</option>
-											 <option value="3">Development</option>
+										  <Input
+											 type="select"
+											 id="profession"
+											 name="profession"
+											 value={profession}
+											 onChange={(e) => this.onChangeDropdown(e.target.value, 'profession')}
+										  >
+											 {
+											    allProfessions && allProfessions.map(item => {
+											       return (
+													  <option
+														 key={item._id}
+														 value={item._id}
+													  >{item.name}
+													  </option>
+												   )
+												})
+											 }
 										  </Input>
 									   </FormGroup>
 									</Col>
@@ -369,24 +483,23 @@ class ProfileEdit extends Component {
 									<Col md="12">
 									   <Label>Select all skills that apply</Label>
 									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="111" label="skill 1"/>
-										  <CustomInput type="checkbox" id="222" label="skill 4"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="555" label="skill 2"/>
-										  <CustomInput type="checkbox" id="666" label="skill 5"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup check className="px-0">
-										  <CustomInput type="checkbox" id="333" label="skill 3"/>
-										  <CustomInput type="checkbox" id="444" label="skill 6"/>
-									   </FormGroup>
-									</Col>
+									{
+									   allSkills && allSkills.map(skill => {
+									      const checked = skills &&
+											 skills.findIndex(item => item === skill._id) !== -1;
+									      return (
+											 <Col md="4" key={skill._id}>
+												<CustomInput
+												   type="checkbox"
+												   id={skill._id}
+												   checked={checked}
+												   label={skill.name}
+												   onChange={(e) => this.onChangeCheckbox(e.target.checked, skill._id, 'skills')}
+												/>
+											 </Col>
+										  )
+									   })
+									}
 								 </Row>
 
 							  </CardBody>
@@ -397,24 +510,23 @@ class ProfileEdit extends Component {
 									<Col md="12">
 									   <Label>Job locations</Label>
 									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="l1" label="location 1"/>
-										  <CustomInput type="checkbox" id="l4" label="location 4"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="l2" label="location 2"/>
-										  <CustomInput type="checkbox" id="l5" label="location 5"/>
-									   </FormGroup>
-									</Col>
-									<Col md="4">
-									   <FormGroup>
-										  <CustomInput type="checkbox" id="l3" label="location 3"/>
-										  <CustomInput type="checkbox" id="l6" label="location 6"/>
-									   </FormGroup>
-									</Col>
+									{
+									   allJobLocations && allJobLocations.map(item => {
+									      const checked = jobLocations &&
+											 jobLocations.findIndex(ele => ele === item._id) !== -1;
+									      return (
+											 <Col md="4" key={item._id}>
+												<CustomInput
+												   type="checkbox"
+												   id={item._id}
+												   label={item.name}
+												   checked={checked}
+												   onChange={(e) => this.onChangeCheckbox(e.target.checked, item._id, 'jobLocations')}
+												/>
+											 </Col>
+										  )
+									   })
+									}
 								 </Row>
 								 <Row>
 									<Col md="12" className="text-center">
@@ -439,13 +551,19 @@ const mapStateToProps = (state) => ({
    userData: getUserData(state),
    submitting: getSubmitting(state),
    success: getSuccess(state),
+   allSkills: getAllSkills(state),
+   allJobLocations: getAllJobLocations(state),
+   allProfessions: getAllProfessions(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
 	  {
-		 fetchUserAction,
-		 updateUserAction,
+		 fetchUser: fetchUserAction,
+		 updateUser: updateUserAction,
+		 fetchAllJobLocations: fetchAllJobLocationsAction,
+		 fetchAllSkills: fetchAllSkillsAction,
+		 fetchAllProfessions: fetchAllProfessionsAction,
 	  },
 	  dispatch,
    );

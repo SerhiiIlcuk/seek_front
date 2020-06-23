@@ -3,6 +3,7 @@ import auth from "./auth";
 import user from "./user";
 import company from "./company";
 import job from "./job";
+import common from "./common";
 
 export default function* rootSaga() {
    yield all([
@@ -10,5 +11,6 @@ export default function* rootSaga() {
       user(),
       company(),
       job(),
+      common(),
    ])
 };
