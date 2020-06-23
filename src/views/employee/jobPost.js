@@ -23,16 +23,17 @@ import {EditorState, convertFromHTML, ContentState} from 'draft-js';
 import {getErrMessage, getSubmitting, getSuccess, getJob} from "../../redux/selectors/job";
 import {bindActionCreators} from "redux";
 import {createJobAction, fetchJobAction, updateJobAction} from "../../redux/actions/job";
-import {fetchAllJobCategoriesAction} from "../../redux/actions/common";
-import {getAllJobCategories} from "../../redux/selectors/common";
+import {experienceLevels} from "../../config/constants";
+import {
+   fetchAllJobCategoriesAction,
+   fetchAllJobLocationsAction
+} from "../../redux/actions/common";
+import {getAllJobCategories, getAllJobLocations} from "../../redux/selectors/common";
 import {connect} from "react-redux";
 import {toastr} from "react-redux-toastr";
 
 const formSchema = Yup.object().shape({
-   // company: Yup.string(),
    title: Yup.string()
-	  .required("Required"),
-   location: Yup.string()
 	  .required("Required")
 });
 
@@ -44,6 +45,8 @@ class JobPost extends Component {
 	  description: EditorState.createEmpty(),
 	  published: false,
 	  unpublished: true,
+	  experienceLevel: "1",
+	  jobLocation: "", // selected job location by user
 	  jobCategory: "", // selected job category by user
 	  subCategories: [], // subcategories showed when job category change
 	  jobSubCategories: [], // selected subcategories by user
@@ -56,6 +59,7 @@ class JobPost extends Component {
 		 match,
 		 fetchJob,
 		 fetchAllJobCategories,
+		 fetchAllJobLocations,
 	  } = this.props;
 
 	  // if job edit page
@@ -69,6 +73,10 @@ class JobPost extends Component {
 
 	  if (fetchAllJobCategories) {
 		 fetchAllJobCategories();
+	  }
+
+	  if (fetchAllJobLocations) {
+		 fetchAllJobLocations();
 	  }
    }
 
@@ -130,6 +138,8 @@ class JobPost extends Component {
 			   published: job.published,
 			   unpublished: !job.published,
 			   description: descriptionState && EditorState.createWithContent(descriptionState),
+			   experienceLevel: job.experienceLevel || "1",
+			   jobLocation: job.jobLocation || "",
 			   jobCategory: (job.jobCategory && job.jobCategory._id) || "",
 			   jobSubCategories: job.jobSubCategories || [],
 			   subCategories: (job.jobCategory && job.jobCategory.subCategories) ||
@@ -207,8 +217,10 @@ class JobPost extends Component {
 		 unpublished,
 		 postPage,
 		 jobCategory,
+		 jobLocation,
 		 subCategories,
 		 jobSubCategories,
+		 experienceLevel,
 		 errors,
 	  } = this.state;
 	  const {
@@ -216,6 +228,7 @@ class JobPost extends Component {
 		 updateJob,
 		 createJob,
 		 allJobCategories,
+		 allJobLocations,
 	  } = this.props;
 	  const jobSubCategoriesError = errors.indexOf('jobSubCategories') !== -1;
 	  return (
@@ -233,9 +246,7 @@ class JobPost extends Component {
 			   <Col sm="8">
 				  <Formik
 					 initialValues={{
-						// company: (job && job.company) || "",
 						title: (job && job.title) || "",
-						location: (job && job.location) || ""
 					 }}
 					 validationSchema={formSchema}
 					 onSubmit={values => {
@@ -258,9 +269,9 @@ class JobPost extends Component {
 						   description,
 						   jobSubCategories,
 						   jobCategory,
+						   jobLocation,
+						   experienceLevel,
 						};
-
-						console.log(data);
 
 						if (postPage) { // job post page
 						   createJob(data);
@@ -304,21 +315,45 @@ class JobPost extends Component {
 									<Col md="4">
 									   <FormGroup>
 										  <Label for="experienceLevel">Experience level</Label>
-										  <Input type="select" id="experienceLevel" name="experienceLevel">
-											 <option value="1">1-3 Years</option>
-											 <option value="2">3-5 Years</option>
-											 <option value="3">5++ Years</option>
+										  <Input
+											 type="select"
+											 id="experienceLevel"
+											 name="experienceLevel"
+											 value={experienceLevel}
+											 onChange={(e) => this.onChangeDropdown(e.target.value, 'experienceLevel')}
+										  >
+											 {
+											    experienceLevels && experienceLevels.map(item => {
+											       return (
+													  <option key={item.id} value={item.id}>{item.title}</option>
+												   )
+												})
+											 }
 										  </Input>
 									   </FormGroup>
 									</Col>
 									<Col md="4">
 									   <FormGroup>
 										  <Label for="location">Location</Label>
-										  <Field name="location" id="location"
-												 className={`form-control ${errors.location && touched.location && 'is-invalid'}`}/>
-										  {errors.location && touched.location ?
-											 <div
-												className="invalid-feedback">{errors.location}</div> : null}
+										  <Input
+											 type="select"
+											 id="location"
+											 name="location"
+											 value={jobLocation}
+											 onChange={(e) => this.onChangeDropdown(e.target.value, 'jobLocation')}
+										  >
+											 {
+												allJobLocations && allJobLocations.map(item => {
+												   return (
+													  <option
+														 key={item._id}
+														 value={item._id}
+													  >{item.name}
+													  </option>
+												   )
+												})
+											 }
+										  </Input>
 									   </FormGroup>
 									</Col>
 									<Col md="4">
@@ -487,6 +522,7 @@ const mapStateToProps = (state) => ({
    errMessage: getErrMessage(state),
    job: getJob(state),
    allJobCategories: getAllJobCategories(state),
+   allJobLocations: getAllJobLocations(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -495,6 +531,7 @@ const mapDispatchToProps = (dispatch) =>
 		 createJob: createJobAction,
 		 updateJob: updateJobAction,
 		 fetchJob: fetchJobAction,
+		 fetchAllJobLocations: fetchAllJobLocationsAction,
 		 fetchAllJobCategories: fetchAllJobCategoriesAction,
 	  },
 	  dispatch,

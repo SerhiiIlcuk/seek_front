@@ -4,35 +4,96 @@ import {connect} from "react-redux"
 import {
    Card,
    CardBody,
-   CardTitle,
    Row,
    Col,
    Button,
    FormGroup,
-   Label,
    Input,
-   CustomInput,
-   Pagination,
-   PaginationItem,
-   PaginationLink
+   CustomInput, Label,
 } from "reactstrap";
+import {experienceLevels} from "../../config/constants";
 import config from "../../config"
 import {bindActionCreators} from "redux";
 import {fetchAllJobsAction} from "../../redux/actions/job";
 import {getAllJobs} from "../../redux/selectors/job";
 import parse from 'html-react-parser';
+import {fetchAllJobCategoriesAction, fetchAllJobLocationsAction} from "../../redux/actions/common";
+import {getAllJobCategories, getAllJobLocations} from "../../redux/selectors/common";
 
 class JobPage extends Component {
+   state = {
+      jobCategories: [],
+	  experienceLevel: "1",
+	  jobLocation: "",
+	  keyword: "",
+   };
+
    componentDidMount() {
-	  const {fetchAllJobs} = this.props;
+	  const {
+	     fetchAllJobs,
+		 fetchAllJobCategories,
+		 fetchAllJobLocations,
+	  } = this.props;
 
 	  if (fetchAllJobs) {
 		 fetchAllJobs();
 	  }
+
+	  if (fetchAllJobCategories) {
+	     fetchAllJobCategories();
+	  }
+
+	  if (fetchAllJobLocations) {
+		 fetchAllJobLocations();
+	  }
+   }
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+      const {allJobLocations} = this.props;
+      if (prevProps.allJobLocations !== allJobLocations) {
+         if (allJobLocations) {
+            this.setState({jobLocation: allJobLocations && allJobLocations[0]._id});
+		 }
+	  }
+   }
+
+   onChangeDropdown = (id, stateName) => {
+	  this.setState({[stateName]: id});
+   }
+
+   onChangeCheckbox = (checked, id, stateName) => {
+	  const temp = this.state[stateName];
+	  const data = JSON.parse(JSON.stringify(temp));
+	  const index = data.findIndex(item => item === id);
+
+	  if (index === -1) {
+		 if (checked) {
+			data.push(id);
+		 }
+	  } else {
+		 if (!checked) {
+			data.splice(index, 1);
+		 }
+	  }
+
+	  this.setState({[stateName]: data});
+   }
+
+   onClickSearch = () => {
+
    }
 
    render() {
-	  const {allJobs} = this.props;
+	  const {
+	     allJobs,
+		 allJobCategories,
+		 allJobLocations,
+	  } = this.props;
+	  const {
+	     jobLocation,
+	     experienceLevel,
+		 jobCategories,
+	  } = this.state;
 
 	  return (
 		 <Fragment>
@@ -44,65 +105,71 @@ class JobPage extends Component {
 						<Row>
 						   <Col md="12">
 							  <Row>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox1" label="Category 1"/>
-									</FormGroup>
+								 <Col md="12">
+									<Label>Job Categories</Label>
 								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox2" label="Category 2"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox3" label="Category 3"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox4" label="Category 4"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox5" label="Category 5"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox6" label="Category 6"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox7" label="Category 7"/>
-									</FormGroup>
-								 </Col>
-								 <Col md="3" sm="12">
-									<FormGroup>
-									   <CustomInput type="checkbox" id="checkbox8" label="Category 8"/>
-									</FormGroup>
-								 </Col>
+								 {
+								    allJobCategories && allJobCategories.map(item => {
+									   const id = item._id;
+									   const checked = jobCategories.findIndex(ele => ele === item._id) !== -1;
+								       return (
+										  <Col key={item._id} md="3" sm="12" className="mb-2">
+											 <CustomInput
+												type="checkbox"
+												id={id}
+												label={item.name}
+												checked={checked}
+												onChange={(e) => this.onChangeCheckbox(e.target.checked, item._id, 'jobCategories')}
+											 />
+										  </Col>
+									   )
+									})
+								 }
 							  </Row>
 						   </Col>
 						</Row>
 						<Row>
 						   <Col md="6" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="experienceLevel">Experience level</Label>
+								 <Input
+									type="select"
+									id="experienceLevel"
+									name="experienceLevel"
+									value={experienceLevel}
+									onChange={(e) => this.onChangeDropdown(e.target.value, 'experienceLevel')}
+								 >
+									{
+									   experienceLevels && experienceLevels.map(item => {
+										  return (
+											 <option key={item.id} value={item.id}>{item.title}</option>
+										  )
+									   })
+									}
 								 </Input>
 							  </FormGroup>
 						   </Col>
 						   <Col md="6" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="location">Location</Label>
+								 <Input
+									type="select"
+									id="location"
+									name="location"
+									value={jobLocation}
+									onChange={(e) => this.onChangeDropdown(e.target.value, 'jobLocation')}
+								 >
+									{
+									   allJobLocations && allJobLocations.map(item => {
+										  return (
+											 <option
+												key={item._id}
+												value={item._id}
+											 >{item.name}
+											 </option>
+										  )
+									   })
+									}
 								 </Input>
 							  </FormGroup>
 						   </Col>
@@ -116,7 +183,10 @@ class JobPage extends Component {
 							  </FormGroup>
 						   </Col>
 						   <Col md="3" sm="12" className="text-center">
-							  <Button color="primary">
+							  <Button
+								 color="primary"
+								 onClick={this.onClickSearch}
+							  >
 								 Search
 							  </Button>
 						   </Col>
@@ -163,46 +233,6 @@ class JobPage extends Component {
 							  }
 						   </Col>
 						</Row>
-
-						{/*<Row>
-						   <Col md="1"></Col>
-						   <Col md="10" className="d-none d-md-block">
-							  <Pagination aria-label="Page navigation example">
-								 <PaginationItem disabled>
-									<PaginationLink previous href="#"/>
-								 </PaginationItem>
-								 <PaginationItem active>
-									<PaginationLink href="#">1</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">2</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">3</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">4</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">5</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink next href="#"/>
-								 </PaginationItem>
-							  </Pagination>
-						   </Col>
-
-						   <Col md="10" className="d-lg-none d-md-none d-sm-block">
-							  <Pagination aria-label="Page navigation example">
-								 <PaginationItem disabled>
-									<PaginationLink previous href="#"/>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink next href="#"/>
-								 </PaginationItem>
-							  </Pagination>
-						   </Col>
-						</Row>*/}
 					 </CardBody>
 				  </Card>
 			   </Col>
@@ -214,12 +244,16 @@ class JobPage extends Component {
 
 const mapStateToProps = (state) => ({
    allJobs: getAllJobs(state),
+   allJobCategories: getAllJobCategories(state),
+   allJobLocations: getAllJobLocations(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
 	  {
 		 fetchAllJobs: fetchAllJobsAction,
+		 fetchAllJobCategories: fetchAllJobCategoriesAction,
+		 fetchAllJobLocations: fetchAllJobLocationsAction,
 	  },
 	  dispatch,
    )
