@@ -80,6 +80,38 @@
    }
 }
 
+.menu-hide {
+   //margin-left: 60px;
+   padding: 0 16px;
+   main {
+      margin-top: 15px;
+      color: $heading-color;
+      .content {
+         font-family: $font-family-content;
+      }
+      p {
+         color: $content-color;
+      }
+   }
+   footer {
+      font-family: $font-family-content;
+      p {
+         color: $heading-color;
+         font-size: 1rem;
+         letter-spacing: 0.3px;
+         font-weight: 300;
+         margin-top: 0.5rem;
+         margin-bottom: 0.5rem;
+         a {
+            color: $primary;
+            cursor: pointer;
+            text-decoration: none;
+            background-color: transparent;
+         }
+      }
+   }
+}
+
 @media (max-width: 768px) {
    .menu-collapsed {
       margin-left: 0px;

@@ -6,7 +6,6 @@ import classnames from "classnames";
 // import internal(own) modules
 import {FoldedContentConsumer, FoldedContentProvider} from "../utility/context/toggleContentContext";
 import Sidebar from "./components/sidebar/sidebar";
-import Navbar from "./components/navbar/navbar"
 import CandidateNavbar from "./components/navbar/candidateNavbar"
 import Footer from "./components/footer/footer";
 import templateConfig from "../templateConfig";
@@ -64,7 +63,8 @@ class MainLayout extends PureComponent {
 
 				  <div
 					 className={classnames("wrapper ", {
-						"menu-collapsed": context.foldedContent || this.state.width < 991,
+						"menu-collapsed": templateConfig.sidebar.visible && (context.foldedContent || this.state.width < 991),
+						"menu-hide": !templateConfig.sidebar.visible,
 						"main-layout": !context.foldedContent,
 						[`${templateConfig.sidebar.size}`]: (this.state.sidebarSize === ''),
 						[`${this.state.sidebarSize}`]: (this.state.sidebarSize !== ''),

@@ -905,7 +905,7 @@ class Router extends Component {
 				  </Switch>
 			   ) : (
 				  <Switch>
-					 <MainLayoutRoutes
+					 {/*<MainLayoutRoutes
 						exact
 						path="/"
 						render={matchprops => (
@@ -913,10 +913,10 @@ class Router extends Component {
 							  <LazyLanding {...matchprops} />
 						   </Suspense>
 						)}
-					 />
+					 />*/}
 					 <MainLayoutRoutes
 						exact
-						path="/job"
+						path="/candidate/job"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyJob {...matchprops} />
@@ -925,7 +925,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/news"
+						path="/candidate/news"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyNews {...matchprops} />
@@ -934,7 +934,7 @@ class Router extends Component {
 					 />
 					 <MainLayoutRoutes
 						exact
-						path="/company"
+						path="/candidate/company"
 						render={matchprops => (
 						   <Suspense fallback={<Spinner/>}>
 							  <LazyCompany {...matchprops} />
@@ -970,7 +970,7 @@ class Router extends Component {
 					 />
 					 <Redirect
 						exact
-						to="/"
+						to="/candidate/job"
 					 />
 				  </Switch>
 			   )

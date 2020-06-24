@@ -160,7 +160,7 @@ class CompanyPage extends Component {
 												{company.streetAddressOne}
 											 </Col>
 											 <Col md="2" sm="12" className="text-center">
-												<Button color="primary">Save</Button>
+												<Button color="primary">View Jobs</Button>
 											 </Col>
 										  </Row>
 									   </CardBody>
@@ -169,46 +169,6 @@ class CompanyPage extends Component {
 							  }
 						   </Col>
 						</Row>
-
-						{/*<Row>
-						   <Col md="1"></Col>
-						   <Col md="10" className="d-none d-md-block">
-							  <Pagination aria-label="Page navigation example">
-								 <PaginationItem disabled>
-									<PaginationLink previous href="#"/>
-								 </PaginationItem>
-								 <PaginationItem active>
-									<PaginationLink href="#">1</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">2</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">3</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">4</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink href="#">5</PaginationLink>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink next href="#"/>
-								 </PaginationItem>
-							  </Pagination>
-						   </Col>
-
-						   <Col md="10" className="d-lg-none d-md-none d-sm-block">
-							  <Pagination aria-label="Page navigation example">
-								 <PaginationItem disabled>
-									<PaginationLink previous href="#"/>
-								 </PaginationItem>
-								 <PaginationItem>
-									<PaginationLink next href="#"/>
-								 </PaginationItem>
-							  </Pagination>
-						   </Col>
-						</Row>*/}
 					 </CardBody>
 				  </Card>
 			   </Col>
