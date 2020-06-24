@@ -23,9 +23,10 @@ import {getAllJobCategories, getAllJobLocations} from "../../redux/selectors/com
 class JobPage extends Component {
    state = {
       jobCategories: [],
-	  experienceLevel: "1",
-	  jobLocation: "",
+	  experienceLevel: "-1",
+	  jobLocation: "-1",
 	  keyword: "",
+	  filteredJobs: [],
    };
 
    componentDidMount() {
@@ -49,11 +50,29 @@ class JobPage extends Component {
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {allJobLocations} = this.props;
-      if (prevProps.allJobLocations !== allJobLocations) {
+      const {
+         allJobLocations,
+		 allJobs,
+      } = this.props;
+      /*if (prevProps.allJobLocations !== allJobLocations) {
          if (allJobLocations) {
             this.setState({jobLocation: allJobLocations && allJobLocations[0]._id});
+            this.onClickSearch();
 		 }
+	  }*/
+
+      if (allJobs !== prevProps.allJobs) {
+         this.onClickSearch();
+	  }
+   }
+
+   onChangeInput = (value, stateName) => {
+      this.setState({[stateName]: value});
+   }
+
+   onClickEnter = (e) => {
+      if (e.keyCode === 13) {
+         this.onClickSearch();
 	  }
    }
 
@@ -80,19 +99,46 @@ class JobPage extends Component {
    }
 
    onClickSearch = () => {
+	  const {allJobs} = this.props;
+	  const {
+	     jobCategories,
+		 jobLocation,
+		 experienceLevel,
+		 keyword,
+	  } = this.state;
+	  const filtered = allJobs && allJobs.filter(job => {
+	     const jobLocationFlag = jobLocation === "-1" ? true: jobLocation === job.jobLocation;
+		 const experienceLevelFlag = experienceLevel === "-1" ? true : experienceLevel === job.experienceLevel;
+		 const keywordFlag = keyword.trim() === "" ? true: (
+		    job.title && job.title.toLowerCase()
+			   .indexOf(keyword.toLowerCase())
+		 ) !== -1;
 
+	     if (jobLocationFlag && experienceLevelFlag && keywordFlag && job.published) {
+			if (jobCategories && jobCategories.length > 0) {
+			   const index = jobCategories.findIndex(category => category === job.jobCategory);
+			   return index !== -1;
+			}
+			return true;
+		 } else {
+	        return false
+		 }
+	  });
+
+	  this.setState({filteredJobs: filtered});
    }
 
    render() {
 	  const {
-	     allJobs,
 		 allJobCategories,
 		 allJobLocations,
 	  } = this.props;
 	  const {
+	     keyword,
 	     jobLocation,
 	     experienceLevel,
 		 jobCategories,
+		 filteredJobs,
 	  } = this.state;
 
 	  return (
@@ -139,6 +185,7 @@ class JobPage extends Component {
 									value={experienceLevel}
 									onChange={(e) => this.onChangeDropdown(e.target.value, 'experienceLevel')}
 								 >
+									<option value="-1">Select experience level</option>
 									{
 									   experienceLevels && experienceLevels.map(item => {
 										  return (
@@ -159,6 +206,7 @@ class JobPage extends Component {
 									value={jobLocation}
 									onChange={(e) => this.onChangeDropdown(e.target.value, 'jobLocation')}
 								 >
+									<option value="-1">Select location</option>
 									{
 									   allJobLocations && allJobLocations.map(item => {
 										  return (
@@ -178,7 +226,15 @@ class JobPage extends Component {
 						   <Col md="9" sm="12">
 							  <FormGroup>
 								 <div className="position-relative has-icon-left">
-									<Input type="text" id="iconLeft" name="iconLeft" className="round"/>
+									<Input
+									   type="text"
+									   id="iconLeft"
+									   name="iconLeft"
+									   className="round"
+									   value={keyword}
+									   onChange={(e) => this.onChangeInput(e.target.value, 'keyword')}
+									   onKeyDown={(e) => this.onClickEnter(e)}
+									/>
 								 </div>
 							  </FormGroup>
 						   </Col>
@@ -199,7 +255,7 @@ class JobPage extends Component {
 						<Row>
 						   <Col md="12">
 							  {
-								 allJobs && allJobs.map((job, index) => {
+								 filteredJobs && filteredJobs.map((job, index) => {
 								    const companyLogo = job.company && job.company.logoImg;
 									return (
 									   <Card color="secondary" key={index}>
@@ -223,7 +279,7 @@ class JobPage extends Component {
 												   {parse(job.description)}
 												</Col>
 												<Col md="2" sm="12" className="text-center">
-												   <Button color="primary">Save</Button>
+												   <Button color="primary">Apply</Button>
 												</Col>
 											 </Row>
 										  </CardBody>

@@ -8,64 +8,58 @@ import {
    CardBody,
    Input,
    FormGroup,
-   Button,
-   Pagination,
-   PaginationItem,
-   PaginationLink
+   Button
+   , Label
 } from "reactstrap";
 import CarouselSliderCard from "../../components/cards/carouselSliderCard";
 import {bindActionCreators} from "redux";
-import {fetchAllCompaniesAction} from "../../redux/actions/company";
-import {getAllCompanies} from "../../redux/selectors/company";
+import {fetchAllCompaniesAction, fetchAllCompanyTypesAction} from "../../redux/actions/company";
+import {getAllCompanies, getAllCompanyTypes} from "../../redux/selectors/company";
 import config from "../../config";
+import {companySizes, experienceLevels} from "../../config/constants";
 
 class CompanyPage extends Component {
+   state = {
+      companyType: "-1",
+	  companySize: "-1",
+   };
    componentDidMount() {
-	  const {fetchAllCompanies} = this.props;
+	  const {
+	     fetchAllCompanies,
+		 fetchAllCompanyTypes,
+	  } = this.props;
 
 	  if (fetchAllCompanies) {
 		 fetchAllCompanies();
 	  }
+
+	  if (fetchAllCompanyTypes) {
+		 fetchAllCompanyTypes();
+	  }
+   }
+
+   onChangeDropdown = (id, stateName) => {
+	  this.setState({[stateName]: id});
    }
 
    render() {
-	  const {allCompanies} = this.props;
-	  const jobs = [
-		 {
-			id: 1,
-			info: "IMB",
-			description: "Our company is looking for a developer"
-		 },
-		 {
-			id: 2,
-			info: "IMB",
-			description: "Our company is looking for a developer"
-		 },
-		 {
-			id: 3,
-			info: "IMB",
-			description: "Our company is looking for a developer"
-		 },
-		 {
-			id: 4,
-			info: "IMB",
-			description: "Our company is looking for a developer"
-		 },
-		 {
-			id: 5,
-			info: "IMB",
-			description: "Our company is looking for a developer"
-		 },
-	  ];
+	  const {
+	     allCompanies,
+		 allCompanyTypes,
+	  } = this.props;
+	  const {
+	     companyType,
+		 companySize,
+	  } = this.state;
 
 	  return (
 		 <Fragment>
 			<Row>
 			   <Col md="12">
-				  <CarouselSliderCard
+				  {/*<CarouselSliderCard
 					 cardTitle=""
 					 description=""
-				  />
+				  />*/}
 			   </Col>
 			</Row>
 
@@ -84,37 +78,59 @@ class CompanyPage extends Component {
 						<Row>
 						   <Col md="3" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="companyType">Company Type</Label>
+								 <Input
+									type="select"
+									id="companyType"
+									name="companyType"
+									value={companyType}
+									onChange={(e) => this.onChangeDropdown(e.target.value, 'companyType')}
+								 >
+									<option value="-1">Select company type</option>
+									{
+									   allCompanyTypes && allCompanyTypes.map(item => {
+										  return (
+											 <option key={item._id} value={item._id}>{item.typeName}</option>
+										  )
+									   })
+									}
 								 </Input>
 							  </FormGroup>
 						   </Col>
 						   <Col md="3" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="companySize">Company Size</Label>
+								 <Input
+									type="select"
+									id="companySize"
+									name="companySize"
+									value={companySize}
+									onChange={(e) => this.onChangeDropdown(e.target.value, 'companySize')}
+								 >
+									<option value="-1">Select company size</option>
+									{
+									   companySizes && companySizes.map(item => {
+										  return (
+											 <option key={item.id + "size"} value={item.id}>{item.title}</option>
+										  )
+									   })
+									}
 								 </Input>
 							  </FormGroup>
 						   </Col>
 						   <Col md="3" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="industry">Company Industry</Label>
+								 <Input type="select" id="industry" name="industry">
+
 								 </Input>
 							  </FormGroup>
 						   </Col>
 						   <Col md="3" sm="12">
 							  <FormGroup>
-								 <Input type="select" id="profession" name="profession">
-									<option value="1">Sales</option>
-									<option value="2">Marketing</option>
-									<option value="3">Development</option>
+								 <Label for="role">Company Role</Label>
+								 <Input type="select" id="role" name="role">
+
 								 </Input>
 							  </FormGroup>
 						   </Col>
@@ -204,12 +220,14 @@ class CompanyPage extends Component {
 
 const mapStateToProps = (state) => ({
    allCompanies: getAllCompanies(state),
+   allCompanyTypes: getAllCompanyTypes(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
 	  {
 		 fetchAllCompanies: fetchAllCompaniesAction,
+		 fetchAllCompanyTypes: fetchAllCompanyTypesAction,
 	  },
 	  dispatch,
    )

@@ -37,4 +37,27 @@ export const experienceLevels = [
       id: "3",
       title: "5++ Years",
    },
+];
+
+export const companySizes = [
+   {
+      id: "1",
+      title: "less than 10",
+   },
+   {
+      id: "2",
+      title: "10 - 50",
+   },
+   {
+      id: "3",
+      title: "50 - 250",
+   },
+   {
+      id: "4",
+      title: "250 - 1000",
+   },
+   {
+      id: "5",
+      title: "more than 1000",
+   },
 ]
