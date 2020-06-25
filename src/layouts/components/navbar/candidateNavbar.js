@@ -94,11 +94,15 @@ class ThemeCandidateNavbar extends Component {
 							  <img src={imgNews} className="news-icon" alt="news icon" />
 						   </Link>
 						</NavItem>
-						<NavItem className="pr-1">
-						   <Link to="/user/profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
-							  <Settings size={40} />
-						   </Link>
-						</NavItem>
+						{
+						   token ? (
+							  <NavItem className="pr-1">
+								 <Link to="/user/profile/edit" className="nav-link" onClick={() => this.onClickNav('profile')}>
+									<Settings size={40} />
+								 </Link>
+							  </NavItem>
+						   ) : null
+						}
 						<NavItem className="pr-1 mr-1">
 						   {
 						      token ? (

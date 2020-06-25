@@ -9,7 +9,8 @@ import MainLayoutRoutes from "../layouts/routes/mainRoutes";
 import FullPageLayout from "../layouts/routes/fullpageRoutes";
 import ErrorLayoutRoute from "../layouts/routes/errorRoutes";
 
-import {getToken} from "../redux/selectors/auth";
+import {getToken, getUserType} from "../redux/selectors/auth";
+import {EMPLOYEE} from "../config/constants";
 
 // Main Layout
 const LazyEcommerceDashboard = lazy(() => import("../views/dashboard/ecommerceDashboard"));
@@ -107,12 +108,16 @@ const LazyErrorPage = lazy(() => import("../views/pages/error"));
 const mapStateToProps = (state) => {
    return {
 	  token: getToken(state),
+	  useType: getUserType(state),
    }
 };
 
 class Router extends Component {
 
    render() {
+      const {userType} = this.props;
+      console.log(userType);
+      const redirectUrl = userType === EMPLOYEE ? "/employee/manage-jobs": "candidate/job";
 	  return (
 		 // Set the directory path if you are deplying in sub-folder
 		 <BrowserRouter basename="/">
@@ -120,7 +125,7 @@ class Router extends Component {
 			   this.props.token ? (
 				  <Switch>
 					 {/* Dashboard Views */}
-					 <MainLayoutRoutes
+					 {/*<MainLayoutRoutes
 						exact
 						path="/"
 						render={matchprops => (
@@ -128,7 +133,7 @@ class Router extends Component {
 							  <LazyLanding {...matchprops} />
 						   </Suspense>
 						)}
-					 />
+					 />*/}
 					 <MainLayoutRoutes
 						exact
 						path="/candidate/job"
@@ -900,7 +905,7 @@ class Router extends Component {
 					 />
 					 <Redirect
 						exact
-						to="/"
+						to={redirectUrl}
 					 />
 				  </Switch>
 			   ) : (
