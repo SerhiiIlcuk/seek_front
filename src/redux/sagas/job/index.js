@@ -25,8 +25,9 @@ import {
    JOB_RESULT, FETCH_ALL_JOBS,
    ALL_JOBS_RESULT,
 } from "../../types/job";
-import {SUBMIT_END} from "../../types/common";
+import {SUBMIT_START, SUBMIT_END} from "../../types/common";
 import {getEmployeeJobs} from "../../selectors/job";
+import {extractErrorMessage} from "../../../common/errorInterceptor";
 
 function* actionWatcher() {
    yield takeLatest(CREATE_JOB, createJobSaga);
@@ -39,48 +40,62 @@ function* actionWatcher() {
 
 function* createJobSaga({payload: {job}}) {
    try {
+	  yield put({
+		 type: SUBMIT_START,
+	  });
+
 	  yield call(createJob, job);
+
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });
    } catch (e) {
 	  console.log('error', e);
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });
    }
 }
 
 function* updateJobSaga({payload: {job}}) {
    try {
+	  yield put({
+		 type: SUBMIT_START,
+	  });
+
 	  yield call(updateJob, job);
+
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });
    } catch (e) {
 	  console.log('error', e);
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });
    }
 }
 
 function* fetchJobSaga({payload: {id}}) {
    try {
+	  /*yield put({
+		 type: SUBMIT_START,
+	  });*/
+
 	  const job = yield call(fetchJob, id);
 
 	  yield put({
@@ -90,26 +105,30 @@ function* fetchJobSaga({payload: {id}}) {
 		 }
 	  })
 
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });*/
    } catch (e) {
 	  console.log('error', e);
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });*/
    }
 }
 
 function* fetchAllJobsSaga() {
    try {
+	  /*yield put({
+		 type: SUBMIT_START,
+	  });*/
+
 	  const jobs = yield call(fetchAllJobs);
 
 	  yield put({
@@ -119,26 +138,30 @@ function* fetchAllJobsSaga() {
 		 }
 	  })
 
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });*/
    } catch (e) {
 	  console.log('error', e);
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });*/
    }
 }
 
 function* fetchEmployeeJobSaga() {
    try {
+	  /*yield put({
+		 type: SUBMIT_START,
+	  });*/
+
       const jobs = yield call(fetchEmployeeJobs);
 
       yield put({
@@ -148,26 +171,30 @@ function* fetchEmployeeJobSaga() {
 		 }
 	  })
 
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });*/
    } catch (e) {
 	  console.log('error', e);
-	  yield put({
+	  /*yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });*/
    }
 }
 
 function* updateJobSettingsSaga({payload: {settings}}) {
    try {
+	  yield put({
+		 type: SUBMIT_START,
+	  });
+
       const state = yield select();
 	  const updatedJob = yield call(updateJobSettings, settings);
 	  const employeeJobs = getEmployeeJobs(state);
@@ -188,16 +215,16 @@ function* updateJobSettingsSaga({payload: {settings}}) {
 		 payload: {
 			success: true,
 		 }
-	  })
+	  });
    } catch (e) {
 	  console.log('error', e);
 	  yield put({
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
-	  })
+	  });
    }
 }
 

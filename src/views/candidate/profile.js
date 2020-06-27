@@ -15,7 +15,8 @@ import {
    fetchAllJobLocationsAction,
    fetchAllSkillsAction,
 } from "../../redux/actions/common";
-import {getSubmitting, getSuccess, getUserData} from "../../redux/selectors/user";
+import {getUserData} from "../../redux/selectors/user";
+import {getSubmitting, getSuccess} from '../../redux/selectors/common';
 import {cropImage} from "../employee/profile";
 import {
    uploadFile,

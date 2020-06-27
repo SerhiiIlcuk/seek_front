@@ -1,7 +1,7 @@
 import { produce } from "immer"
 import {
    USER_RESULT,
-   UPDATE_USER, UPDATE_USER_END, USER_COMPANY,
+   USER_COMPANY,
 } from "../../types/user";
 
 const initialState = {
@@ -31,15 +31,6 @@ export default (state = initialState, action) => {
 			   };
 			   localStorage.setItem('userCompany', JSON.stringify(draft.userCompany));
 			}
-		 });
-	  case UPDATE_USER:
-		 return produce(state, draft => {
-			draft.submitting = true;
-		 });
-	  case UPDATE_USER_END:
-		 return produce(state, draft => {
-			draft.success = action.payload.success;
-			draft.submitting = false;
 		 });
 	  default:
 		 return state

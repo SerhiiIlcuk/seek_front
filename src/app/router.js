@@ -116,7 +116,6 @@ class Router extends Component {
 
    render() {
       const {userType} = this.props;
-      console.log(userType);
       const redirectUrl = userType === EMPLOYEE ? "/employee/manage-jobs": "candidate/job";
 	  return (
 		 // Set the directory path if you are deplying in sub-folder

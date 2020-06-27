@@ -14,8 +14,9 @@ import {
 } from "reactstrap";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {XSquare, PlusSquare, X, Check} from "react-feather";
-import {getCompany, getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/company";
+import {PlusSquare, X, Check} from "react-feather";
+import {getCompany} from "../../redux/selectors/company";
+import {getErrMessage, getSubmitting, getSuccess} from '../../redux/selectors/common';
 import {
    fetchCompanyAction,
    updateEmployeeAction,
@@ -26,7 +27,7 @@ import config from "../../config/index"
 
 class ManageUsersPage extends Component {
    state = {
-      employees: this.props.company && this.props.company.employees,
+	  employees: this.props.company && this.props.company.employees,
    };
 
    componentDidMount() {
@@ -37,10 +38,10 @@ class ManageUsersPage extends Component {
    };
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {company} = this.props;
+	  const {company} = this.props;
 
-      if (company !== prevProps.company) {
-         this.setState({employees: company.employees});
+	  if (company !== prevProps.company) {
+		 this.setState({employees: company.employees});
 	  }
    }
 
@@ -50,11 +51,11 @@ class ManageUsersPage extends Component {
 	  const employeeIndex = data[index].roles.findIndex(item => item === role);
 
 	  if (value) {
-	     if (employeeIndex === -1) {
+		 if (employeeIndex === -1) {
 			data[index].roles.push(role);
 		 }
 	  } else {
-	     if (employeeIndex !== -1) {
+		 if (employeeIndex !== -1) {
 			data[index].roles.splice(employeeIndex, 1);
 		 }
 	  }
@@ -64,9 +65,9 @@ class ManageUsersPage extends Component {
 
    // used to recognize user's role changed
    compareStateAndProps = (stateEmployee, propsEmployee) => {
-      const stateRoles = stateEmployee && stateEmployee.roles;
-      const propsRoles = propsEmployee && propsEmployee.roles;
-	  if (!Array.isArray(stateRoles) || ! Array.isArray(propsRoles) || stateRoles.length !== propsRoles.length)
+	  const stateRoles = stateEmployee && stateEmployee.roles;
+	  const propsRoles = propsEmployee && propsEmployee.roles;
+	  if (!Array.isArray(stateRoles) || !Array.isArray(propsRoles) || stateRoles.length !== propsRoles.length)
 		 return false;
 
 	  const arr1 = stateRoles.concat().sort();
@@ -82,14 +83,14 @@ class ManageUsersPage extends Component {
 
    _updateEmployee = (employee) => {
 	  const {
-	     company,
+		 company,
 		 updateEmployee
 	  } = this.props;
 
 	  updateEmployee({
 		 id: company._id,
 		 employee: {
-		    user: employee.user._id,
+			user: employee.user._id,
 			roles: employee.roles
 		 }
 	  });
@@ -146,7 +147,7 @@ class ManageUsersPage extends Component {
 
 									   let checkDisable = true;
 									   if (!this.compareStateAndProps((propsEmployees && propsEmployees[index]), employee)) {
-									      checkDisable = false;
+										  checkDisable = false;
 									   }
 
 
@@ -172,7 +173,7 @@ class ManageUsersPage extends Component {
 												   type="checkbox"
 												   checked={hasAdminRole}
 												   onChange={(e) => {
-												      this._updateEmployeeState(index, e.target.checked, EMPLOYEE_ROLES.USER)
+													  this._updateEmployeeState(index, e.target.checked, EMPLOYEE_ROLES.USER)
 												   }}
 												/>
 											 </td>

@@ -11,15 +11,3 @@ export const getAllCompanies = (state) => {
 export const getAllCompanyTypes = (state) => {
    return get(state, "company.allCompanyTypes");
 };
-
-export const getSubmitting = (state) => {
-   return get(state, "company.submitting");
-};
-
-export const getSuccess = (state) => {
-   return get(state, "company.success");
-};
-
-export const getErrMessage = (state) => {
-   return get(state, "company.errMessage");
-};

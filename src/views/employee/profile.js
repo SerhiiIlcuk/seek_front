@@ -15,10 +15,12 @@ import {
 import {
    getAllCompanyTypes,
    getCompany,
+} from "../../redux/selectors/company";
+import {
    getErrMessage,
    getSubmitting,
    getSuccess,
-} from "../../redux/selectors/company";
+} from '../../redux/selectors/common';
 import {toastr} from "react-redux-toastr";
 import {uploadImage} from "../../http/http-calls";
 import config from "../../config/index"
@@ -390,7 +392,7 @@ class ProfileEdit extends Component {
 									</Col>
 									{
 									   allCompanyTypes && allCompanyTypes.map((item) => {
-									      const exist = (companyTypes.findIndex(type => type === item._id) !== -1);
+										  const exist = (companyTypes.findIndex(type => type === item._id) !== -1);
 										  return (
 											 <Col md="4" key={item._id}>
 												<CustomInput

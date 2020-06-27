@@ -1,5 +1,4 @@
-import { produce } from "immer"
-import {SUBMIT_END} from "../../types/common";
+import { produce } from "immer";
 import {ALL_JOBS_RESULT, CREATE_JOB, EMPLOYEE_JOBS_RESULT, JOB_RESULT, UPDATE_JOB} from "../../types/job";
 
 const initialState = {
@@ -32,12 +31,6 @@ export default (state = initialState, action) => {
 	  case EMPLOYEE_JOBS_RESULT:
 		 return produce(state, draft => {
 			draft.employeeJobs = action.payload.jobs;
-		 });
-	  case SUBMIT_END:
-		 return produce(state, draft => {
-			draft.submitting = false;
-			draft.success = action.payload.success;
-			draft.errMessage = action.payload.message;
 		 });
 	  default:
 		 return state

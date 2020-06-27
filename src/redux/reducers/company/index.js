@@ -1,7 +1,7 @@
 import { produce } from "immer"
 import {
    ALL_COMPANIES_RESULT, ALL_COMPANY_TYPES_RESULT,
-   COMPANY_RESULT, CREATE_COMPANY, SUBMIT_END, UPDATE_COMPANY
+   COMPANY_RESULT, CREATE_COMPANY, UPDATE_COMPANY
 } from "../../types/company";
 
 const initialState = {
@@ -34,12 +34,6 @@ export default (state = initialState, action) => {
 	  case ALL_COMPANY_TYPES_RESULT:
 		 return produce(state, draft => {
 			draft.allCompanyTypes = action.payload;
-		 });
-	  case SUBMIT_END:
-		 return produce(state, draft => {
-			draft.submitting = false;
-			draft.success = action.payload.success;
-			draft.errMessage = action.payload.message;
 		 });
 	  default:
 		 return state

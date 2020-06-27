@@ -16,7 +16,7 @@ import {
    CardBody,
    CardFooter
 } from "reactstrap";
-import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/auth";
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/common";
 import {toastr} from "react-redux-toastr";
 
 class Login extends Component {
@@ -43,7 +43,7 @@ class Login extends Component {
 					 errMessage,
 					 {
 						position: "top-right",
-						timeOut: 1000
+						timeOut: 2000
 					 }
 				  );
 			   }

@@ -15,3 +15,15 @@ export const getAllProfessions = (state) => {
 export const getAllJobCategories = (state) => {
    return get(state, "common.allJobCategories");
 };
+
+export const getSubmitting = (state) => {
+   return get(state, "common.submitting");
+};
+
+export const getSuccess = (state) => {
+   return get(state, "common.success");
+};
+
+export const getErrMessage = (state) => {
+   return get(state, "common.errMessage");
+};

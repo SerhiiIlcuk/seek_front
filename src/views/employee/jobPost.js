@@ -20,7 +20,8 @@ import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../../assets/scss/views/components/extra/editor.scss";
 import {stateToHTML} from 'draft-js-export-html'
 import {EditorState, convertFromHTML, ContentState} from 'draft-js';
-import {getErrMessage, getSubmitting, getSuccess, getJob} from "../../redux/selectors/job";
+import {getJob} from "../../redux/selectors/job";
+import {getErrMessage, getSubmitting, getSuccess} from '../../redux/selectors/common';
 import {bindActionCreators} from "redux";
 import {createJobAction, fetchJobAction, updateJobAction} from "../../redux/actions/job";
 import {experienceLevels} from "../../config/constants";

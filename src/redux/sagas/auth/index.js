@@ -13,9 +13,13 @@ import {
 } from "../../../http/http-calls";
 import {
    REGISTER,
-   SUBMIT_END
 } from "../../types/auth";
+import {
+   SUBMIT_START,
+   SUBMIT_END
+} from "../../types/common";
 import {USER_COMPANY} from "../../types/user";
+import {extractErrorMessage} from "../../../common/errorInterceptor";
 
 function* actionWatcher() {
    yield takeLatest('LOGIN', loginSaga);
@@ -24,6 +28,10 @@ function* actionWatcher() {
 
 function* registerSaga({payload: {email, password, userType}}) {
    try {
+	  yield put({
+		 type: SUBMIT_START,
+	  });
+
 	  yield call(register, {
 		 email,
 		 password,
@@ -42,7 +50,7 @@ function* registerSaga({payload: {email, password, userType}}) {
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
 	  });
 	  console.log('error', e.message);
@@ -51,6 +59,10 @@ function* registerSaga({payload: {email, password, userType}}) {
 
 function* loginSaga({payload: {email, password}}) {
    try {
+      yield put({
+		 type: SUBMIT_START
+	  });
+
 	  const res = yield call(login, {
 		 email,
 		 password
@@ -85,7 +97,7 @@ function* loginSaga({payload: {email, password}}) {
 		 type: SUBMIT_END,
 		 payload: {
 			success: false,
-			errMessage: e.message
+			errMessage: extractErrorMessage(e.message)
 		 }
 	  });
 	  console.log('error', e);

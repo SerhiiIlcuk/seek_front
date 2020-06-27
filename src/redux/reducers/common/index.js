@@ -1,5 +1,6 @@
 import { produce } from "immer"
 import {
+   SUBMIT_START,
    SUBMIT_END,
    ALL_JOB_LOCATIONS_RESULT,
    ALL_SKILLS_RESULT,
@@ -34,6 +35,10 @@ export default (state = initialState, action) => {
 	  case ALL_JOB_CATEGORIES_RESULT:
 		 return produce(state, draft => {
 			draft.allJobCategories = action.payload;
+		 });
+	  case SUBMIT_START:
+		 return produce(state, draft => {
+			draft.submitting = true;
 		 });
 	  case SUBMIT_END:
 		 return produce(state, draft => {

@@ -17,14 +17,14 @@ import {
 } from "reactstrap";
 import {registerAction} from "../../redux/actions/auth";
 import {bindActionCreators} from "redux";
-import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/auth";
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/common";
 
 class Register extends Component {
    state = {
       email: "",
       password: "",
-      company: true,
-      candidate: false,
+      company: false,
+      candidate: true,
       isChecked: true
    };
 

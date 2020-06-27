@@ -276,7 +276,7 @@ class JobPage extends Component {
 												   {job.title}
 												</Col>
 												<Col md="6" sm="12" className="text-center">
-												   {parse(job.description)}
+												   {job.description && parse(job.description)}
 												</Col>
 												<Col md="2" sm="12" className="text-center">
 												   <Button color="primary">Apply</Button>
