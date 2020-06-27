@@ -56,23 +56,15 @@ export const makeGetRequest = async (
 			.then(
 			   res => {
 				  handleErrorIfAvailable(res);
-				  if (res.status >= 200 && res.status <= 299) {
-					 return (res.json());
-				  } else {
-					 throw Error(res.statusText);
-				  }
-			   },
-			   error => {
-				  reject(error);
+				  return res.json();
 			   })
-			.then(
-			   jsonResponse => {
-				  resolve(jsonResponse);
-			   },
-			   error => {
-				  reject(error);
+			.then(jsonResponse => {
+			   if (jsonResponse.statusCode === 200) {
+				  resolve(jsonResponse.response);
+			   } else {
+				  reject(jsonResponse);
 			   }
-			)
+			})
 			.catch(error => {
 			   reject(error);
 			});
@@ -111,23 +103,15 @@ export const makePostRequest = async (
 			.then(
 			   res => {
 				  handleErrorIfAvailable(res);
-				  if (res.status >= 200 && res.status <= 299) {
-					 return (res.json());
-				  } else {
-					 throw Error(res.statusText);
-				  }
-			   },
-			   error => {
-				  reject(error);
+				  return res.json();
 			   })
-			.then(
-			   jsonResponse => {
-				  resolve(jsonResponse);
-			   },
-			   error => {
-				  reject(error);
+			.then(jsonResponse => {
+			   if (jsonResponse.statusCode === 200) {
+				  resolve(jsonResponse.response);
+			   } else {
+				  reject(jsonResponse);
 			   }
-			)
+			})
 			.catch(error => {
 			   reject(error);
 			});
@@ -166,24 +150,15 @@ export const makePutRequest = async (
 			.then(
 			   res => {
 				  handleErrorIfAvailable(res);
-				  if (res.status >= 200 && res.status <= 299) {
-					 return (res.json());
-				  } else {
-					 throw Error(res.statusText);
-				  }
-			   },
-			   error => {
-				  reject(error);
+				  return res.json();
+			   })
+			.then(jsonResponse => {
+			   if (jsonResponse.statusCode === 200) {
+				  resolve(jsonResponse.response);
+			   } else {
+				  reject(jsonResponse);
 			   }
-			)
-			.then(
-			   jsonResponse => {
-				  resolve(jsonResponse);
-			   },
-			   error => {
-				  reject(error);
-			   }
-			)
+			})
 			.catch(error => {
 			   reject(error);
 			});
@@ -222,24 +197,15 @@ export const makeDeleteRequest = async (
 			.then(
 			   res => {
 				  handleErrorIfAvailable(res);
-				  if (res.status >= 200 && res.status <= 299) {
-					 return (res.json());
-				  } else {
-					 throw Error(res.statusText);
-				  }
-			   },
-			   error => {
-				  reject(error);
+				  return res.json();
+			   })
+			.then(jsonResponse => {
+			   if (jsonResponse.statusCode === 200) {
+				  resolve(jsonResponse.response);
+			   } else {
+				  reject(jsonResponse);
 			   }
-			)
-			.then(
-			   jsonResponse => {
-				  resolve(jsonResponse);
-			   },
-			   error => {
-				  reject(error);
-			   }
-			)
+			})
 			.catch(error => {
 			   reject(error);
 			});

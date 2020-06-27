@@ -46,7 +46,7 @@ class JobPost extends Component {
 	  published: false,
 	  unpublished: true,
 	  experienceLevel: "1",
-	  jobLocation: "", // selected job location by user
+	  jobLocation: this.props.allJobLocations && this.props.allJobLocations[0]._id, // selected job location by user
 	  jobCategory: "", // selected job category by user
 	  subCategories: [], // subcategories showed when job category change
 	  jobSubCategories: [], // selected subcategories by user
@@ -88,6 +88,7 @@ class JobPost extends Component {
 		 history,
 		 job,
 		 allJobCategories,
+		 allJobLocations,
 	  } = this.props;
 	  const {postPage} = this.state;
 
@@ -158,6 +159,16 @@ class JobPost extends Component {
 			}
 		 }
 	  }
+
+	  if (allJobLocations !== prevProps.allJobLocations) {
+		 if (allJobLocations && allJobLocations.length > 0) {
+			if (!(job && job.jobLocation)) {
+			   this.setState({
+				  jobLocation: allJobLocations[0]._id,
+			   });
+			}
+		 }
+	  }
    }
 
    onChange = (key, value) => {
@@ -176,7 +187,11 @@ class JobPost extends Component {
 
    convertStateToHtml = () => {
 	  const {description} = this.state;
-	  return stateToHTML(description.getCurrentContent());
+	  if (description) {
+		 return stateToHTML(description.getCurrentContent());
+	  } else {
+	     return null;
+	  }
    };
 
    onChangeDropdown = (id, stateName) => {
