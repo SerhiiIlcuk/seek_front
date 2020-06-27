@@ -36,15 +36,10 @@ class JobPage extends Component {
 
    componentDidMount() {
 	  const {
-	     fetchUser,
 	     fetchAllJobs,
 		 fetchAllJobCategories,
 		 fetchAllJobLocations,
 	  } = this.props;
-
-	  if (fetchUser) {
-	     fetchUser();
-	  }
 
 	  if (fetchAllJobs) {
 		 fetchAllJobs();
@@ -62,7 +57,9 @@ class JobPage extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
       const {
          allJobLocations,
+		 token,
 		 allJobs,
+		 fetchUser,
       } = this.props;
       /*if (prevProps.allJobLocations !== allJobLocations) {
          if (allJobLocations) {
@@ -74,6 +71,15 @@ class JobPage extends Component {
       if (allJobs !== prevProps.allJobs) {
          this.onClickSearch();
 	  }
+
+      if (token !== prevProps.token) {
+         if (token) {
+			if (fetchUser) {
+			   fetchUser();
+			}
+		 }
+	  }
+
    }
 
    onChangeInput = (value, stateName) => {
