@@ -36,6 +36,8 @@ class JobPage extends Component {
 
    componentDidMount() {
 	  const {
+	     token,
+		 fetchUser,
 	     fetchAllJobs,
 		 fetchAllJobCategories,
 		 fetchAllJobLocations,
@@ -51,6 +53,10 @@ class JobPage extends Component {
 
 	  if (fetchAllJobLocations) {
 		 fetchAllJobLocations();
+	  }
+
+	  if (token && fetchUser) {
+	     fetchUser();
 	  }
    }
 
