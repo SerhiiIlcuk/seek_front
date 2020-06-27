@@ -14,14 +14,19 @@ import {
 import {experienceLevels} from "../../config/constants";
 import config from "../../config"
 import {bindActionCreators} from "redux";
-import {fetchAllJobsAction} from "../../redux/actions/job";
+import {applyToJobAction, fetchAllJobsAction} from "../../redux/actions/job";
 import {getAllJobs} from "../../redux/selectors/job";
 import parse from 'html-react-parser';
 import {fetchAllJobCategoriesAction, fetchAllJobLocationsAction} from "../../redux/actions/common";
 import {getAllJobCategories, getAllJobLocations} from "../../redux/selectors/common";
+import {getToken} from "../../redux/selectors/auth";
+import {withRouter} from "react-router";
+import {fetchUserAction} from "../../redux/actions/user";
+import {getUserData} from "../../redux/selectors/user";
 
 class JobPage extends Component {
    state = {
+      user: null,
       jobCategories: [],
 	  experienceLevel: "-1",
 	  jobLocation: "-1",
@@ -31,10 +36,15 @@ class JobPage extends Component {
 
    componentDidMount() {
 	  const {
+	     fetchUser,
 	     fetchAllJobs,
 		 fetchAllJobCategories,
 		 fetchAllJobLocations,
 	  } = this.props;
+
+	  if (fetchUser) {
+	     fetchUser();
+	  }
 
 	  if (fetchAllJobs) {
 		 fetchAllJobs();
@@ -121,15 +131,32 @@ class JobPage extends Component {
 			}
 			return true;
 		 } else {
-	        return false
+	        return false;
 		 }
 	  });
 
 	  this.setState({filteredJobs: filtered});
    }
 
+   applyToJob = (jobId) => {
+      const {
+         token,
+		 history,
+		 applyToJob,
+      } = this.props;
+      if (token) {
+         const data = {
+            id: jobId,
+		 }
+		 applyToJob(data);
+	  } else {
+         history.push('/login');
+	  }
+   }
+
    render() {
 	  const {
+	     userData,
 		 allJobCategories,
 		 allJobLocations,
 	  } = this.props;
@@ -140,6 +167,7 @@ class JobPage extends Component {
 		 jobCategories,
 		 filteredJobs,
 	  } = this.state;
+	  const userId = userData && userData._id;
 
 	  return (
 		 <Fragment>
@@ -257,6 +285,7 @@ class JobPage extends Component {
 							  {
 								 filteredJobs && filteredJobs.map((job, index) => {
 								    const companyLogo = job.company && job.company.logoImg;
+									const applied = job.applies.findIndex(applicant => applicant.candidate === userId) !== -1;
 									return (
 									   <Card color="secondary" key={index}>
 										  <CardBody>
@@ -269,7 +298,6 @@ class JobPage extends Component {
 															className="rounded-circle img-border gradient-summer width-50"
 															alt="company logo"
 														 />
-
 												   }
 												</Col>
 												<Col md="2" sm="12" className="text-center">
@@ -279,7 +307,18 @@ class JobPage extends Component {
 												   {job.description && parse(job.description)}
 												</Col>
 												<Col md="2" sm="12" className="text-center">
-												   <Button color="primary">Apply</Button>
+												   {
+												      !applied ? (
+														 <Button
+															color="primary"
+															onClick={() => this.applyToJob(job._id)}
+														 >
+															Apply
+														 </Button>
+													  ) : (
+													     <Label>applied</Label>
+													  )
+												   }
 												</Col>
 											 </Row>
 										  </CardBody>
@@ -299,6 +338,8 @@ class JobPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+   userData: getUserData(state),
+   token: getToken(state),
    allJobs: getAllJobs(state),
    allJobCategories: getAllJobCategories(state),
    allJobLocations: getAllJobLocations(state),
@@ -307,9 +348,11 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) =>
    bindActionCreators(
 	  {
+		 fetchUser: fetchUserAction,
 		 fetchAllJobs: fetchAllJobsAction,
 		 fetchAllJobCategories: fetchAllJobCategoriesAction,
 		 fetchAllJobLocations: fetchAllJobLocationsAction,
+		 applyToJob: applyToJobAction,
 	  },
 	  dispatch,
    )
@@ -317,4 +360,4 @@ const mapDispatchToProps = (dispatch) =>
 export default connect(
    mapStateToProps,
    mapDispatchToProps,
-)(JobPage);
+)(withRouter(JobPage));

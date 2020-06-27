@@ -13,7 +13,7 @@ import {
    fetchJob,
    fetchAllJobs,
    fetchEmployeeJobs,
-   updateJobSettings,
+   updateJobSettings, applyToJob,
 } from "../../../http/http-calls";
 import {
    CREATE_JOB,
@@ -24,9 +24,10 @@ import {
    UPDATE_JOB_SETTINGS,
    JOB_RESULT, FETCH_ALL_JOBS,
    ALL_JOBS_RESULT,
+   APPLY_TO_JOB,
 } from "../../types/job";
 import {SUBMIT_START, SUBMIT_END} from "../../types/common";
-import {getEmployeeJobs} from "../../selectors/job";
+import {getEmployeeJobs, getAllJobs} from "../../selectors/job";
 import {extractErrorMessage} from "../../../common/errorInterceptor";
 
 function* actionWatcher() {
@@ -36,6 +37,7 @@ function* actionWatcher() {
    yield takeLatest(UPDATE_JOB, updateJobSaga);
    yield takeLatest(FETCH_EMPLOYEE_JOBS, fetchEmployeeJobSaga);
    yield takeLatest(UPDATE_JOB_SETTINGS, updateJobSettingsSaga);
+   yield takeLatest(APPLY_TO_JOB, applyToJobSaga);
 }
 
 function* createJobSaga({payload: {job}}) {
@@ -209,6 +211,46 @@ function* updateJobSettingsSaga({payload: {settings}}) {
 			jobs: data
 		 }
 	  })
+
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: true,
+		 }
+	  });
+   } catch (e) {
+	  console.log('error', e);
+	  yield put({
+		 type: SUBMIT_END,
+		 payload: {
+			success: false,
+			errMessage: extractErrorMessage(e.message)
+		 }
+	  });
+   }
+}
+
+function* applyToJobSaga({payload: {applyJob}}) {
+   try {
+      const state = yield select();
+	  yield put({
+		 type: SUBMIT_START,
+	  });
+
+	  const data = yield call(applyToJob, applyJob);
+	  let allJobs = getAllJobs(state);
+	  const index = allJobs && allJobs.findIndex(job => job._id === data._id);
+
+	  if (index !== -1) {
+	     let temp = allJobs && JSON.parse(JSON.stringify(allJobs));
+	     temp && temp.splice(index, 1, data);
+		 yield put({
+			type: ALL_JOBS_RESULT,
+			payload: {
+			   allJobs: temp
+			}
+		 })
+	  }
 
 	  yield put({
 		 type: SUBMIT_END,

@@ -19,6 +19,7 @@ export const endPoints = {
     uploadImage: "file-upload/image",
     uploadFile: "file-upload/etc",
     createJob: "job",
+    applyJob: "job/apply",
     fetchAllJobs: "job",
     fetchJob: "job/detail/",
     fetchEmployeeJobs: "job/employee",

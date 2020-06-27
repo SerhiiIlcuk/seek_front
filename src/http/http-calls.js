@@ -277,6 +277,22 @@ export const updateJob = (data) => {
 };
 
 /**
+ * @description apply to job
+ */
+export const applyToJob = (data) => {
+   return new Promise((resolve, reject) => {
+	  makePostRequest(config.baseUrl + endPoints.applyJob, true, data)
+		 .then(res => {
+			resolve(res);
+		 })
+		 .catch(e => {
+			console.log("API call error: ", e);
+			reject(e);
+		 });
+   });
+};
+
+/**
  * @description fetch job by id
  * @param id
  * @return {Promise<unknown>}
