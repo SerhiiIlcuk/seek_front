@@ -184,15 +184,15 @@ class JobPage extends Component {
 		return (
 			<Fragment>
 				<Row>
-					<Col md="1"></Col>
-					<Col md="10">
+					<Col md="12">
 						<Card>
 							<CardBody>
 								<Row>
 									<Col md="12">
 										<Row>
 											<Col md="12">
-												<Label>Job Categories</Label>
+												<Label>Select Job Category</Label>
+												<Label>Select Job Category</Label>
 											</Col>
 											{
 												allJobCategories && allJobCategories.map(item => {
@@ -292,14 +292,14 @@ class JobPage extends Component {
 
 						<Card>
 							<CardBody>
-								<Row>
+								<Row className="bg-secondary">
 									<Col md="12" className="min-vh-100">
 										{
 											filteredJobs && filteredJobs.map((job, index) => {
 												const companyLogo = job.company && job.company.logoImg;
 												const applied = job.applies.findIndex(applicant => applicant.candidate === userId) !== -1;
 												return (
-													<Card color="secondary" key={index}>
+													<Card color="bg-light" key={index}>
 														<CardBody>
 															<Row>
 																<Col md="2" sm="12" className="text-center">

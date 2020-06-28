@@ -43,6 +43,44 @@ class CompanyPage extends Component {
 		this.setState({[stateName]: id});
 	}
 
+	filterCompanies = (allCompanies) => {
+		const {
+			companyType,
+			companySize,
+		} = this.state;
+		const filteredCompanies = allCompanies && allCompanies.filter(company => {
+			let typeFlag = false;
+			let sizeFlag = false;
+
+			if (companyType === "-1") {
+				typeFlag = true;
+			} else {
+				const index = company.companyTypes && company.companyTypes.findIndex(type => type === companyType);
+				typeFlag = index !== -1;
+			}
+
+			if (companySize === "-1") {
+				sizeFlag = true;
+			} else {
+				const element = companySizes && companySizes.find(item => item.id === companySize);
+				if (element) {
+					const lowLimit = element.value.low;
+					const highLimit = element.value.high;
+
+					if (company.totalEmployees > lowLimit && company.totalEmployees <= highLimit) {
+						sizeFlag = true;
+					}
+				} else {
+					sizeFlag = true;
+				}
+			}
+
+			return typeFlag && sizeFlag;
+		});
+
+		return filteredCompanies;
+	}
+
 	render() {
 		const {
 			allCompanies,
@@ -52,6 +90,8 @@ class CompanyPage extends Component {
 			companyType,
 			companySize,
 		} = this.state;
+
+		const filteredCompanies = this.filterCompanies(allCompanies);
 
 		return (
 			<Fragment>
@@ -137,11 +177,11 @@ class CompanyPage extends Component {
 									</Col>
 								</Row>
 
-								<Row>
+								<Row className="bg-secondary">
 									<Col md="12" className="min-vh-100">
 										{
-											allCompanies && allCompanies.map((company, index) => (
-												<Card color="secondary" key={index}>
+											filteredCompanies && filteredCompanies.map((company, index) => (
+												<Card color="bg-light" key={index}>
 													<CardBody>
 														<Row>
 															<Col md="2" sm="12" className="text-center">

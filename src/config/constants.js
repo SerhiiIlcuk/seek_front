@@ -42,22 +42,42 @@ export const experienceLevels = [
 export const companySizes = [
    {
       id: "1",
+      value: {
+         low: 0,
+         high: 10,
+      },
       title: "less than 10",
    },
    {
       id: "2",
+      value: {
+         low: 10,
+         high: 50,
+      },
       title: "10 - 50",
    },
    {
       id: "3",
+      value: {
+         low: 50,
+         high: 250,
+      },
       title: "50 - 250",
    },
    {
       id: "4",
+      value: {
+         low: 250,
+         high: 1000,
+      },
       title: "250 - 1000",
    },
    {
       id: "5",
+      value: {
+         low: 1000,
+         high: -1,
+      },
       title: "more than 1000",
    },
 ]
