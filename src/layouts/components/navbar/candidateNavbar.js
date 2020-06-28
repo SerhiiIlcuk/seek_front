@@ -68,7 +68,9 @@ class ThemeCandidateNavbar extends Component {
 					 onClick={this.handleClick.bind(this)}
 					 data-toggle="collapse"
 				  />
-				  <img src={imgTeam} className="logo" alt="logo" />
+				  <Link to="/">
+						<img src={imgTeam} className="logo" alt="logo" />
+					</Link>
 				  <MoreVertical
 					 className="mt-1 navbar-toggler black no-border float-right"
 					 size={50}

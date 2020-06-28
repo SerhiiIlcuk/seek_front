@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
 		 return produce(state, draft => {
 			draft.submitting = false;
 			draft.success = action.payload.success;
-			draft.errMessage = action.payload.message;
+			draft.errMessage = action.payload.errMessage;
 		 });
 	  default:
 		 return state

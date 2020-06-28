@@ -115,8 +115,6 @@ const mapStateToProps = (state) => {
 class Router extends Component {
 
    render() {
-      const {userType} = this.props;
-      const redirectUrl = userType === EMPLOYEE ? "/employee/manage-jobs": "candidate/job";
 	  return (
 		 // Set the directory path if you are deplying in sub-folder
 		 <BrowserRouter basename="/">
@@ -124,7 +122,7 @@ class Router extends Component {
 			   this.props.token ? (
 				  <Switch>
 					 {/* Dashboard Views */}
-					 {/*<MainLayoutRoutes
+					 <MainLayoutRoutes
 						exact
 						path="/"
 						render={matchprops => (
@@ -132,7 +130,7 @@ class Router extends Component {
 							  <LazyLanding {...matchprops} />
 						   </Suspense>
 						)}
-					 />*/}
+					 />
 					 <MainLayoutRoutes
 						exact
 						path="/candidate/job"
@@ -904,12 +902,12 @@ class Router extends Component {
 					 />
 					 <Redirect
 						exact
-						to={redirectUrl}
+						to="/"
 					 />
 				  </Switch>
 			   ) : (
 				  <Switch>
-					 {/*<MainLayoutRoutes
+					 <MainLayoutRoutes
 						exact
 						path="/"
 						render={matchprops => (
@@ -917,7 +915,7 @@ class Router extends Component {
 							  <LazyLanding {...matchprops} />
 						   </Suspense>
 						)}
-					 />*/}
+					 />
 					 <MainLayoutRoutes
 						exact
 						path="/candidate/job"
@@ -974,7 +972,7 @@ class Router extends Component {
 					 />
 					 <Redirect
 						exact
-						to="/candidate/job"
+						to="/"
 					 />
 				  </Switch>
 			   )
