@@ -11,12 +11,33 @@ import {
 	Button
 	, Label
 } from "reactstrap";
-import CarouselSliderCard from "../../components/cards/carouselSliderCard";
 import {bindActionCreators} from "redux";
 import {fetchAllCompaniesAction, fetchAllCompanyTypesAction} from "../../redux/actions/company";
 import {getAllCompanies, getAllCompanyTypes} from "../../redux/selectors/company";
 import config from "../../config";
 import {companySizes, experienceLevels} from "../../config/constants";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+
+const responsive = {
+	superLargeDesktop: {
+		// the naming can be any, depends on you.
+		breakpoint: { max: 4000, min: 3000 },
+		items: 5
+	},
+	desktop: {
+		breakpoint: { max: 3000, min: 1024 },
+		items: 4
+	},
+	tablet: {
+		breakpoint: { max: 1024, min: 464 },
+		items: 3
+	},
+	mobile: {
+		breakpoint: { max: 464, min: 0 },
+		items: 1
+	}
+};
 
 class CompanyPage extends Component {
 	state = {
@@ -90,8 +111,10 @@ class CompanyPage extends Component {
 			companyType,
 			companySize,
 		} = this.state;
-
 		const filteredCompanies = this.filterCompanies(allCompanies);
+		const logoImages = allCompanies && allCompanies.map(company => {
+			return company.logoImg;
+		});
 
 		return (
 			<Fragment>
@@ -101,6 +124,38 @@ class CompanyPage extends Component {
 					 cardTitle=""
 					 description=""
 				  />*/}
+						{
+							logoImages && logoImages.length > 0 &&
+							<Carousel
+								ssr={true}
+								partialVisbile
+								itemClass="image-item"
+								responsive={responsive}
+								autoPlay={false}
+								infinite
+								deviceType={this.props.deviceType}
+								removeArrowOnDeviceType={["mobile"]}
+							>
+								{
+									logoImages && logoImages.map((item, key) =>{
+										return (
+											<div key={key}>
+												<img src={config.baseUrl + item}/>
+											</div>
+										)
+									})
+								}
+								<div>
+									<img width={400} height={400} src="https://i.postimg.cc/qBGQNc37/ro-slider.jpg"/>
+								</div>
+								<div>
+									<img width={400} height={400} src="https://i.postimg.cc/NfzMDVHP/willie-mosconi-slider.jpg"/>
+								</div>
+								<div>
+									<img width={400} height={400} src="https://i.postimg.cc/C12h7nZn/ms-1.jpg"/>
+								</div>
+							</Carousel>
+						}
 					</Col>
 				</Row>
 

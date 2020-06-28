@@ -1,11 +1,16 @@
 // import external modules
 import React, { Component, Fragment } from "react";
+import {Col, Row} from "reactstrap";
 
 class NewsPage extends Component {
    render() {
 	  return (
 		 <Fragment>
-			News page
+			 <Row>
+				 <Col md="12" className="min-vh-100">
+
+				 </Col>
+			 </Row>
 		 </Fragment>
 	  );
    }
