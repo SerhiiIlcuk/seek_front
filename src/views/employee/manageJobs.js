@@ -62,8 +62,7 @@ class ManageJobsPage extends Component {
 		return (
 			<Fragment>
 				<Row>
-					<Col md="1"></Col>
-					<Col md="10">
+					<Col md="12">
 						<Card>
 							<CardBody>
 								<Row>
@@ -79,7 +78,7 @@ class ManageJobsPage extends Component {
 						<Card>
 							<CardBody>
 								<Row>
-									<Col md="12">
+									<Col md="12" className="min-vh-100">
 										<div>
 											<Nav tabs className="nav-border-bottom">
 												<NavItem>

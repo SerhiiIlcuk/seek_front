@@ -116,12 +116,11 @@ class ManageUsersPage extends Component {
 		return (
 			<Fragment>
 				<Row>
-					<Col md="1"></Col>
-					<Col md="10">
+					<Col md="12">
 						<Card>
 							<CardBody>
 								<Row>
-									<Col md="12">
+									<Col md="12" className="min-vh-100">
 										<Table striped>
 											<thead>
 											<tr>
