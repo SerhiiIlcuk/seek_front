@@ -1,42 +1,50 @@
 import {
-   CREATE_COMPANY,
-   FETCH_COMPANY,
-   IMAGE_UPLOAD,
-   UPDATE_COMPANY,
-   UPDATE_EMPLOYEE,
-   DELETE_EMPLOYEE,
-   FETCH_ALL_COMPANIES,
-   FETCH_ALL_COMPANY_TYPES,
+	CREATE_COMPANY,
+	ADMIN_CREATE_COMPANY,
+	FETCH_COMPANY,
+	IMAGE_UPLOAD,
+	UPDATE_COMPANY,
+	UPDATE_EMPLOYEE,
+	DELETE_EMPLOYEE,
+	FETCH_ALL_COMPANIES,
+	FETCH_ALL_COMPANY_TYPES,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
-   type: CREATE_COMPANY,
-   payload: {
-      company
-   }
+	type: CREATE_COMPANY,
+	payload: {
+		company
+	}
+})
+
+export const adminCreateCompanyAction = (company) => ({
+	type: ADMIN_CREATE_COMPANY,
+	payload: {
+		company
+	}
 })
 
 export const updateCompanyAction = (company, companyId) => ({
-   type: UPDATE_COMPANY,
-   payload: {
-      company,
-      companyId
-   }
+	type: UPDATE_COMPANY,
+	payload: {
+		company,
+		companyId
+	}
 })
 
 export const fetchCompanyAction = () => ({
-   type: FETCH_COMPANY
+	type: FETCH_COMPANY
 })
 
 export const fetchAllCompaniesAction = () => ({
-   type: FETCH_ALL_COMPANIES
+	type: FETCH_ALL_COMPANIES
 })
 
 export const uploadImageAction = (base64) => ({
-   type: IMAGE_UPLOAD,
-   payload: {
-      base64
-   }
+	type: IMAGE_UPLOAD,
+	payload: {
+		base64
+	}
 })
 
 /**
@@ -45,10 +53,10 @@ export const uploadImageAction = (base64) => ({
  * @return {{payload: {companyEmployee: *}, type: string}}
  */
 export const updateEmployeeAction = (companyEmployee) => ({
-   type: UPDATE_EMPLOYEE,
-   payload: {
-      companyEmployee
-   }
+	type: UPDATE_EMPLOYEE,
+	payload: {
+		companyEmployee
+	}
 })
 /**
  * delete employee from company
@@ -56,10 +64,10 @@ export const updateEmployeeAction = (companyEmployee) => ({
  * @return {{payload: {companyEmployee: *}, type: string}}
  */
 export const deleteEmployeeAction = (companyEmployee) => ({
-   type: DELETE_EMPLOYEE,
-   payload: {
-      companyEmployee
-   }
+	type: DELETE_EMPLOYEE,
+	payload: {
+		companyEmployee
+	}
 })
 
 /**
@@ -67,5 +75,5 @@ export const deleteEmployeeAction = (companyEmployee) => ({
  * @return {{type: string}}
  */
 export const fetchAllCompanyTypesAction = () => ({
-   type: FETCH_ALL_COMPANY_TYPES,
+	type: FETCH_ALL_COMPANY_TYPES,
 })

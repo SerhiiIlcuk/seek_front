@@ -76,9 +76,8 @@ export const getUserDetails = () => {
    });
 };
 
-
 /**
- * updateUser - to update the user details
+ *@description updateUser - to update the user details
  * @param {object} data information to be updated with
  */
 export const updateUser = (data) => {
@@ -95,6 +94,56 @@ export const updateUser = (data) => {
 };
 
 /**
+ * @description fetch all admins
+ */
+export const fetchAllAdmins = () => {
+	return new Promise((resolve, reject) => {
+		makeGetRequest(config.baseUrl + endPoints.fetchAllAdmins, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
+/**
+ *@description updateAdmin - to update the admin roles
+ * @param {object} data information to be updated with
+ */
+export const updateAdmin = (data) => {
+	return new Promise((resolve, reject) => {
+		makePutRequest(config.baseUrl + endPoints.updateAdmin, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
+/**
+ *@description deleteAdmin - to delete admin user
+ * @param {object} data information to be updated with
+ */
+export const deleteAdmin = (data) => {
+	return new Promise((resolve, reject) => {
+		makeDeleteRequest(config.baseUrl + endPoints.deleteAdmin, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
+/**
  * @description create company
  */
 export const createCompany = (data) => {
@@ -108,6 +157,22 @@ export const createCompany = (data) => {
 			reject(e);
 		 });
    });
+};
+
+/**
+ * @description admin creates company
+ */
+export const adminCreateCompany = (data) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.adminCreateCompany, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
 };
 
 /**

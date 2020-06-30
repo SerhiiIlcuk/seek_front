@@ -1,6 +1,6 @@
 // import external modules
 import React, {Component, Suspense, lazy} from "react";
-import { connect } from "react-redux"
+import {connect} from "react-redux"
 import {BrowserRouter, Redirect, Switch} from "react-router-dom";
 import Spinner from "../components/spinner/spinner";
 
@@ -95,6 +95,10 @@ const LazyJob = lazy(() => import("../views/candidate/job"));
 const LazyCompany = lazy(() => import("../views/candidate/company"));
 const LazyNews = lazy(() => import("../views/candidate/news"));
 
+// admin
+const LazyManageCompanies = lazy(() => import("../views/admin/manageCompanies"));
+const LazyAdminManageUsers = lazy(() => import("../views/admin/manageUsers"));
+
 // Full Layout
 const LazyForgotPassword = lazy(() => import("../views/pages/forgotPassword"));
 const LazyLogin = lazy(() => import("../views/pages/login"));
@@ -106,880 +110,898 @@ const LazyLockScreen = lazy(() => import("../views/pages/lockScreen"));
 const LazyErrorPage = lazy(() => import("../views/pages/error"));
 
 const mapStateToProps = (state) => {
-   return {
-	  token: getToken(state),
-	  useType: getUserType(state),
-   }
+	return {
+		token: getToken(state),
+		useType: getUserType(state),
+	}
 };
 
 class Router extends Component {
 
-   render() {
-	  return (
-		 // Set the directory path if you are deplying in sub-folder
-		 <BrowserRouter basename="/">
-			{
-			   this.props.token ? (
-				  <Switch>
-					 {/* Dashboard Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLanding {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/job"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyJob {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/news"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyNews {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/company"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCompany {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/profile/edit"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyProfile {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/employee/company-profile/edit"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCompanyProfile {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/employee/job-post"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyJobPost {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/employee/job-edit/:id"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyJobPost {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/employee/manage-jobs"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyManageJobs {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/employee/manage-users"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyManageUsers {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/user/profile/edit"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCandidateProfile {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/analytics-dashboard"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyAnalyticsDashboard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/sales-dashboard"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySalesDashboard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Single Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/colorpalettes"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyColorPallete {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/email"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyEmail {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/chat"
-						render={matchprops => (
-						   <Suspense fallback={<div>Loading ...</div>}>
-							  <LazyChat {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/contacts"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyContacts {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/todo"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyTodo {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* UIKit Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/grids"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyGrid {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/typography"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyTypography {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/syntaxhighlighter"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySyntaxHighlighter {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/helperclasses"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyHelperClasses {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/textutilities"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyTextUtility {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/uikit/feather"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyFeather {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Components Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/lists"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLists {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/buttons"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyButton {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/breadcrumbs"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBreadcrumbs {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/alerts"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyAlerts {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/badges"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBadges {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/dropdowns"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyDropdowns {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/tabs"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyTabs {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/input-groups"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyInputGroups {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/media-objects"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyMediaObjects {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/pagination"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyPagination {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/progress-bars"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyProgressBars {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/modals"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyModals {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/collapse"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCollapse {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/tooltips"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyTooltips {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/bootstrap/popover"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyPopover {...matchprops} />
-						   </Suspense>
-						)}
-					 />
+	render() {
+		return (
+			// Set the directory path if you are deplying in sub-folder
+			<BrowserRouter basename="/">
+				{
+					this.props.token ? (
+						<Switch>
+							{/* Dashboard Views */}
+							<MainLayoutRoutes
+								exact
+								path="/"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLanding {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/job"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJob {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/news"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyNews {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/company"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCompany {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/profile/edit"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyProfile {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/employee/company-profile/edit"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCompanyProfile {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/employee/job-post"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJobPost {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/employee/job-edit/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJobPost {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/employee/manage-jobs"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyManageJobs {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/employee/manage-users"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyManageUsers {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/user/profile/edit"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCandidateProfile {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/admin/manage-companies"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyManageCompanies {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/admin/manage-users"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAdminManageUsers {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/analytics-dashboard"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAnalyticsDashboard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/sales-dashboard"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySalesDashboard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Single Views */}
+							<MainLayoutRoutes
+								exact
+								path="/colorpalettes"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyColorPallete {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/email"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyEmail {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/chat"
+								render={matchprops => (
+									<Suspense fallback={<div>Loading ...</div>}>
+										<LazyChat {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/contacts"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyContacts {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/todo"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyTodo {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* UIKit Views */}
+							<MainLayoutRoutes
+								exact
+								path="/uikit/grids"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyGrid {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/uikit/typography"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyTypography {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/uikit/syntaxhighlighter"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySyntaxHighlighter {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/uikit/helperclasses"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyHelperClasses {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/uikit/textutilities"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyTextUtility {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/uikit/feather"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyFeather {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Components Views */}
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/lists"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLists {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/buttons"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyButton {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/breadcrumbs"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBreadcrumbs {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/alerts"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAlerts {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/badges"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBadges {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/dropdowns"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyDropdowns {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/tabs"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyTabs {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/input-groups"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyInputGroups {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/media-objects"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyMediaObjects {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/pagination"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyPagination {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/progress-bars"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyProgressBars {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/modals"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyModals {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/collapse"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCollapse {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/tooltips"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyTooltips {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/bootstrap/popover"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyPopover {...matchprops} />
+									</Suspense>
+								)}
+							/>
 
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/select"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySelect {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/slider"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySlider {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/upload"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyUpload {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/editor"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyEditor {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/drag-and-drop"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyDragAndDrop {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/input-tags"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyInputTags {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/switches"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySwitches {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/components/extra/toastr"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyToastr {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Forms */}
-					 <MainLayoutRoutes
-						exact
-						path="/forms/elements/inputs"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyInputs {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/elements/input-grids"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyInputGrids {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/basic-forms"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBasicForms {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/bordered-forms"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBorderedForms {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/form-actions"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyFormActions {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/hidden-labels"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyHiddenLabels {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/horizontal-forms"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyHorizontalForms {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/layouts/striped-rows"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyStripedRows {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/validation"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyValidation {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/forms/wizard"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyWizard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Tables */}
-					 <MainLayoutRoutes
-						exact
-						path="/tables/regular"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyRegular {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/tables/extended"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyExtended {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/react-tables/regular"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyRegular {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/react-tables/extended"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyReactTableExtended {...matchprops} />
-						   </Suspense>
-						)}
-					 />
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/select"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySelect {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/slider"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySlider {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/upload"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyUpload {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/editor"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyEditor {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/drag-and-drop"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyDragAndDrop {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/input-tags"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyInputTags {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/switches"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySwitches {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/components/extra/toastr"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyToastr {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Forms */}
+							<MainLayoutRoutes
+								exact
+								path="/forms/elements/inputs"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyInputs {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/elements/input-grids"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyInputGrids {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/basic-forms"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBasicForms {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/bordered-forms"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBorderedForms {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/form-actions"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyFormActions {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/hidden-labels"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyHiddenLabels {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/horizontal-forms"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyHorizontalForms {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/layouts/striped-rows"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyStripedRows {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/validation"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyValidation {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/forms/wizard"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyWizard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Tables */}
+							<MainLayoutRoutes
+								exact
+								path="/tables/regular"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyRegular {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/tables/extended"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyExtended {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/react-tables/regular"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyRegular {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/react-tables/extended"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyReactTableExtended {...matchprops} />
+									</Suspense>
+								)}
+							/>
 
-					 {/* Cards */}
-					 <MainLayoutRoutes
-						exact
-						path="/cards/basic-card"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBasicCard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/cards/extended-card"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyExtendedCard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/cards/statistic-card"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyStatisticCard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/cards/advanced-card"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyAdvancedCard {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Chart Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/charts/chartist"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyChartist {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/charts/chartjs"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyChart {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Maps Views */}
-					 <MainLayoutRoutes
-						exact
-						path="/google-maps"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyGoogle {...matchprops} />
-						   </Suspense>
-						)}
-					 />
+							{/* Cards */}
+							<MainLayoutRoutes
+								exact
+								path="/cards/basic-card"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBasicCard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/cards/extended-card"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyExtendedCard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/cards/statistic-card"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyStatisticCard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/cards/advanced-card"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAdvancedCard {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Chart Views */}
+							<MainLayoutRoutes
+								exact
+								path="/charts/chartist"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyChartist {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/charts/chartjs"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyChart {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Maps Views */}
+							<MainLayoutRoutes
+								exact
+								path="/google-maps"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyGoogle {...matchprops} />
+									</Suspense>
+								)}
+							/>
 
-					 {/* Saperate Pages Views */}
-					 <FullPageLayout
-						exact
-						path="/pages/forgot-password"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyForgotPassword {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/horizontal-timeline"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyHorizontalTimeline {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/vertical-timeline"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyVerticalTimeline {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/pages/login"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLogin {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/pages/register"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyRegister {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/user-profile"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyUserProfile {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/pages/lockscreen"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLockScreen {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/invoice"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyInvoice {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/blank-page"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyBlankPage {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/change-log"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyChangeLogPage {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/pages/maintenance"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyMaintainance {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/gallery"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyGallery {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/faq"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyFAQ {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/knowledge-base"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyKnowledgeBase {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/pages/search"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazySearch {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 {/* Calender */}
-					 <MainLayoutRoutes
-						exact
-						path="/calendar"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCalender {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <ErrorLayoutRoute
-						exact
-						path="/pages/error"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyErrorPage {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <Redirect
-						exact
-						to="/"
-					 />
-				  </Switch>
-			   ) : (
-				  <Switch>
-					 <MainLayoutRoutes
-						exact
-						path="/"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLanding {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/job"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyJob {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/news"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyNews {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <MainLayoutRoutes
-						exact
-						path="/candidate/company"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyCompany {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/login"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyLogin {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/register"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyRegister {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <FullPageLayout
-						exact
-						path="/forgot-password"
-						render={matchprops => (
-						   <Suspense fallback={<Spinner/>}>
-							  <LazyForgotPassword {...matchprops} />
-						   </Suspense>
-						)}
-					 />
-					 <Redirect
-						exact
-						to="/"
-					 />
-				  </Switch>
-			   )
-			}
-		 </BrowserRouter>
-	  );
-   }
+							{/* Saperate Pages Views */}
+							<FullPageLayout
+								exact
+								path="/pages/forgot-password"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyForgotPassword {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/horizontal-timeline"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyHorizontalTimeline {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/vertical-timeline"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyVerticalTimeline {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/pages/login"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLogin {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/pages/register"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyRegister {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/user-profile"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyUserProfile {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/pages/lockscreen"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLockScreen {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/invoice"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyInvoice {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/blank-page"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyBlankPage {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/change-log"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyChangeLogPage {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/pages/maintenance"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyMaintainance {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/gallery"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyGallery {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/faq"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyFAQ {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/knowledge-base"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyKnowledgeBase {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/pages/search"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazySearch {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							{/* Calender */}
+							<MainLayoutRoutes
+								exact
+								path="/calendar"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCalender {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<ErrorLayoutRoute
+								exact
+								path="/pages/error"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyErrorPage {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<Redirect
+								exact
+								to="/"
+							/>
+						</Switch>
+					) : (
+						<Switch>
+							<MainLayoutRoutes
+								exact
+								path="/"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLanding {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/job"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJob {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/news"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyNews {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/candidate/company"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCompany {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/login"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyLogin {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/register"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyRegister {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<FullPageLayout
+								exact
+								path="/forgot-password"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyForgotPassword {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<Redirect
+								exact
+								to="/"
+							/>
+						</Switch>
+					)
+				}
+			</BrowserRouter>
+		);
+	}
 }
 
 export default connect(mapStateToProps)(Router);

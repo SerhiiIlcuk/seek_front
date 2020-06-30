@@ -7,3 +7,7 @@ export const getUserData = (state) => {
 export const getUserCompany = (state) => {
    return get(state, "user.userCompany");
 };
+
+export const getAllAdmins = (state) => {
+   return get(state, "user.allAdmins");
+};
