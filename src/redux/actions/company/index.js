@@ -8,6 +8,9 @@ import {
 	DELETE_EMPLOYEE,
 	FETCH_ALL_COMPANIES,
 	FETCH_ALL_COMPANY_TYPES,
+	FETCH_VERIFIED_COMPANIES,
+	PUBLISH_COMPANY,
+	UN_PUBLISH_COMPANY,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -32,12 +35,30 @@ export const updateCompanyAction = (company, companyId) => ({
 	}
 })
 
+export const publishCompanyAction = (id) => ({
+	type: PUBLISH_COMPANY,
+	payload: {
+		id
+	}
+})
+
+export const unPublishCompanyAction = (id) => ({
+	type: UN_PUBLISH_COMPANY,
+	payload: {
+		id
+	}
+})
+
 export const fetchCompanyAction = () => ({
 	type: FETCH_COMPANY
 })
 
 export const fetchAllCompaniesAction = () => ({
 	type: FETCH_ALL_COMPANIES
+})
+
+export const fetchVerifiedCompaniesAction = () => ({
+	type: FETCH_VERIFIED_COMPANIES
 })
 
 export const uploadImageAction = (base64) => ({

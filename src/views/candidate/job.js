@@ -132,8 +132,8 @@ class JobPage extends Component {
 			const jobLocationFlag = jobLocation === "-1" ? true : jobLocation === job.jobLocation;
 			const experienceLevelFlag = experienceLevel === "-1" ? true : experienceLevel === job.experienceLevel;
 			const keywordFlag = keyword.trim() === "" ? true : (
-				job.title && job.title.toLowerCase()
-					.indexOf(keyword.toLowerCase())
+				job.title && job.title.toLowerCase().trim()
+					.indexOf(keyword.toLowerCase().trim())
 			) !== -1;
 
 			if (jobLocationFlag && experienceLevelFlag && keywordFlag && job.published) {

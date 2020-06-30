@@ -17,7 +17,9 @@ import {bindActionCreators} from "redux";
 import {
 	adminCreateCompanyAction,
 	fetchAllCompaniesAction,
-	fetchAllCompanyTypesAction
+	fetchAllCompanyTypesAction,
+	publishCompanyAction,
+	unPublishCompanyAction,
 } from "../../redux/actions/company";
 import {getAllCompanies, getAllCompanyTypes} from "../../redux/selectors/company";
 import config from "../../config";
@@ -39,6 +41,8 @@ const formSchema = Yup.object().shape({
 
 class ManageCompanies extends Component {
 	state = {
+		verifySelect: "-1",
+		keyword: "",
 		primaryIndustry: "",
 		secondaryIndustry: "",
 		secondaryIndustryError: false,
@@ -133,9 +137,36 @@ class ManageCompanies extends Component {
 		}
 	}
 
+	filteredCompanies = () => {
+		const {allCompanies} = this.props;
+		const {verifySelect, keyword} = this.state;
+		let filtered = allCompanies;
+
+		if (verifySelect === "1") {
+			filtered = allCompanies && allCompanies.filter(company => company.verified === true);
+		} else if (verifySelect === "0") {
+			filtered = allCompanies && allCompanies.filter(company => company.verified === false);
+		}
+
+		if (keyword.trim() === '') {
+			return filtered;
+		} else {
+			return filtered && filtered.filter(item => item.name.toLowerCase().trim().indexOf(keyword.toLowerCase().trim()) !== -1);
+		}
+	}
+
+	actionOnCompany = (verified, id) => {
+		const {publishCompany, unPublishCompany} = this.props;
+
+		if (verified) {
+			unPublishCompany(id);
+		} else {
+			publishCompany(id);
+		}
+	}
+
 	render() {
 		const {
-			allCompanies,
 			allCompanyTypes,
 			adminCreateCompany,
 		} = this.props;
@@ -144,7 +175,10 @@ class ManageCompanies extends Component {
 			secondaryIndustry,
 			keyword,
 			secondaryIndustryError,
+			verifySelect,
 		} = this.state;
+
+		const filteredCompanies = this.filteredCompanies();
 
 		return (
 			<Fragment>
@@ -158,7 +192,22 @@ class ManageCompanies extends Component {
 											Lookup company..
 										</h5>
 									</Col>
-									<Col md="9" sm="12">
+									<Col md="6">
+										<FormGroup>
+											<Input
+												type="select"
+												id="verifySelect"
+												name="verifySelect"
+												value={verifySelect}
+												onChange={(e) => this.onChange(e.target.value, "verifySelect")}
+											>
+												<option value="-1">All</option>
+												<option value="1">Verified</option>
+												<option value="0">UnVerified</option>
+											</Input>
+										</FormGroup>
+									</Col>
+									<Col md="6" sm="12">
 										<FormGroup>
 											<div className="position-relative has-icon-left">
 												<Input
@@ -168,19 +217,18 @@ class ManageCompanies extends Component {
 													className="round"
 													value={keyword}
 													onChange={(e) => this.onChange(e.target.value, 'keyword')}
-													onKeyDown={(e) => this.onClickEnter(e)}
 												/>
 											</div>
 										</FormGroup>
 									</Col>
-									<Col md="3" sm="12" className="text-center">
+									{/*<Col md="3" sm="12" className="text-center">
 										<Button
 											color="primary"
 											onClick={this.onClickSearch}
 										>
 											Search
 										</Button>
-									</Col>
+									</Col>*/}
 								</Row>
 
 								<Row className="mb-3">
@@ -335,7 +383,7 @@ class ManageCompanies extends Component {
 								<Row className="bg-secondary">
 									<Col md="12" className="min-vh-100">
 										{
-											allCompanies && allCompanies.map((company, index) => (
+											filteredCompanies && filteredCompanies.map((company, index) => (
 												<Card color="bg-light" key={index}>
 													<CardBody>
 														<Row>
@@ -367,7 +415,7 @@ class ManageCompanies extends Component {
 															<Col md="2" sm="12" className="text-center">
 																<Button color="primary">Edit</Button>
 																<br/>
-																<Button color="warning">UnPublish</Button>
+																<Button color="warning" onClick={() => this.actionOnCompany(company.verified, company._id)}>{company.verified ? "UnPublish" : "Publish"}</Button>
 															</Col>
 														</Row>
 													</CardBody>
@@ -396,6 +444,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) =>
 	bindActionCreators(
 		{
+			publishCompany: publishCompanyAction,
+			unPublishCompany: unPublishCompanyAction,
 			fetchAllCompanies: fetchAllCompaniesAction,
 			fetchAllCompanyTypes: fetchAllCompanyTypesAction,
 			adminCreateCompany: adminCreateCompanyAction,

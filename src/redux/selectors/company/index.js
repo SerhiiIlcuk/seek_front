@@ -8,6 +8,10 @@ export const getAllCompanies = (state) => {
    return get(state, "company.allCompanies");
 };
 
+export const getVerifiedCompanies = (state) => {
+   return get(state, "company.verifiedCompanies");
+};
+
 export const getAllCompanyTypes = (state) => {
    return get(state, "company.allCompanyTypes");
 };

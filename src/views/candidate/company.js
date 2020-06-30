@@ -12,10 +12,10 @@ import {
 	, Label
 } from "reactstrap";
 import {bindActionCreators} from "redux";
-import {fetchAllCompaniesAction, fetchAllCompanyTypesAction} from "../../redux/actions/company";
-import {getAllCompanies, getAllCompanyTypes} from "../../redux/selectors/company";
+import {fetchVerifiedCompaniesAction, fetchAllCompanyTypesAction} from "../../redux/actions/company";
+import {getVerifiedCompanies, getAllCompanyTypes} from "../../redux/selectors/company";
 import config from "../../config";
-import {companySizes, experienceLevels} from "../../config/constants";
+import {companySizes} from "../../config/constants";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -47,12 +47,12 @@ class CompanyPage extends Component {
 
 	componentDidMount() {
 		const {
-			fetchAllCompanies,
+			fetchVerifiedCompanies,
 			fetchAllCompanyTypes,
 		} = this.props;
 
-		if (fetchAllCompanies) {
-			fetchAllCompanies();
+		if (fetchVerifiedCompanies) {
+			fetchVerifiedCompanies();
 		}
 
 		if (fetchAllCompanyTypes) {
@@ -64,12 +64,12 @@ class CompanyPage extends Component {
 		this.setState({[stateName]: id});
 	}
 
-	filterCompanies = (allCompanies) => {
+	filterCompanies = (verifiedCompanies) => {
 		const {
 			companyType,
 			companySize,
 		} = this.state;
-		const filteredCompanies = allCompanies && allCompanies.filter(company => {
+		const filteredCompanies = verifiedCompanies && verifiedCompanies.filter(company => {
 			let typeFlag = false;
 			let sizeFlag = false;
 
@@ -104,15 +104,15 @@ class CompanyPage extends Component {
 
 	render() {
 		const {
-			allCompanies,
+			verifiedCompanies,
 			allCompanyTypes,
 		} = this.props;
 		const {
 			companyType,
 			companySize,
 		} = this.state;
-		const filteredCompanies = this.filterCompanies(allCompanies);
-		const logoImages = allCompanies && allCompanies.map(company => {
+		const filteredCompanies = this.filterCompanies(verifiedCompanies);
+		const logoImages = verifiedCompanies && verifiedCompanies.map(company => {
 			return company.logoImg;
 		});
 
@@ -139,9 +139,11 @@ class CompanyPage extends Component {
 								{
 									logoImages && logoImages.map((item, key) =>{
 										return (
-											<div key={key}>
-												<img src={config.baseUrl + item}/>
-											</div>
+											item && item !== undefined ? (
+												<div key={key}>
+													<img src={config.baseUrl + item}/>
+												</div>
+											) : null
 										)
 									})
 								}
@@ -275,14 +277,14 @@ class CompanyPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	allCompanies: getAllCompanies(state),
+	verifiedCompanies: getVerifiedCompanies(state),
 	allCompanyTypes: getAllCompanyTypes(state),
 });
 
 const mapDispatchToProps = (dispatch) =>
 	bindActionCreators(
 		{
-			fetchAllCompanies: fetchAllCompaniesAction,
+			fetchVerifiedCompanies: fetchVerifiedCompaniesAction,
 			fetchAllCompanyTypes: fetchAllCompanyTypesAction,
 		},
 		dispatch,

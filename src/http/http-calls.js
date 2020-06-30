@@ -192,6 +192,38 @@ export const updateCompany = (data, companyId) => {
 };
 
 /**
+ * @description publish company
+ */
+export const publishCompany = (companyId) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.publishCompany + companyId, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
+/**
+ * @description un publish company
+ */
+export const unPublishCompany = (companyId) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.unPublishCompany + companyId, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
+/**
  * @description update employee of company (specially update roles)
  */
 export const updateEmployee = (data) => {
@@ -254,6 +286,23 @@ export const fetchAllCompanies = () => {
 			reject(e);
 		 });
    });
+};
+
+/**
+ * @description fetch verified companies
+ * @return {Promise<unknown>}
+ */
+export const fetchVerifiedCompanies = () => {
+	return new Promise((resolve, reject) => {
+		makeGetRequest(config.baseUrl + endPoints.fetchVerifiedCompanies, false)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
 };
 
 /**
