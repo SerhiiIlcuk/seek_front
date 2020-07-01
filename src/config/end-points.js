@@ -31,4 +31,5 @@ export const endPoints = {
     fetchJob: "job/detail/",
     fetchEmployeeJobs: "job/employee",
     updateJobSettings: "job/update-settings",
+    createNews: "article",
 };

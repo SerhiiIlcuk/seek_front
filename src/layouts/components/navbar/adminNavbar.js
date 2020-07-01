@@ -99,6 +99,12 @@ class ThemeAdminNavbar extends Component {
 									</Link>
 								</NavItem>
 								<NavItem className="pr-1">
+									<Link to="/admin/article" className="nav-link" onClick={() => this.onClickNav('news')}>
+										<h5 className="text-white">Post News</h5>
+										{/*<img src={imgNews} className="news-icon" alt="news icon" />*/}
+									</Link>
+								</NavItem>
+								<NavItem className="pr-1">
 									<Link to="/admin/analytics" className="nav-link" onClick={() => this.onClickNav('news')}>
 										<h5 className="text-white">Analytics</h5>
 										{/*<img src={imgNews} className="news-icon" alt="news icon" />*/}

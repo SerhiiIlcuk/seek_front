@@ -89,4 +89,26 @@ export const companySizes = [
       },
       title: "more than 1000",
    },
-]
+];
+
+export const articleCategories = [
+   {
+      id: "siete",
+      value: "Siete",
+   },
+   {
+      id: "cinco",
+      value: "Cinco",
+   },
+];
+
+export const articleStatus = [
+   {
+      id: "draft",
+      value: "Draft",
+   },
+   {
+      id: "publish",
+      value: "Publish",
+   }
+];

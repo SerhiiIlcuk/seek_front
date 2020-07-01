@@ -536,3 +536,16 @@ export const fetchAllJobCategories = () => {
 		 });
    });
 };
+
+export const createNews = (data) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.createNews, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+}
