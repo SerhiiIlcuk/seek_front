@@ -84,7 +84,6 @@ class ThemeAdminNavbar extends Component {
 								<NavItem className="pr-1">
 									<Link to="/admin/manage-companies" className="nav-link" onClick={() => this.onClickNav('job')}>
 										<h5 className="text-white">Manage <br/>Companies</h5>
-										{/*<img src={imgJob} className="job-icon" alt="job icon" />*/}
 									</Link>
 								</NavItem>
 								<NavItem className="pr-1">
@@ -95,19 +94,16 @@ class ThemeAdminNavbar extends Component {
 								<NavItem className="pr-1">
 									<Link to="/admin/manage-news" className="nav-link" onClick={() => this.onClickNav('company')}>
 										<h5 className="text-white">Manage <br/>News</h5>
-										{/*<img src={imgCompany} className="company-icon" alt="company icon" />*/}
 									</Link>
 								</NavItem>
-								<NavItem className="pr-1">
-									<Link to="/admin/article" className="nav-link" onClick={() => this.onClickNav('news')}>
-										<h5 className="text-white">Post News</h5>
-										{/*<img src={imgNews} className="news-icon" alt="news icon" />*/}
+								{/*<NavItem className="pr-1">
+									<Link to="/admin/news" className="nav-link" onClick={() => this.onClickNav('news')}>
+										<h5 className="text-white">Post <br/>News</h5>
 									</Link>
-								</NavItem>
+								</NavItem>*/}
 								<NavItem className="pr-1">
 									<Link to="/admin/analytics" className="nav-link" onClick={() => this.onClickNav('news')}>
 										<h5 className="text-white">Analytics</h5>
-										{/*<img src={imgNews} className="news-icon" alt="news icon" />*/}
 									</Link>
 								</NavItem>
 								<NavItem className="pr-1 mr-1">

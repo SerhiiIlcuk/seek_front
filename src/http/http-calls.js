@@ -549,3 +549,17 @@ export const createNews = (data) => {
 			});
 	});
 }
+
+export const fetchAllNews = () => {
+	return new Promise((resolve, reject) => {
+		makeGetRequest(config.baseUrl + endPoints.fetchAllNews, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+}
+

@@ -22,7 +22,7 @@ const formSchema = Yup.object().shape({
 		.required("Required"),
 });
 
-class Article extends Component {
+class News extends Component {
 	state = {
 		category: articleCategories && articleCategories[0].id,
 		status: articleStatus && articleStatus[0].id,
@@ -196,4 +196,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Article);
+)(News);

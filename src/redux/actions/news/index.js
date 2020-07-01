@@ -6,3 +6,7 @@ export const createNewsAction = (news) => ({
 		news
 	}
 })
+
+export const fetchAllNewsAction = () => ({
+	type: types.FETCH_ALL_NEWS,
+})
