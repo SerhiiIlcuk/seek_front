@@ -59,7 +59,7 @@ class ManageNews extends Component {
 				/>
 				<Row>
 					<Col md="12">
-						<Card>
+						<Card className="min-vh-100">
 							<CardBody>
 								<Row>
 									<Col md="12">

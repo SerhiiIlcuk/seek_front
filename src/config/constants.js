@@ -112,3 +112,6 @@ export const articleStatus = [
       value: "Publish",
    }
 ];
+
+export const NEWS_PUBLISHED = "publish";
+export const NEWS_DRAFT = "draft";
