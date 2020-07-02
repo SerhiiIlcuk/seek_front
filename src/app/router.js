@@ -265,6 +265,15 @@ class Router extends Component {
 							/>
 							<MainLayoutRoutes
 								exact
+								path="/admin/news-edit/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAdminArticle {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
 								path="/analytics-dashboard"
 								render={matchprops => (
 									<Suspense fallback={<Spinner/>}>

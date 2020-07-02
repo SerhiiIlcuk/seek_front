@@ -550,6 +550,20 @@ export const createNews = (data) => {
 	});
 }
 
+export const updateNews = (data) => {
+	const newsId = data._id;
+	return new Promise((resolve, reject) => {
+		makePutRequest(config.baseUrl + endPoints.updateNews + "/" + newsId, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+}
+
 export const fetchAllNews = () => {
 	return new Promise((resolve, reject) => {
 		makeGetRequest(config.baseUrl + endPoints.fetchAllNews, true)
@@ -563,3 +577,28 @@ export const fetchAllNews = () => {
 	});
 }
 
+export const fetchNews = (id) => {
+	return new Promise((resolve, reject) => {
+		makeGetRequest(config.baseUrl + endPoints.fetchNews + "/" + id, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+}
+
+export const deleteNews = (id) => {
+	return new Promise((resolve, reject) => {
+		makeDeleteRequest(config.baseUrl + endPoints.deleteNews + "/" + id, true)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+}

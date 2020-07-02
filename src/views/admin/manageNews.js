@@ -2,24 +2,61 @@ import React, {Component, Fragment} from "react";
 import {Button, Card, CardBody, Col, CustomInput, Row, Table} from "reactstrap";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {fetchAllNewsAction} from "../../redux/actions/news";
+import {deleteNewsAction, fetchAllNewsAction} from "../../redux/actions/news";
 import {getAllNews} from "../../redux/selectors/news";
 import moment from "moment";
 import {Link} from "react-router-dom";
+import {withRouter} from "react-router";
 import {Edit, XSquare} from "react-feather";
+import ModalDialog from "../../components/modal/modal";
 
 class ManageNews extends Component {
+	state = {
+		showDeleteModal: false,
+		deleteNewsId: null,
+	};
 	componentDidMount() {
 		const {fetchAllNews} = this.props;
 
 		fetchAllNews();
 	}
 
+	showDeleteModal = (id) => {
+		this.setState({deleteNewsId: id, showDeleteModal: true});
+	}
+
+	editNews = (id) => {
+		const {history} = this.props;
+		history.push(`/admin/news-edit/${id}`)
+	}
+
+	onClickDelete = () => {
+		const {
+			deleteNewsId,
+		} = this.state;
+		const {deleteNews} = this.props;
+
+		deleteNews(deleteNewsId);
+		this.setState({showDeleteModal: false});
+	}
+
+	onClickCancel = () => {
+		this.setState({showDeleteModal: false});
+	}
+
 	render() {
+		const {showDeleteModal} = this.state;
 		const {allNews} = this.props;
 
 		return (
 			<Fragment>
+				<ModalDialog
+					show={showDeleteModal}
+					title="confirm"
+					content="Are you sure you want to delete this news?"
+					onClickOk={this.onClickDelete}
+					onClickCancel={this.onClickCancel}
+				/>
 				<Row>
 					<Col md="12">
 						<Card>
@@ -69,8 +106,18 @@ class ManageNews extends Component {
 															</td>
 															<td>{news.category}</td>
 															<td>
-																<Edit size={20} color="#006d6d"/>
-																<XSquare size={20} color="#ff8d69" />
+																<Edit
+																	size={30}
+																	color="#006d6d"
+																	className="cursor-pointer mr-2"
+																	onClick={() => this.editNews(news._id)}
+																/>
+																<XSquare
+																	size={30}
+																	color="#ff8d69"
+																	className="cursor-pointer"
+																	onClick={() => this.showDeleteModal(news._id)}
+																/>
 															</td>
 														</tr>
 													)
@@ -97,6 +144,7 @@ const mapDispatchToProps = dispatch =>
 	bindActionCreators(
 		{
 			fetchAllNews: fetchAllNewsAction,
+			deleteNews: deleteNewsAction,
 		},
 		dispatch
 	);
@@ -104,4 +152,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ManageNews);
+)(withRouter(ManageNews));

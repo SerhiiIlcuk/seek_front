@@ -9,9 +9,13 @@ import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../../assets/scss/views/components/extra/editor.scss";
 import {Field, Formik, Form} from "formik";
 import {articleCategories, articleStatus} from "../../config/constants";
-import {EditorState} from "draft-js";
+import {ContentState, convertFromHTML, EditorState} from "draft-js";
 import {stateToHTML} from "draft-js-export-html";
-import {createNewsAction} from "../../redux/actions/news";
+import {createNewsAction, fetchNewsAction, updateNewsAction} from "../../redux/actions/news";
+import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/common";
+import {toastr} from "react-redux-toastr";
+import {withRouter} from "react-router";
+import {getNews} from "../../redux/selectors/news";
 
 const formSchema = Yup.object().shape({
 	title: Yup.string()
@@ -34,6 +38,79 @@ class News extends Component {
 		this.setState({[key]: value});
 	}
 
+	componentDidMount() {
+		const {
+			location,
+			match,
+			fetchNews,
+		} = this.props;
+
+		if (location.pathname.includes("news-edit") && location.pathname.includes("admin")) {
+			const newsId = match.params.id;
+
+			if (newsId) {
+				fetchNews(newsId);
+			}
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		const {
+			submitting,
+			success,
+			errMessage,
+			history,
+			news,
+		} = this.props;
+
+		if (prevProps.news !== news) {
+			if (news !== undefined) {
+				let contentState;
+				if (news.content) {
+					const blocksFromHTML = convertFromHTML(news.content);
+					if (blocksFromHTML && blocksFromHTML.contentBlocks && blocksFromHTML.entityMap) {
+						contentState = ContentState.createFromBlockArray(
+							blocksFromHTML.contentBlocks,
+							blocksFromHTML.entityMap,
+						);
+					}
+				}
+
+				this.setState({
+					category: news.category,
+					status: news.status,
+					featured: news.featured,
+					content: contentState && EditorState.createWithContent(contentState),
+				})
+			}
+		}
+
+		if (prevProps.submitting !== submitting) {
+			if (!submitting) {
+				if (success) {
+					toastr.success(
+						"Success",
+						"Operation successfully done",
+						{
+							position: "top-right",
+							timeOut: 1000
+						}
+					);
+					history.push('/admin/manage-news');
+				} else {
+					toastr.error(
+						"Error",
+						errMessage,
+						{
+							position: "top-right",
+							timeOut: 1000
+						}
+					);
+				}
+			}
+		}
+	}
+
 	convertStateToHtml = () => {
 		const {content} = this.state;
 		if (content) {
@@ -50,13 +127,18 @@ class News extends Component {
 			featured,
 			content,
 		} = this.state;
-		const {createNews} = this.props;
+		const {
+			news,
+			createNews,
+			updateNews,
+			submitting
+		} = this.props;
 
 		return (
 			<Fragment>
 				<Formik
 					initialValues={{
-						title: '',
+						title: (news && news.title) || '',
 						author: '',
 					}}
 					onSubmit={(values) => {
@@ -69,8 +151,12 @@ class News extends Component {
 							...values,
 						};
 
+						if (news && news._id) {
+							updateNews({...data, _id: news._id});
+						} else {
+							createNews(data);
+						}
 						console.log(data);
-						createNews(data);
 					}}
 					validationSchema={formSchema}
 					enableReinitialize
@@ -170,8 +256,9 @@ class News extends Component {
 										size="lg"
 										type="submit"
 										color="success"
+										disabled={submitting}
 									>
-										Save
+										Submit
 									</Button>
 								</Col>
 							</Row>
@@ -183,12 +270,19 @@ class News extends Component {
 	}
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+	success: getSuccess(state),
+	errMessage: getErrMessage(state),
+	submitting: getSubmitting(state),
+	news: getNews(state),
+})
 
 const mapDispatchToProps = dispatch =>
 	bindActionCreators(
 		{
 			createNews: createNewsAction,
+			fetchNews: fetchNewsAction,
+			updateNews: updateNewsAction,
 		},
 		dispatch
 	);
@@ -196,4 +290,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(News);
+)(withRouter(News));

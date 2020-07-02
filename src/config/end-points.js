@@ -32,5 +32,8 @@ export const endPoints = {
     fetchEmployeeJobs: "job/employee",
     updateJobSettings: "job/update-settings",
     createNews: "article",
+    updateNews: "article",
     fetchAllNews: "article",
+    deleteNews: "article",
+    fetchNews: "article",
 };
