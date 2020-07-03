@@ -23,15 +23,15 @@ const responsive = {
 	superLargeDesktop: {
 		// the naming can be any, depends on you.
 		breakpoint: { max: 4000, min: 3000 },
-		items: 5
+		items: 3
 	},
 	desktop: {
 		breakpoint: { max: 3000, min: 1024 },
-		items: 4
+		items: 3
 	},
 	tablet: {
 		breakpoint: { max: 1024, min: 464 },
-		items: 3
+		items: 2
 	},
 	mobile: {
 		breakpoint: { max: 464, min: 0 },
@@ -112,9 +112,9 @@ class CompanyPage extends Component {
 			companySize,
 		} = this.state;
 		const filteredCompanies = this.filterCompanies(verifiedCompanies);
-		const logoImages = verifiedCompanies && verifiedCompanies.map(company => {
+		/*const logoImages = verifiedCompanies && verifiedCompanies.map(company => {
 			return company.logoImg;
-		});
+		});*/
 
 		return (
 			<Fragment>
@@ -125,23 +125,26 @@ class CompanyPage extends Component {
 					 description=""
 				  />*/}
 						{
-							logoImages && logoImages.length > 0 &&
+							verifiedCompanies && verifiedCompanies.length > 0 &&
 							<Carousel
 								ssr={true}
 								partialVisbile
 								itemClass="image-item"
 								responsive={responsive}
-								autoPlay={false}
+								autoPlay={true}
 								infinite
 								deviceType={this.props.deviceType}
 								removeArrowOnDeviceType={["mobile"]}
 							>
 								{
-									logoImages && logoImages.map((item, key) =>{
+									verifiedCompanies && verifiedCompanies.map((item, key) =>{
 										return (
-											item && item !== undefined ? (
-												<div key={key}>
-													<img src={config.baseUrl + item}/>
+											item.logoImg && item.logoImg !== undefined ? (
+												<div key={key} className="position-relative">
+													<img className="position-absolute bottom-right" src={config.baseUrl + item.logoImg}/>
+													<Label className="position-absolute text-warning">{item.name}</Label>
+													<br/>
+													<Label className="position-absolute text-warning">{item.city}</Label>
 												</div>
 											) : null
 										)
@@ -174,7 +177,7 @@ class CompanyPage extends Component {
 								</Row>
 
 								<Row>
-									<Col md="3" sm="12">
+									<Col md="6" sm="12">
 										<FormGroup>
 											<Label for="companyType">Company Type</Label>
 											<Input
@@ -195,7 +198,7 @@ class CompanyPage extends Component {
 											</Input>
 										</FormGroup>
 									</Col>
-									<Col md="3" sm="12">
+									<Col md="6" sm="12">
 										<FormGroup>
 											<Label for="companySize">Company Size</Label>
 											<Input
@@ -216,7 +219,7 @@ class CompanyPage extends Component {
 											</Input>
 										</FormGroup>
 									</Col>
-									<Col md="3" sm="12">
+									{/*<Col md="3" sm="12">
 										<FormGroup>
 											<Label for="industry">Company Industry</Label>
 											<Input type="select" id="industry" name="industry">
@@ -231,7 +234,7 @@ class CompanyPage extends Component {
 
 											</Input>
 										</FormGroup>
-									</Col>
+									</Col>*/}
 								</Row>
 
 								<Row className="bg-secondary">
