@@ -16,7 +16,7 @@ export const handleErrorIfAvailable = httpResponse => {
 	  case 401: {
 		 // Token expired
 		 // localStorage.clear();
-		 window.location.reload();
+		 // window.location.reload();
 		 break;
 	  }
 	  default: {

@@ -15,3 +15,7 @@ export const getVerifiedCompanies = (state) => {
 export const getAllCompanyTypes = (state) => {
    return get(state, "company.allCompanyTypes");
 };
+// get company fetched by id
+export const getCompanyDetail = (state) => {
+   return get(state, "company.companyDetail");
+};

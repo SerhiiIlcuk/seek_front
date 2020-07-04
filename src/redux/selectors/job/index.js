@@ -11,3 +11,7 @@ export const getJob = (state) => {
 export const getAllJobs = (state) => {
    return get(state, "job.allJobs");
 };
+
+export const getCompanyJobs = (state) => {
+   return get(state, "job.companyJobs");
+}

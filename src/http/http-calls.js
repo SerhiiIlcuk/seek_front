@@ -456,6 +456,19 @@ export const fetchEmployeeJobs = () => {
    });
 }
 
+export const fetchCompanyJobs = (companyId) => {
+	return new Promise((resolve, reject) => {
+		makeGetRequest(config.baseUrl + endPoints.fetchCompanyJobs + "/" + companyId, false)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
 export const updateJobSettings = (settings) => {
    return new Promise((resolve, reject) => {
 	  makePostRequest(config.baseUrl + endPoints.updateJobSettings, true, settings)

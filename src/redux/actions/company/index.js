@@ -11,6 +11,7 @@ import {
 	FETCH_VERIFIED_COMPANIES,
 	PUBLISH_COMPANY,
 	UN_PUBLISH_COMPANY,
+	FETCH_COMPANY_BY_ID,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -49,8 +50,23 @@ export const unPublishCompanyAction = (id) => ({
 	}
 })
 
+/**
+ * @description this will fetch my company
+ * @return {{type: string}}
+ */
 export const fetchCompanyAction = () => ({
 	type: FETCH_COMPANY
+})
+
+/**
+ * @description this will fetch company by id
+ * @return {{type: string}}
+ */
+export const fetchCompanyByIdAction = (id) => ({
+	type: FETCH_COMPANY_BY_ID,
+	payload: {
+		id
+	}
 })
 
 export const fetchAllCompaniesAction = () => ({

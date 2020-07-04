@@ -1,13 +1,18 @@
 import {produce} from "immer"
 import {
 	ALL_COMPANIES_RESULT, ALL_COMPANY_TYPES_RESULT,
-	COMPANY_RESULT, CREATE_COMPANY, UPDATE_COMPANY, VERIFIED_COMPANIES_RESULT
+	COMPANY_RESULT,
+	CREATE_COMPANY,
+	UPDATE_COMPANY,
+	VERIFIED_COMPANIES_RESULT,
+	COMPANY_DETAIL_RESULT,
 } from "../../types/company";
 
 const initialState = {
 	success: false,
 	submitting: false,
 	companyData: null,
+	companyDetail: undefined, // this is for company fetched by id
 	allCompanies: null,
 	allCompanyTypes: null,
 	verifiedCompanies: null,
@@ -27,6 +32,10 @@ export default (state = initialState, action) => {
 		case COMPANY_RESULT:
 			return produce(state, draft => {
 				draft.companyData = action.payload;
+			});
+		case COMPANY_DETAIL_RESULT:
+			return produce(state, draft => {
+				draft.companyDetail = action.payload;
 			});
 		case ALL_COMPANIES_RESULT:
 			return produce(state, draft => {

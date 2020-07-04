@@ -39,10 +39,11 @@ import {
 	VERIFIED_COMPANIES_RESULT,
 	PUBLISH_COMPANY,
 	UN_PUBLISH_COMPANY,
+	FETCH_COMPANY_BY_ID,
+	COMPANY_DETAIL_RESULT,
 } from "../../types/company";
 import {getUserCompany} from "../../selectors/user";
 import {SUBMIT_START, SUBMIT_END} from "../../types/common";
-import {ALL_ADMINS_RESULT} from "../../types/user";
 import {getAllCompanies} from "../../selectors/company";
 
 function* actionWatcher() {
@@ -58,6 +59,7 @@ function* actionWatcher() {
 	yield takeLatest(FETCH_ALL_COMPANY_TYPES, fetchAllCompanyTypesSaga);
 	yield takeLatest(PUBLISH_COMPANY, publishCompanySaga);
 	yield takeLatest(UN_PUBLISH_COMPANY, unPublishCompanySaga);
+	yield takeLatest(FETCH_COMPANY_BY_ID, fetchCompanyByIdSaga);
 }
 
 function* createCompanySaga({payload: {company}}) {
@@ -162,6 +164,18 @@ function* fetchCompanySaga() {
 				payload: data
 			});
 		}
+	} catch (e) {
+		console.log('error', e);
+	}
+}
+
+function* fetchCompanyByIdSaga({payload: {id}}) {
+	try {
+		const data = yield call(getCompanyDetails, id);
+		yield put({
+			type: COMPANY_DETAIL_RESULT,
+			payload: data
+		});
 	} catch (e) {
 		console.log('error', e);
 	}
