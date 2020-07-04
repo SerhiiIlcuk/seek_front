@@ -14,6 +14,7 @@ export const endPoints = {
     publishCompany: "company/publish/",
     unPublishCompany: "company/un-publish/",
     updateEmployee: "company/employee",
+    addEmployee: "company/employee",
     deleteEmployee: "company/employee",
     companyLoad: "company/detail/",
     fetchAllCompanies: "company",

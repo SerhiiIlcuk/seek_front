@@ -239,6 +239,19 @@ export const updateEmployee = (data) => {
    });
 };
 
+export const addEmployee = (data) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.addEmployee, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
 /**
  * @description update employee of company (specially update roles)
  */

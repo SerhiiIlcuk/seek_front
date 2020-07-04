@@ -20,6 +20,7 @@ import {
 	fetchVerifiedCompanies,
 	publishCompany,
 	unPublishCompany,
+	addEmployee,
 } from "../../../http/http-calls";
 import {extractErrorMessage} from "../../../common/errorInterceptor";
 import {
@@ -41,6 +42,7 @@ import {
 	UN_PUBLISH_COMPANY,
 	FETCH_COMPANY_BY_ID,
 	COMPANY_DETAIL_RESULT,
+	ADD_EMPLOYEE,
 } from "../../types/company";
 import {getUserCompany} from "../../selectors/user";
 import {SUBMIT_START, SUBMIT_END} from "../../types/common";
@@ -60,6 +62,7 @@ function* actionWatcher() {
 	yield takeLatest(PUBLISH_COMPANY, publishCompanySaga);
 	yield takeLatest(UN_PUBLISH_COMPANY, unPublishCompanySaga);
 	yield takeLatest(FETCH_COMPANY_BY_ID, fetchCompanyByIdSaga);
+	yield takeLatest(ADD_EMPLOYEE, addEmployeeSaga);
 }
 
 function* createCompanySaga({payload: {company}}) {
@@ -221,6 +224,47 @@ function* uploadImageSaga({payload}) {
 		});
 	} catch (e) {
 		console.log('error', e);
+		yield put({
+			type: SUBMIT_END,
+			payload: {
+				success: false,
+				errMessage: extractErrorMessage(e.message)
+			}
+		});
+	}
+}
+
+function* addEmployeeSaga({payload: {newEmployee}}) {
+	try {
+		const state = yield select();
+		const userCompany = getUserCompany(state);
+		const companyId = userCompany.id;
+
+		if (companyId) {
+			yield put({
+				type: SUBMIT_START,
+			});
+
+			const data = yield call(addEmployee, {
+				...newEmployee,
+				companyId,
+			});
+
+			yield put({
+				type: COMPANY_RESULT,
+				payload: data
+			});
+
+			yield put({
+				type: SUBMIT_END,
+				payload: {
+					success: true,
+				}
+			});
+		}
+	} catch (e) {
+		console.log('error', e);
+
 		yield put({
 			type: SUBMIT_END,
 			payload: {

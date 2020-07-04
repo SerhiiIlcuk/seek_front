@@ -12,6 +12,7 @@ import {
 	PUBLISH_COMPANY,
 	UN_PUBLISH_COMPANY,
 	FETCH_COMPANY_BY_ID,
+	ADD_EMPLOYEE,
 } from "../../types/company";
 
 export const createCompanyAction = (company) => ({
@@ -113,4 +114,11 @@ export const deleteEmployeeAction = (companyEmployee) => ({
  */
 export const fetchAllCompanyTypesAction = () => ({
 	type: FETCH_ALL_COMPANY_TYPES,
+})
+
+export const addEmployeeAction = (newEmployee) => ({
+	type: ADD_EMPLOYEE,
+	payload: {
+		newEmployee,
+	}
 })
