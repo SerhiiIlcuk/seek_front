@@ -94,6 +94,9 @@ const LazyLanding = lazy(() => import("../views/candidate/landing"));
 const LazyJob = lazy(() => import("../views/candidate/job"));
 const LazyCompany = lazy(() => import("../views/candidate/company"));
 const LazyNews = lazy(() => import("../views/candidate/news"));
+const LazyJobDetail = lazy(() => import("../views/common/jobDetail"));
+const LazyNewsDetail = lazy(() => import("../views/common/newsDetail"));
+const LazyCompanyDetail = lazy(() => import("../views/candidate/companyDetail"));
 
 // admin
 const LazyManageCompanies = lazy(() => import("../views/admin/manageCompanies"));
@@ -161,6 +164,33 @@ class Router extends Component {
 								render={matchprops => (
 									<Suspense fallback={<Spinner/>}>
 										<LazyCompany {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/job-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJobDetail {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/news-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyNewsDetail {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/company-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCompanyDetail {...matchprops} />
 									</Suspense>
 								)}
 							/>
@@ -991,6 +1021,33 @@ class Router extends Component {
 								render={matchprops => (
 									<Suspense fallback={<Spinner/>}>
 										<LazyCompany {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/job-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyJobDetail {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/news-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyNewsDetail {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/company-detail/:id"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyCompanyDetail {...matchprops} />
 									</Suspense>
 								)}
 							/>

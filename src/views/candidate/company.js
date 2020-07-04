@@ -18,6 +18,7 @@ import config from "../../config";
 import {companySizes} from "../../config/constants";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import {withRouter} from "react-router";
 
 const responsive = {
 	superLargeDesktop: {
@@ -100,6 +101,14 @@ class CompanyPage extends Component {
 		});
 
 		return filteredCompanies;
+	}
+
+	navigateToUrl = (url) => {
+		const {
+			history
+		} = this.props;
+
+		history.push(url);
 	}
 
 	render() {
@@ -261,7 +270,12 @@ class CompanyPage extends Component {
 																{company.streetAddressOne}
 															</Col>
 															<Col md="2" sm="12" className="text-center">
-																<Button color="primary">View Jobs</Button>
+																<Button
+																	onClick={() => this.navigateToUrl(`/company-detail/${company._id}`)}
+																	color="primary"
+																>
+																	View Detail
+																</Button>
 															</Col>
 														</Row>
 													</CardBody>
@@ -296,4 +310,4 @@ const mapDispatchToProps = (dispatch) =>
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(CompanyPage);
+)(withRouter(CompanyPage));

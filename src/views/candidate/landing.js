@@ -45,13 +45,12 @@ class LandingPage extends Component {
 
 		const publishedNews = allNews && allNews.filter(news => news.status === NEWS_PUBLISHED);
 		const publishedJobs = allJobs && allJobs.filter(job => job.published);
-
-		console.log(publishedJobs);
 		let companyJobs;
+
 		if (userType === EMPLOYEE) {
 			const userCompany = localStorage.getItem('userCompany') && JSON.parse(localStorage.getItem('userCompany'));
 			const companyId = userCompany && userCompany.id;
-			companyJobs = publishedJobs && publishedJobs.filter(job => job.company._id === companyId)
+			companyJobs = publishedJobs && publishedJobs.filter(job => (job.company && job.company._id) === companyId)
 		} else {
 			companyJobs = publishedJobs;
 		}
@@ -83,7 +82,12 @@ class LandingPage extends Component {
 											<div className="col align-self-center">
 												<CardTitle className="mt-3">{truncateText(news.title, 20)}</CardTitle>
 												{truncateText((news.content && parse(news.content)), 30)}
-												<Button className="btn btn-raised btn-info btn-darken-3">See detail</Button>
+												<Button
+													className="btn btn-raised btn-info btn-darken-3"
+													onClick={() => this.navigateTo(`/news-detail/${news._id}`)}
+												>
+													See detail
+												</Button>
 											</div>
 										</div>
 									</CardBody>
@@ -109,7 +113,13 @@ class LandingPage extends Component {
 										<CardText>
 											{truncateText(job.summary, 100)}
 										</CardText>
-										<Button className="position-absolute position-bottom-0" color="info">See detail</Button>
+										<Button
+											className="position-absolute position-bottom-0"
+											color="info"
+											onClick={() => this.navigateTo(`/job-detail/${job._id}`)}
+										>
+											See detail
+										</Button>
 									</CardBody>
 								</Card>
 							</Col>

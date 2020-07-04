@@ -86,7 +86,6 @@ function* fetchNewsSaga({payload: {id}}) {
 			type: types.NEWS_RESULT,
 			payload: news,
 		});
-		console.log(news);
 	} catch (e) {
 		console.log(e);
 	}
@@ -99,7 +98,6 @@ function* fetchAllNewsSaga() {
 			type: types.ALL_NEWS_RESULT,
 			payload: allNews,
 		});
-		console.log(allNews);
 	} catch (e) {
 		console.log(e);
 	}
