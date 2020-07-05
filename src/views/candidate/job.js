@@ -157,14 +157,15 @@ class JobPage extends Component {
 			history,
 			applyToJob,
 		} = this.props;
-		if (token) {
-			const data = {
-				id: jobId,
-			}
-			applyToJob(data);
-		} else {
-			history.push('/login');
-		}
+		history.push(`/job-detail/${jobId}`);
+		// if (token) {
+		// 	const data = {
+		// 		id: jobId,
+		// 	}
+		// 	applyToJob(data);
+		// } else {
+		// 	history.push('/login');
+		// }
 	}
 
 	render() {
@@ -326,7 +327,7 @@ class JobPage extends Component {
 																				color="primary"
 																				onClick={() => this.applyToJob(job._id)}
 																			>
-																				Apply
+																				View Details
 																			</Button>
 																		) : (
 																			<Label>applied</Label>
