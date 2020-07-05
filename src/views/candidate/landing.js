@@ -10,8 +10,6 @@ import {connect} from "react-redux";
 import {getAllJobs} from "../../redux/selectors/job";
 import {truncateText} from "../../common";
 import {EMPLOYEE, NEWS_PUBLISHED} from "../../config/constants";
-import parse from 'html-react-parser';
-import Link from "../../containers/todo/todoFilterLink";
 import {withRouter} from "react-router";
 import {getUserType} from "../../redux/selectors/auth";
 
