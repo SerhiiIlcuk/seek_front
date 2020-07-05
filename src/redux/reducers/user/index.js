@@ -35,6 +35,8 @@ export default (state = initialState, action) => {
 						roles: me.roles
 					};
 					localStorage.setItem('userCompany', JSON.stringify(draft.userCompany));
+				} else {
+					draft.userCompany = null;
 				}
 			});
 		default:

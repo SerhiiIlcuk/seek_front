@@ -23,6 +23,7 @@ import {getToken} from "../../redux/selectors/auth";
 import {withRouter} from "react-router";
 import {fetchUserAction} from "../../redux/actions/user";
 import {getUserData} from "../../redux/selectors/user";
+import {truncateText} from "../../common";
 
 class JobPage extends Component {
 	state = {
@@ -316,7 +317,7 @@ class JobPage extends Component {
 																	{job.title}
 																</Col>
 																<Col md="6" sm="12" className="text-center">
-																	{job.description && parse(job.description)}
+																	{truncateText(job.summary, 250)}
 																</Col>
 																<Col md="2" sm="12" className="text-center">
 																	{

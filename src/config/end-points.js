@@ -8,6 +8,7 @@ export const endPoints = {
     fetchAllAdmins: "user/admin/all",
     updateAdmin: "user/admin/update",
     deleteAdmin: "user/admin/delete",
+    addAdmin: "user/admin/add",
     createCompany: "company",
     adminCreateCompany: "company/by-admin",
     updateCompany: "company/update/",

@@ -101,8 +101,10 @@ const LazyCompanyDetail = lazy(() => import("../views/candidate/companyDetail"))
 // admin
 const LazyManageCompanies = lazy(() => import("../views/admin/manageCompanies"));
 const LazyAdminManageUsers = lazy(() => import("../views/admin/manageUsers"));
-const LazyAdminArticle = lazy(() => import("../views/admin/news"));
+const LazyAdminArticleEdit = lazy(() => import("../views/admin/editNews"));
+const LazyAdminArticlePost = lazy(() => import("../views/admin/postNews"));
 const LazyAdminManageNews = lazy(() => import("../views/admin/manageNews"));
+const LazyAdminAnalytics = lazy(() => import("../views/admin/analytics"));
 
 // Full Layout
 const LazyForgotPassword = lazy(() => import("../views/pages/forgotPassword"));
@@ -286,10 +288,10 @@ class Router extends Component {
 							/>
 							<MainLayoutRoutes
 								exact
-								path="/admin/news"
+								path="/admin/news-post"
 								render={matchprops => (
 									<Suspense fallback={<Spinner/>}>
-										<LazyAdminArticle {...matchprops} />
+										<LazyAdminArticlePost {...matchprops} />
 									</Suspense>
 								)}
 							/>
@@ -298,7 +300,16 @@ class Router extends Component {
 								path="/admin/news-edit/:id"
 								render={matchprops => (
 									<Suspense fallback={<Spinner/>}>
-										<LazyAdminArticle {...matchprops} />
+										<LazyAdminArticleEdit {...matchprops} />
+									</Suspense>
+								)}
+							/>
+							<MainLayoutRoutes
+								exact
+								path="/admin/analytics"
+								render={matchprops => (
+									<Suspense fallback={<Spinner/>}>
+										<LazyAdminAnalytics {...matchprops} />
 									</Suspense>
 								)}
 							/>

@@ -126,6 +126,19 @@ export const updateAdmin = (data) => {
 	});
 };
 
+export const addAdmin = (data) => {
+	return new Promise((resolve, reject) => {
+		makePostRequest(config.baseUrl + endPoints.addAdmin, true, data)
+			.then(res => {
+				resolve(res);
+			})
+			.catch(e => {
+				console.log("API call error: ", e);
+				reject(e);
+			});
+	});
+};
+
 /**
  *@description deleteAdmin - to delete admin user
  * @param {object} data information to be updated with

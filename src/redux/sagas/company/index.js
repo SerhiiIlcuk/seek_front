@@ -166,6 +166,11 @@ function* fetchCompanySaga() {
 				type: COMPANY_RESULT,
 				payload: data
 			});
+		} else {
+			yield put({
+				type: COMPANY_RESULT,
+				payload: null
+			});
 		}
 	} catch (e) {
 		console.log('error', e);

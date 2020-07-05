@@ -21,10 +21,21 @@ import {
 	getSuccess
 } from '../../redux/selectors/common';
 import {getAllAdmins} from "../../redux/selectors/user";
-import {fetchAllAdminsAction} from "../../redux/actions/user";
+import {addAdminAction, fetchAllAdminsAction} from "../../redux/actions/user";
 import {ADMIN_ROLES, EMPLOYEE_ROLES} from "../../config/constants";
 import config from "../../config/index";
 import {updateAdminAction, deleteAdminAction} from "../../redux/actions/user";
+import {Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+
+const formSchema = Yup.object().shape({
+	email: Yup.string()
+		.required('Required')
+		.email("Invalid email"),
+	adminRole: Yup.boolean(),
+	newsRole: Yup.boolean(),
+	companyRole: Yup.boolean(),
+});
 
 class ManageUsersPage extends Component {
 	state = {
@@ -109,9 +120,37 @@ class ManageUsersPage extends Component {
 		});
 	}
 
+	makeRoles = (values) => {
+		const {
+			newsRole,
+			adminRole,
+			companyRole,
+		} = values;
+
+		let roles = [];
+
+		if (adminRole) {
+			roles.push(ADMIN_ROLES.USER)
+		}
+
+		if (companyRole) {
+			roles.push(ADMIN_ROLES.COMPANY)
+		}
+
+		if (newsRole) {
+			roles.push(EMPLOYEE_ROLES.NEWS)
+		}
+
+		return roles;
+	}
+
 	render() {
 		const {allAdmins} = this.state;
 		const propsAllAdmins = this.props.allAdmins;
+		const {
+			submitting,
+			addAdmin,
+		} = this.props;
 
 		return (
 			<Fragment>
@@ -121,133 +160,189 @@ class ManageUsersPage extends Component {
 							<CardBody>
 								<Row>
 									<Col md="12" className="min-vh-100">
-										<Table striped>
-											<thead>
-											<tr>
-												<th></th>
-												<th></th>
-												<th>Admins</th>
-												<th>Admin</th>
-												<th>Manage Companies</th>
-												<th>Manage News</th>
-												<th></th>
-												<th></th>
-											</tr>
-											</thead>
-											<tbody>
-											{
-												allAdmins && allAdmins.map((admin, index) => {
-													const hasAdminRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.USER) !== -1);
-													const hasCompanyRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.COMPANY) !== -1);
-													const hasNewsRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.NEWS) !== -1);
-													const adminRoleId = "admin" + admin._id;
-													const companyRoleId = "profile" + admin._id;
-													const newsRoleId = "job" + admin._id;
+										<Formik
+											onSubmit={(values, {resetForm}) => {
+												const roles = this.makeRoles(values);
+												const data = {
+													email: values.email,
+													roles,
+												};
 
-													let checkDisable = true;
-													if (!this.compareStateAndProps((propsAllAdmins && propsAllAdmins[index]), admin)) {
-														checkDisable = false;
-													}
+												addAdmin(data);
 
-													return (
-														<tr key={index}>
-															<th scope="row">{index + 1}</th>
-															<td>
-																{
-																	admin.logoImg &&
-																	<img
-																		src={config.baseUrl + admin.logoImg}
-																		className="rounded-circle img-border gradient-summer width-50"
-																		alt="user avatar"
-																	/>
+												resetForm({
+													email: '',
+													companyRole: false,
+													adminRole: false,
+													newsRole: false,
+												});
+											}}
+											initialValues={{
+												email: '',
+												newsRole: false,
+												adminRole: false,
+												companyRole: false,
+											}}
+											validationSchema={formSchema}
+										>
+											{({
+													errors,
+													touched,
+													values,
+													setFieldValue,
+												}) => (
+												<Form>
+													<Table striped>
+														<thead>
+														<tr>
+															<th></th>
+															<th></th>
+															<th>Admins</th>
+															<th>Admin</th>
+															<th>Manage Companies</th>
+															<th>Manage News</th>
+															<th></th>
+															<th></th>
+														</tr>
+														</thead>
+														<tbody>
+														{
+															allAdmins && allAdmins.map((admin, index) => {
+																const hasAdminRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.USER) !== -1);
+																const hasCompanyRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.COMPANY) !== -1);
+																const hasNewsRole = (admin.roles.findIndex(role => role === ADMIN_ROLES.NEWS) !== -1);
+																const adminRoleId = "admin" + admin._id;
+																const companyRoleId = "profile" + admin._id;
+																const newsRoleId = "job" + admin._id;
+
+																let checkDisable = true;
+																if (!this.compareStateAndProps((propsAllAdmins && propsAllAdmins[index]), admin)) {
+																	checkDisable = false;
 																}
-															</td>
-															<td>
-																{
-																	admin.firstName && admin.lastName ?
-																		admin.firstName + ' ' + admin.lastName
-																		: admin.email
-																}
-															</td>
-															<td>
-																<CustomInput
-																	id={adminRoleId}
-																	type="checkbox"
-																	checked={hasAdminRole}
-																	onChange={(e) => {
-																		this._updateAdminState(index, e.target.checked, ADMIN_ROLES.USER)
-																	}}
-																/>
-															</td>
-															<td>
-																<CustomInput
-																	id={companyRoleId}
-																	type="checkbox"
-																	checked={hasCompanyRole}
-																	onChange={(e) => {
-																		this._updateAdminState(index, e.target.checked, ADMIN_ROLES.COMPANY)
-																	}}
-																/>
-															</td>
-															<td>
-																<CustomInput
-																	id={newsRoleId}
-																	type="checkbox"
-																	checked={hasNewsRole}
-																	onChange={(e) => {
-																		this._updateAdminState(index, e.target.checked, ADMIN_ROLES.NEWS)
-																	}}
-																/>
-															</td>
-															<td>
-																<X
-																	size={30}
-																	onClick={() => this._deleteAdmin(admin)}
-																/>
-															</td>
-															<td>
-																<Check
-																	size={30}
-																	color={checkDisable ? "gray" : "green"}
-																	className={checkDisable ? "cursor-not-allowed" : "cursor-pointer"}
-																	onClick={() => this._updateAdmin(admin)}
-																/>
+
+																return (
+																	<tr key={index}>
+																		<th scope="row">{index + 1}</th>
+																		<td>
+																			{
+																				admin.logoImg &&
+																				<img
+																					src={config.baseUrl + admin.logoImg}
+																					className="rounded-circle img-border gradient-summer width-50"
+																					alt="user avatar"
+																				/>
+																			}
+																		</td>
+																		<td>
+																			{
+																				admin.firstName && admin.lastName ?
+																					admin.firstName + ' ' + admin.lastName
+																					: admin.email
+																			}
+																		</td>
+																		<td>
+																			<CustomInput
+																				id={adminRoleId}
+																				type="checkbox"
+																				checked={hasAdminRole}
+																				onChange={(e) => {
+																					this._updateAdminState(index, e.target.checked, ADMIN_ROLES.USER)
+																				}}
+																			/>
+																		</td>
+																		<td>
+																			<CustomInput
+																				id={companyRoleId}
+																				type="checkbox"
+																				checked={hasCompanyRole}
+																				onChange={(e) => {
+																					this._updateAdminState(index, e.target.checked, ADMIN_ROLES.COMPANY)
+																				}}
+																			/>
+																		</td>
+																		<td>
+																			<CustomInput
+																				id={newsRoleId}
+																				type="checkbox"
+																				checked={hasNewsRole}
+																				onChange={(e) => {
+																					this._updateAdminState(index, e.target.checked, ADMIN_ROLES.NEWS)
+																				}}
+																			/>
+																		</td>
+																		<td>
+																			<X
+																				size={30}
+																				onClick={() => this._deleteAdmin(admin)}
+																			/>
+																		</td>
+																		<td>
+																			<Check
+																				size={30}
+																				color={checkDisable ? "gray" : "green"}
+																				className={checkDisable ? "cursor-not-allowed" : "cursor-pointer"}
+																				onClick={() => this._updateAdmin(admin)}
+																			/>
+																		</td>
+																	</tr>
+																)
+															})
+														}
+														<tr>
+															<td colSpan={8}>
+
 															</td>
 														</tr>
-													)
-												})
-											}
-											<tr>
-												<td colSpan={8}>
+														<tr>
+															<th scope="row"></th>
+															<td>
+																<Field name="email" id="email"
+																			 className={`form-control ${errors.email && touched.email && 'is-invalid'}`}/>
+																{errors.email && touched.email ?
+																	<div className="invalid-feedback">{errors.email}</div> : null}
+															</td>
+															<td>
 
-												</td>
-											</tr>
-											<tr>
-												<th scope="row"></th>
-												<td>
-													<Input
-														type="email"
-													/>
-												</td>
-												<td>
-
-												</td>
-												<td>
-													<CustomInput id="adminRole" type="checkbox"/>
-												</td>
-												<td>
-													<CustomInput id="companyRole" type="checkbox"/>
-												</td>
-												<td>
-													<CustomInput id="newsRole" type="checkbox"/>
-												</td>
-												<td></td>
-												<td>
-													<PlusSquare size={30}/>
-												</td>
-											</tr>
-											</tbody>
-										</Table>
+															</td>
+															<td>
+																<CustomInput
+																	id="adminRole"
+																	type="checkbox"
+																	checked={values['adminRole']}
+																	onChange={(e) => setFieldValue('adminRole', e.target.checked)}
+																/>
+															</td>
+															<td>
+																<CustomInput
+																	id="companyRole"
+																	type="checkbox"
+																	checked={values['companyRole']}
+																	onChange={(e) => setFieldValue('companyRole', e.target.checked)}
+																/>
+															</td>
+															<td>
+																<CustomInput
+																	id="newsRole"
+																	type="checkbox"
+																	checked={values['newsRole']}
+																	onChange={(e) => setFieldValue('newsRole', e.target.checked)}
+																/>
+															</td>
+															<td></td>
+															<td>
+																<Button
+																	type="submit"
+																	disabled={submitting}
+																>
+																	Add
+																</Button>
+															</td>
+														</tr>
+														</tbody>
+													</Table>
+												</Form>
+											)}
+										</Formik>
 									</Col>
 								</Row>
 							</CardBody>
@@ -272,6 +367,7 @@ const mapDispatchToProps = dispatch =>
 			fetchAllAdmins: fetchAllAdminsAction,
 			updateAdmin: updateAdminAction,
 			deleteAdmin: deleteAdminAction,
+			addAdmin: addAdminAction,
 		},
 		dispatch
 	);

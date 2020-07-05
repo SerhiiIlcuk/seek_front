@@ -11,7 +11,7 @@ import {Field, Formik, Form} from "formik";
 import {articleCategories, articleStatus} from "../../config/constants";
 import {ContentState, convertFromHTML, EditorState} from "draft-js";
 import {stateToHTML} from "draft-js-export-html";
-import {createNewsAction, fetchNewsAction, updateNewsAction} from "../../redux/actions/news";
+import {fetchNewsAction, updateNewsAction} from "../../redux/actions/news";
 import {getErrMessage, getSubmitting, getSuccess} from "../../redux/selectors/common";
 import {toastr} from "react-redux-toastr";
 import {withRouter} from "react-router";
@@ -26,7 +26,7 @@ const formSchema = Yup.object().shape({
 		.required("Required"),
 });
 
-class News extends Component {
+class EditNews extends Component {
 	state = {
 		category: articleCategories && articleCategories[0].id,
 		status: articleStatus && articleStatus[0].id,
@@ -40,17 +40,13 @@ class News extends Component {
 
 	componentDidMount() {
 		const {
-			location,
 			match,
 			fetchNews,
 		} = this.props;
+		const newsId = match.params.id;
 
-		if (location.pathname.includes("news-edit") && location.pathname.includes("admin")) {
-			const newsId = match.params.id;
-
-			if (newsId) {
-				fetchNews(newsId);
-			}
+		if (newsId) {
+			fetchNews(newsId);
 		}
 	}
 
@@ -129,7 +125,6 @@ class News extends Component {
 		} = this.state;
 		const {
 			news,
-			createNews,
 			updateNews,
 			submitting
 		} = this.props;
@@ -151,12 +146,7 @@ class News extends Component {
 							...values,
 						};
 
-						if (news && news._id) {
-							updateNews({...data, _id: news._id});
-						} else {
-							createNews(data);
-						}
-						console.log(data);
+						updateNews({...data, _id: news._id});
 					}}
 					validationSchema={formSchema}
 					enableReinitialize
@@ -280,7 +270,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
 	bindActionCreators(
 		{
-			createNews: createNewsAction,
 			fetchNews: fetchNewsAction,
 			updateNews: updateNewsAction,
 		},
@@ -290,4 +279,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withRouter(News));
+)(withRouter(EditNews));

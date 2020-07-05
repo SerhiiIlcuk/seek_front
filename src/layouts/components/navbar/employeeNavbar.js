@@ -27,6 +27,7 @@ import {logoutAction} from "../../../redux/actions/auth/logoutActions";
 import {getToken} from "../../../redux/selectors/auth";
 import {getUserCompany} from "../../../redux/selectors/user";
 import {EMPLOYEE_ROLES} from "../../../config/constants";
+import {fetchCompanyAction} from "../../../redux/actions/company";
 
 class ThemeEmployeeNavbar extends Component {
 	handleClick = e => {
@@ -43,6 +44,12 @@ class ThemeEmployeeNavbar extends Component {
 		};
 	}
 
+	componentDidMount() {
+		const {fetchCompany} = this.props;
+
+		fetchCompany();
+	}
+
 	toggle() {
 		this.setState({
 			isOpen: !this.state.isOpen
@@ -55,6 +62,8 @@ class ThemeEmployeeNavbar extends Component {
 
 	logout = () => {
 		localStorage.removeItem("token");
+		localStorage.removeItem('userCompany');
+		localStorage.removeItem('userType');
 		this.props.logout();
 	}
 
@@ -156,7 +165,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) =>
 	bindActionCreators(
 		{
-			logout: logoutAction
+			logout: logoutAction,
+			fetchCompany: fetchCompanyAction,
 		},
 		dispatch,
 	)

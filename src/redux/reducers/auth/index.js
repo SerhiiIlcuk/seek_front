@@ -18,6 +18,7 @@ export default (state = initialState, action) => {
 	  case "LOGOUT":
 		 return produce(state, draft => {
 		    draft.token = null;
+		    draft.userType = null;
 		 });
 	  default:
 		 return state

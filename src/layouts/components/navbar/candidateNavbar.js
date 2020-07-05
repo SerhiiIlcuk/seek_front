@@ -51,6 +51,8 @@ class ThemeCandidateNavbar extends Component {
 
    logout = () => {
       localStorage.removeItem("token");
+      localStorage.removeItem('userCompany');
+		 localStorage.removeItem('userType');
       this.props.logout();
    }
 

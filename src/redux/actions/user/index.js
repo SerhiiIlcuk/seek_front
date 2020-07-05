@@ -1,7 +1,10 @@
 import {
 	FETCH_USER,
 	UPDATE_USER,
-	FETCH_ALL_ADMINS, UPDATE_ADMIN, DELETE_ADMIN,
+	FETCH_ALL_ADMINS,
+	UPDATE_ADMIN,
+	DELETE_ADMIN,
+	ADD_ADMIN,
 } from "../../types/user";
 
 export const fetchUserAction = () => ({
@@ -24,5 +27,10 @@ export const updateAdminAction = (admin) => ({
 
 export const deleteAdminAction = (admin) => ({
 	type: DELETE_ADMIN,
+	payload: admin,
+})
+
+export const addAdminAction = (admin) => ({
+	type: ADD_ADMIN,
 	payload: admin,
 })

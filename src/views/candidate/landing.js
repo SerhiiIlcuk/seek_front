@@ -58,12 +58,6 @@ class LandingPage extends Component {
 		return (
 			<Fragment>
 				<Row>
-					<Col md="12">
-
-					</Col>
-				</Row>
-
-				<Row>
 					<Col md="6">
 						<h4 className="text-bold-600">Latest news</h4>
 					</Col>
@@ -80,8 +74,7 @@ class LandingPage extends Component {
 												<img src={cardImgEle07} width="150" alt="Card cap 07" className=""/>
 											</div>
 											<div className="col align-self-center">
-												<CardTitle className="mt-3">{truncateText(news.title, 20)}</CardTitle>
-												{truncateText((news.content && parse(news.content)), 30)}
+												<CardTitle className="mt-3">{truncateText(news.title, 50)}</CardTitle>
 												<Button
 													className="btn btn-raised btn-info btn-darken-3"
 													onClick={() => this.navigateTo(`/news-detail/${news._id}`)}
@@ -107,7 +100,7 @@ class LandingPage extends Component {
 					{
 						companyJobs && companyJobs.map((job, index) => (
 							<Col key={index} sm="12" md="4">
-								<Card className="text-left height-150">
+								<Card className="text-left height-200">
 									<CardBody>
 										<CardTitle className="info">{truncateText(job.title, 30)}</CardTitle>
 										<CardText>

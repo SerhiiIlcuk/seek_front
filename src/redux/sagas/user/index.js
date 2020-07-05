@@ -13,11 +13,12 @@ import {
 	fetchAllAdmins,
 	updateAdmin,
 	deleteAdmin,
+	addAdmin,
 } from "../../../http/http-calls";
 import {
 	FETCH_USER, UPDATE_USER, UPDATE_USER_END,
 	USER_RESULT, FETCH_ALL_ADMINS, ALL_ADMINS_RESULT,
-	UPDATE_ADMIN, DELETE_ADMIN,
+	UPDATE_ADMIN, DELETE_ADMIN, ADD_ADMIN,
 } from "../../types/user";
 import {SUBMIT_START, SUBMIT_END} from "../../types/common";
 import {getAllAdmins} from "../../selectors/user";
@@ -28,6 +29,7 @@ function* actionWatcher() {
 	yield takeLatest(UPDATE_USER, updateUserSaga);
 	yield takeLatest(UPDATE_ADMIN, updateAdminSaga);
 	yield takeLatest(DELETE_ADMIN, deleteAdminSaga);
+	yield takeLatest(ADD_ADMIN, addAdminSaga);
 	yield takeLatest(FETCH_ALL_ADMINS, fetchAllAdminsSaga);
 }
 
@@ -137,6 +139,43 @@ function* updateAdminSaga({payload}) {
 		yield put({
 			type: ALL_ADMINS_RESULT,
 			payload: data,
+		});
+
+		yield put({
+			type: SUBMIT_END,
+			payload: {
+				success: true,
+			}
+		});
+	} catch (e) {
+		console.log('error', e);
+		yield put({
+			type: SUBMIT_END,
+			payload: {
+				success: false,
+				errMessage: extractErrorMessage(e.message)
+			}
+		});
+	}
+}
+
+function* addAdminSaga({payload}) {
+	try {
+		yield put({
+			type: SUBMIT_START,
+		});
+
+		const addedAdmin = yield call(addAdmin, payload);
+		const state = yield select();
+		const allAdmins = getAllAdmins(state);
+
+		let temp = (allAdmins && JSON.parse(JSON.stringify(allAdmins))) || [];
+		temp.push(addedAdmin);
+
+
+		yield put({
+			type: ALL_ADMINS_RESULT,
+			payload: temp,
 		});
 
 		yield put({

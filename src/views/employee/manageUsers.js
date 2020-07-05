@@ -40,10 +40,6 @@ const formSchema = Yup.object().shape({
 class ManageUsersPage extends Component {
 	state = {
 		employees: this.props.company && this.props.company.employees,
-		newEmployeeEmail: '',
-		newEmployeeAdminRole: false,
-		newEmployeeJobRole: false,
-		newEmployeeProfileRole: false,
 	};
 
 	componentDidMount() {
@@ -145,10 +141,6 @@ class ManageUsersPage extends Component {
 			id: company._id,
 			userId: employee.user._id
 		});
-	}
-
-	onChange = (value, key) => {
-		this.setState({[key]: value});
 	}
 
 	makeRoles = (values) => {

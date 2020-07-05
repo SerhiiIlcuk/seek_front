@@ -63,7 +63,7 @@ class ManageNews extends Component {
 							<CardBody>
 								<Row>
 									<Col md="12">
-										<Link to="/admin/news">
+										<Link to="/admin/news-post">
 											<Button
 												size="lg"
 												color="primary"
