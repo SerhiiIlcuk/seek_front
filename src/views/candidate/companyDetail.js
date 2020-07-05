@@ -9,6 +9,7 @@ import {fetchCompanyByIdAction} from "../../redux/actions/company";
 import {getCompanyDetail} from "../../redux/selectors/company";
 import {fetchCompanyJobsAction} from "../../redux/actions/job";
 import {getCompanyJobs} from "../../redux/selectors/job";
+import {truncateText} from "../../common";
 
 class CompanyDetail extends Component {
 	componentDidMount() {
@@ -94,7 +95,7 @@ class CompanyDetail extends Component {
 											</Col>
 
 											<Col md="6" className="text-center">
-												{job.description && parse(job.description)}
+												{truncateText(job.summary, 300)}
 											</Col>
 
 											<Col md="3" className="text-right">
