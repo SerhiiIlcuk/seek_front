@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### set base url to your backend in src/config/index.js
+
 ## Available Scripts
 
 In the project directory, you can run:
